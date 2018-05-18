@@ -1,0 +1,115 @@
+ULTIMATE FANTASY SPACE BATTLE IV
+
+GENRE: Turn-based strategy
+
+CONCEPT: Two armies consisting of pop-culture warriors wage war on a battlefield
+
+HOW IT WORKS: Players take turns to move characters across a grid. When two opposing characters meet, they fight.
+
+Each character has HP, MP, Defence, Damage and Move Distance. They can use Attack, Magic or Item.
+
+When the player selects Attack, they must Do Something to complete the Attack.
+  - some attacks are easier to do than others, depending on the character, but all attacks are the same basic mechanic
+  - an Attack can only take place between two adjacent characters
+
+When the player selects Magic, they must Do Something to complete the Spell
+  - some Spells do Damage, others Heal
+  - Magic can be used from 2 grid cells away
+
+Items are picked up on the battlefield
+  - Items can either restore HP, MP, increase Def or DMG
+
+The winner is the player who destroys all the other player's characters
+
+THE PLAYER JOURNEY:
+
+Opening Screen
+  - Enter to Start
+  - Rules
+
+Character Select
+  - Each player takes it in turns to build an army of X number of warriors from a rosta of Y
+
+Battle
+  -  Players take it in turns to move around the map, position themselves and fight
+
+GAME LOGIC:
+
+All takes place on a grid - has to be quite large: 20 x 20? - character dependent
+Move distance is shown by turning the grid squares flashing white
+Move characters around using arrow keys
+Hit enter to bring up menu to select Attack, Magic, Item or Wait (Defence?)
+
+Attack - mini-game: anagram solver? Remember the combination of arrows? Click on the correct block? All with time-limit
+Magic - mini-game: hit keys in the right order?
+
+If Attack or Spell is successful:
+  - DMG is done to the other character with amount depending on Attacker's DMG stat and Opposition's DEF stat
+  - HP decreases an appropriate amount for defender, MP decreases for Attacker (if Spell cast)
+
+  - If character dies, they are removed from the map
+
+WHAT I NEED TO DO:
+  Move characters around the map
+    - characters can not occupy the same grid space
+    - characters have to be able to attack or cast magic dependent on nearby characters (+ or - grid x/y pos and team: opposite)
+
+  Swap between Player 1 and Player 2
+  Let characters do actions depending on what their surroundings are
+  Create minigames for Attack/Spell
+  Set endgame conditions
+  Create sprite characters
+
+PLAN:
+
+  Game objects:
+
+    Character select: 10 characters
+
+    Map: grid array of 20 x 20
+
+    Teams: player
+    Characters: name, hp, mp, def, dmg, team
+
+  ORDER TO DO THINGS:
+
+  1. Create grid
+  2. Move character around and within grid - basic colour block to start
+    2a. Create movement stats for characters
+  3. Create two teams on grid
+    3a. - Create character objects
+  4. Switch between player 1 and player 2 at end of turn
+  5. Get collisions working between characters
+  6. Detect distance between opposing characters
+  7. Create HP stats for characters
+  8. Create DMG stats for characters
+  9. Allow Attacker to successfully Attack Defender (no minigame)
+  10. Deplete HP by DMG amount
+  11. Allow Attacker to kill Defender with Attack (HP === 0)
+    11a. Remove Defender from Map
+  12. Create MP stats for characters
+  13. Allow Attacker to cast Spell on Defender
+  14. Deplete Defender's HP by Spell DMG amount
+  15. Deplete Attacker's MP by Spell Cost amount
+  16. Allow Attacker to increase HP self with Spell
+  17. Allow Attacker to increase TeamMate's HP with Spell
+  18. Create DEF stats for characters
+  19. Allow Attack to do varying DMG dependent on Defender's DEF stats
+  20. Create Mini-Games
+  21. Incorporate Mini-Games into Attack and Magic
+  22. Create Items
+  23. Items have to be generated randomly on battlefield every X number of turns
+  24. Items can either
+      - Heal
+      - Increase DEF
+      - Increase DMG
+  25. Create Start Screen
+  26. Create Character Select screen and rosta of sprite characters
+  27. Write rules
+  28. Do sound effects
+  29. Create themed maps
+
+BONUSES:
+
+  -Characters have special attacks or abilities
+  -Items can be left on the Map to sabotage others
