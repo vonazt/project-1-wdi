@@ -47,9 +47,9 @@ OVERVIEW:
   DONE Place character (color block) at specific coordinate by specifying position in grid array
   DONE Character will be a div with class "character" - this will be set later according to character objects and constructors
   NECESSARY ? - Character div will also have the class "occupied" to prevent two characters occupying the same space
-  Pressing keypads will move character in set direction by changing coordinates on grid
+  DONE Pressing keypads will move character in set direction by changing coordinates on grid
   - WHAT IS THE RELATIONSHIP BETWEEN THE ARRAY COORDINATE AND THE DIV?
-  Make sure character can only go to edge of grid
+  DONE Make sure character can only go to edge of grid
   Create movement stats: character can only move a certain number of spaces in one turn
     How? Limit based on adding Move stat numbers to x, y position.
     - Create character constructor including name for className designation and move stats - keep both x and y equal for now

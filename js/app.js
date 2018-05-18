@@ -25,42 +25,56 @@ game.drawBattlefield = function drawBattlefield() {
   });
 };
 
+
 game.moveCharacter = function moveCharacter() {
   $(document).on('keydown', function(e) {
-    const $character = $('.character');
-    const characterId = $character.attr('id');
+    const $characterOnBoard = $('.character');
+    const characterId = $characterOnBoard.attr('id');
     const upSquare = $(`#${parseInt(characterId[0])-1}-${parseInt(characterId[2])}`);
     const downSquare = $(`#${parseInt(characterId[0])+1}-${parseInt(characterId[2])}`);
     const leftSquare = $(`#${parseInt(characterId[0])}-${parseInt(characterId[2]) -1}`);
     const rightSquare = $(`#${parseInt(characterId[0])}-${parseInt(characterId[2]) + 1}`);
 
     if (e.which === 38) {
-      if (upSquare.attr('class') === 'battle-cell') {
-        upSquare.removeClass('battle-cell').addClass('character');
-        $character.removeClass('character').addClass('battle-cell');
-      }
+      game.makeMove(upSquare, $characterOnBoard);
     } else if (e.which === 40) {
-      if (downSquare.attr('class') === 'battle-cell') {
-        downSquare.removeClass('battle-cell').addClass('character');
-        $character.removeClass('character').addClass('battle-cell');
-      }
+      game.makeMove(downSquare, $characterOnBoard);
     } else if (e.which === 39) {
-      if (rightSquare.attr('class') === 'battle-cell') {
-        rightSquare.removeClass('battle-cell').addClass('character');
-        $character.removeClass('character').addClass('battle-cell');
-      }
+      game.makeMove(rightSquare, $characterOnBoard);
     } else if (e.which === 37) {
-      if (leftSquare.attr('class') === 'battle-cell') {
-        leftSquare.removeClass('battle-cell').addClass('character');
-        $character.removeClass('character').addClass('battle-cell');
-      }
+      game.makeMove(leftSquare, $characterOnBoard);
     }
   });
 };
 
+game.makeMove = function makeMove(direction, characterOnBoard) {
+  if (direction.attr('class') === 'battle-cell') {
+    direction.removeClass('battle-cell').addClass('character');
+    characterOnBoard.removeClass('character').addClass('battle-cell');
+  }
+};
+
+const character = {};
+
+character.moveStats = {
+  x: 5,
+  y: 5
+};
+
+game.checkMoveDistance = function checkMoveDistance() {
+  const $characterStartPoint = $('.character').attr('id');
+  console.log($characterStartPoint);
+  const $characterMoveDistance = `${parseInt($characterStartPoint[0]) + 5}-${parseInt($characterStartPoint[2]) + 5}`;
+  console.log($characterMoveDistance);
+};
+
+
+
 $(() => {
   game.drawBattlefield();
   game.moveCharacter();
+  game.checkMoveDistance();
+
 
 
 
