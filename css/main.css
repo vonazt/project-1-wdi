@@ -24,5 +24,13 @@ body {
     float: left;
     margin: 0;
     background-color: yellow; }
+  #battle-map .available {
+    height: 50px;
+    width: 50px;
+    box-sizing: border-box;
+    border: 1px solid black;
+    float: left;
+    margin: 0;
+    background-color: white; }
 
 /*# sourceMappingURL=main.css.map */

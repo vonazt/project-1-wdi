@@ -48,8 +48,8 @@ game.moveCharacter = function moveCharacter() {
 };
 
 game.makeMove = function makeMove(direction, characterOnBoard) {
-  if (direction.attr('class') === 'battle-cell') {
-    direction.removeClass('battle-cell').addClass('character');
+  if (direction.attr('class') === 'battle-cell available') {
+    direction.removeClass('battle-cell available').addClass('character');
     characterOnBoard.removeClass('character').addClass('battle-cell');
   }
 };
@@ -57,15 +57,19 @@ game.makeMove = function makeMove(direction, characterOnBoard) {
 const character = {};
 
 character.moveStats = {
-  x: 5,
-  y: 5
+  x: 1,
+  y: 0
 };
 
 game.checkMoveDistance = function checkMoveDistance() {
   const $characterStartPoint = $('.character').attr('id');
   console.log($characterStartPoint);
-  const $characterMoveDistance = `${parseInt($characterStartPoint[0]) + 5}-${parseInt($characterStartPoint[2]) + 5}`;
-  console.log($characterMoveDistance);
+  const characterMoveDistance = `${parseInt($characterStartPoint[0]) + character.moveStats.x}-${parseInt($characterStartPoint[2]) + character.moveStats.y}`;
+  console.log(characterMoveDistance);
+  const $availableSquare = $(`#${characterMoveDistance[0]}-${characterMoveDistance[2]}`);
+  console.log($availableSquare);
+  $availableSquare.addClass('available');
+  return $availableSquare;
 };
 
 
