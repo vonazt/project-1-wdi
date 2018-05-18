@@ -37,16 +37,16 @@ OVERVIEW:
 29. Create themed maps
 
 1. Create grid:
-  Use arrays to create 10x10 grid
-  Make grid appear on html page as set of divs with class "battle-grid" - children of parent div, id="battle-map"
+  DONE Use arrays to create 10x10 grid
+  DONE Make grid appear on html page as set of divs with class "battle-grid" - children of parent div, id="battle-map"
   Set and retrieve grid coordinates
     - return an item at specified coordinate
-  Style grid (basic styling)
+  DONE Style grid (basic styling)
 
 2. Move character around and within grid:
-  Place character (color block) at specific coordinate by specifying position in grid array
-  Character will be a div with class "character-name" - this will be set later according to character objects and constructors
-  Character div will also have the class "occupied" to prevent two characters occupying the same space
+  DONE Place character (color block) at specific coordinate by specifying position in grid array
+  DONE Character will be a div with class "character" - this will be set later according to character objects and constructors
+  NECESSARY ? - Character div will also have the class "occupied" to prevent two characters occupying the same space
   Pressing keypads will move character in set direction by changing coordinates on grid
   - WHAT IS THE RELATIONSHIP BETWEEN THE ARRAY COORDINATE AND THE DIV?
   Make sure character can only go to edge of grid

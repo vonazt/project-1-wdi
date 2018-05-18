@@ -1,5 +1,5 @@
 
-const battlefield = {
+const game = {
 
   createGameGrid: function() {
     const gameGrid = [];
@@ -10,7 +10,7 @@ const battlefield = {
         gameGrid[i].push(j);
       }
     }
-    console.log(gameGrid);
+    gameGrid[4][1] = 'character';
     return gameGrid;
   },
 
@@ -19,19 +19,22 @@ const battlefield = {
     $.each(battlegrid, (i, row) => {
       $.each(row, (j, cell) => {
         const $battleSquare = $('<div />');
-        $battleSquare.addClass('battle-cell');
+        cell === 'character'? $battleSquare.addClass('character') : $battleSquare.addClass('battle-cell');
         $battleSquare.data({x: i, y: j});
-        if ($battleSquare.data({x: 4, y: 1})) {
-          $battleSquare.addClass('character');
-        }
+        // $battleSquare.on('click', function() {
+        //   // console.log($(this).data());
+        // });
         $battleSquare.appendTo('#battle-map');
       });
     });
-  }
+  },
+
+
+
 
 };
 
 $(() => {
-  battlefield.drawBattlefield();
+  game.drawBattlefield();
 
 });
