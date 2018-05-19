@@ -41,6 +41,15 @@ body {
     margin: 0;
     background-color: white; }
 
+#move-options {
+  height: 100px;
+  width: 200px;
+  margin-top: 100px;
+  margin-left: 20px;
+  background-color: #0032AF; }
+  #move-options .option {
+    display: block; }
+
 @keyframes blinker {
   50% {
     opacity: 0; } }
