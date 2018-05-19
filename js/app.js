@@ -18,15 +18,20 @@ game.createGameGrid = function createGameGrid() {
 
 game.playerOneTurn = false;
 
+
+
 game.switchPlayers = function switchPlayers() {
   $(document).on('keydown', function(e) {
     if (e.which === 13) {
+      game.$moveOptions.show();
       game.playerOneTurn = !game.playerOneTurn;
       game.clearSquares();
       game.checkMoveDistance();
     }
   });
 };
+
+
 
 game.clearSquares = function clearSquares() {
   const $availableSquares = $('.available');
@@ -155,5 +160,6 @@ $(() => {
   game.moveCharacter();
   game.checkMoveDistance();
   game.switchPlayers();
-
+  game.$moveOptions = $('#move-options'); //this needs to be internalised somewhere later
+  game.$moveOptions.hide();
 });
