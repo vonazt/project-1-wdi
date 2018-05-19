@@ -57,19 +57,48 @@ game.makeMove = function makeMove(direction, characterOnBoard) {
 const character = {};
 
 character.moveStats = {
-  x: 1,
-  y: 0
+  x: 3,
+  y: 3
 };
 
 game.checkMoveDistance = function checkMoveDistance() {
   const $characterStartPoint = $('.character').attr('id');
-  console.log($characterStartPoint);
-  const characterMoveDistance = `${parseInt($characterStartPoint[0]) + character.moveStats.x}-${parseInt($characterStartPoint[2]) + character.moveStats.y}`;
-  console.log(characterMoveDistance);
-  const $availableSquare = $(`#${characterMoveDistance[0]}-${characterMoveDistance[2]}`);
-  console.log($availableSquare);
-  $availableSquare.addClass('available');
-  return $availableSquare;
+  const characterXStartpoint = parseInt($characterStartPoint[0]);
+  const characterYStartPoint = parseInt($characterStartPoint[2]);
+  console.log(characterXStartpoint);
+
+  const moveArray = [];
+  let i = 0;
+  const availableLength = character.moveStats.x;
+  const xDistance = i + characterXStartpoint;
+  const yDistance = i + characterYStartPoint;
+
+  for (i; i <= availableLength; i++) {
+    moveArray.push((i + xDistance) + '-' + (i + yDistance));
+    moveArray.push((i + xDistance) + '-' + (yDistance - i));
+    moveArray.push((xDistance - i) + '-' + (yDistance - i));
+    moveArray.push((xDistance - i) + '-' + (i + yDistance));
+    moveArray.push(xDistance + '-' + (i + yDistance));
+    moveArray.push(xDistance + '-' + (yDistance - i));
+    moveArray.push((xDistance + i) + '-' + (yDistance));
+    moveArray.push((xDistance - i) + '-' + (yDistance));
+  }
+
+  const $gridIds = $('.battle-cell');
+  $.each($gridIds, (i, id) => {
+    // if (moveArray.includes(id)) {
+      console.log(id);
+    // }
+  });
+  //OR MAKE MAX MOVE VALUE AND
+
+  // console.log(moveArray);
+
+  // console.log(characterMoveDistance);
+  // const $availableSquare = $(`#${parseInt(characterMoveDistance[0])}-${characterMoveDistance[2]}`);
+  // console.log($availableSquare);
+  // $availableSquare.addClass('available');
+  // return $availableSquare;
 };
 
 
