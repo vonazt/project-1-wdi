@@ -37,29 +37,29 @@ OVERVIEW:
 29. Create themed maps
 
 1. Create grid:
-  DONE Use arrays to create 10x10 grid
-  DONE Make grid appear on html page as set of divs with class "battle-grid" - children of parent div, id="battle-map"
+  Use arrays to create 10x10 grid
+  Make grid appear on html page as set of divs with class "battle-grid" - children of parent div, id="battle-map"
   Set and retrieve grid coordinates
     - return an item at specified coordinate
-  DONE Style grid (basic styling)
+  Style grid (basic styling)
 
 2. Move character around and within grid:
-  DONE Place character (color block) at specific coordinate by specifying position in grid array
-  DONE Character will be a div with class "character" - this will be set later according to character objects and constructors
-  NECESSARY ? - Character div will also have the class "occupied" to prevent two characters occupying the same space
-  DONE Pressing keypads will move character in set direction by changing coordinates on grid
+  Place character (color block) at specific coordinate by specifying position in grid array
+  Character will be a div with class "character-name" - this will be set later according to character objects and constructors
+  Character div will also have the class "occupied" to prevent two characters occupying the same space
+  Pressing keypads will move character in set direction by changing coordinates on grid
   - WHAT IS THE RELATIONSHIP BETWEEN THE ARRAY COORDINATE AND THE DIV?
-  DONE Make sure character can only go to edge of grid
-  DONE Create movement stats: character can only move a certain number of spaces in one turn
-    DONE How? Limit based on adding Move stat numbers to x, y position.
-    STILL TO DO- Create character constructor including name for className designation and move stats - keep both x and y equal for now
-    STILL TO DO - Character constructor and objects will be different
-    TRIED IT - LOOKS FUNNY ATM Make available move blocks flash using css styling
+  Make sure character can only go to edge of grid
+  Create movement stats: character can only move a certain number of spaces in one turn
+    How? Limit based on adding Move stat numbers to x, y position.
+    - Create character constructor including name for className designation and move stats - keep both x and y equal for now
+    - Character constructor and objects will be different
+    Make available move blocks flash using css styling
 
-3. DONE - Put player 2 character on grid - only player 2 for now
-  DONEISH - Mirror placement function for player 1.
-  STILL TO DO - Create player 2 object - both player 1 and player 2 inherit from player constructor with team set accordingly
-  DONE WITH HEAVY REFACTORING NEEDED - Check movement for player 2 - should inherit same movement function as player 1
+3. Put player 2 character on grid - only player 2 for now
+  Mirror placement function for player 1.
+  Create player 2 object - both player 1 and player 2 inherit from player constructor with team set accordingly
+  Check movement for player 2 - should inherit same movement function as player 1
 
 4. Switch between player 1 and player 2 at end of turn
   Add function to hit enter at end of turn
