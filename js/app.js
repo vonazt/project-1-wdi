@@ -18,6 +18,23 @@ game.createGameGrid = function createGameGrid() {
 
 game.playerOneTurn = false;
 
+game.switchPlayers = function switchPlayers() {
+  $(document).on('keydown', function(e) {
+    if (e.which === 13) {
+      game.playerOneTurn = !game.playerOneTurn;
+      game.clearSquares();
+      game.checkMoveDistance();
+    }
+  });
+};
+
+game.clearSquares = function clearSquares() {
+  const $availableSquares = $('.available');
+  $availableSquares.toggleClass('available');
+};
+
+
+
 game.drawBattlefield = function drawBattlefield() {
   const battlegrid = this.createGameGrid();
   $.each(battlegrid, (i, row) => {
@@ -137,5 +154,6 @@ $(() => {
   game.drawBattlefield();
   game.moveCharacter();
   game.checkMoveDistance();
+  game.switchPlayers();
 
 });

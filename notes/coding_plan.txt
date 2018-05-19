@@ -61,13 +61,13 @@ OVERVIEW:
   STILL TO DO - Create player 2 object - both player 1 and player 2 inherit from player constructor with team set accordingly
   DONE WITH HEAVY REFACTORING NEEDED - Check movement for player 2 - should inherit same movement function as player 1
 
-4. Switch between player 1 and player 2 at end of turn
+4. DONE Switch between player 1 and player 2 at end of turn
   Add function to hit enter at end of turn
     - Create pop-up that gives options of Attack, Magic, Item and Wait - all do the same for now which is end turn
     - OR Options display on edge of battlefield window - options light up when available (later functionality)
     - Control then switches to next player
     - HOW?
-      - Flag - movement controls only work if player1Turn or player2Turn is set to true - alternates back and forth
+      DONE - Flag - movement controls only work if player1Turn or player2Turn is set to true - alternates back and forth
       Get this working
       Put both player 1 and player 2 on the grid - give their divs the classes "player 1/2"
 
