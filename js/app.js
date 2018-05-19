@@ -57,8 +57,8 @@ game.makeMove = function makeMove(direction, characterOnBoard) {
 const character = {};
 
 character.moveStats = {
-  x: 3,
-  y: 3
+  x: 2,
+  y: 2
 };
 
 game.checkMoveDistance = function checkMoveDistance() {
@@ -85,11 +85,15 @@ game.checkMoveDistance = function checkMoveDistance() {
   }
 
   const $gridIds = $('.battle-cell');
-  $.each($gridIds, (i, id) => {
-    // if (moveArray.includes(id)) {
-      console.log(id);
-    // }
+  console.log($gridIds);
+  $gridIds.each(function() {
+    const id = this.id;
+    if (moveArray.includes(id)) {
+      console.log(this.id);
+    }
   });
+
+
   //OR MAKE MAX MOVE VALUE AND
 
   // console.log(moveArray);
