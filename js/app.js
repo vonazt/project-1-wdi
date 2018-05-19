@@ -50,7 +50,7 @@ game.moveCharacter = function moveCharacter() {
 game.makeMove = function makeMove(direction, characterOnBoard) {
   if (direction.attr('class') === 'battle-cell available') {
     direction.removeClass('battle-cell available').addClass('character');
-    characterOnBoard.removeClass('character').addClass('battle-cell');
+    characterOnBoard.removeClass('character').addClass('battle-cell available');
   }
 };
 
@@ -85,24 +85,12 @@ game.checkMoveDistance = function checkMoveDistance() {
   }
 
   const $gridIds = $('.battle-cell');
-  console.log($gridIds);
   $gridIds.each(function() {
     const id = this.id;
     if (moveArray.includes(id)) {
-      console.log(this.id);
+      $(this).addClass('available');
     }
   });
-
-
-  //OR MAKE MAX MOVE VALUE AND
-
-  // console.log(moveArray);
-
-  // console.log(characterMoveDistance);
-  // const $availableSquare = $(`#${parseInt(characterMoveDistance[0])}-${characterMoveDistance[2]}`);
-  // console.log($availableSquare);
-  // $availableSquare.addClass('available');
-  // return $availableSquare;
 };
 
 
