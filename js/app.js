@@ -1,5 +1,4 @@
-const game = {
-};
+const game = {};
 
 
 game.createGameGrid = function createGameGrid() {
@@ -16,21 +15,33 @@ game.createGameGrid = function createGameGrid() {
   return gameGrid;
 };
 
-game.playerOneTurn = false;
+game.playerOneTurn = true;
 
 
 
-game.switchPlayers = function switchPlayers() {
+game.displayOptions = function displayOptions() {
   $(document).on('keydown', function(e) {
     if (e.which === 13) {
       game.$moveOptions.show();
-      game.playerOneTurn = !game.playerOneTurn;
-      game.clearSquares();
-      game.checkMoveDistance();
+      game.pickOption();
     }
   });
 };
 
+game.pickOption = function pickOption() {
+  const $option = $('.option');
+  $option.on('click', function() {
+    console.log(this.id);
+    if (this.id === 'wait-option') game.switchPlayers();
+  });
+};
+
+game.switchPlayers = function switchPlayers() {
+  game.playerOneTurn = !game.playerOneTurn;
+  game.$moveOptions.hide();
+  game.clearSquares();
+  game.checkMoveDistance();
+};
 
 
 game.clearSquares = function clearSquares() {
@@ -159,7 +170,7 @@ $(() => {
   game.drawBattlefield();
   game.moveCharacter();
   game.checkMoveDistance();
-  game.switchPlayers();
+  game.displayOptions();
   game.$moveOptions = $('#move-options'); //this needs to be internalised somewhere later
   game.$moveOptions.hide();
 });
