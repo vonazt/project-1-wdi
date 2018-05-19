@@ -17,13 +17,18 @@ game.createGameGrid = function createGameGrid() {
 
 game.playerOneTurn = true;
 
-
+game.enterKeydown = false;
 
 game.displayOptions = function displayOptions() {
+
   $(document).on('keydown', function(e) {
     if (e.which === 13) {
-      game.$moveOptions.show();
-      game.pickOption();
+      game.enterKeydown = !game.enterKeydown;
+      console.log(game.enterKeydown);
+      if (game.enterKeydown) {
+        game.$moveOptions.show();
+        game.pickOption();
+      }
     }
   });
 };
@@ -31,8 +36,8 @@ game.displayOptions = function displayOptions() {
 game.pickOption = function pickOption() {
   const $option = $('.option');
   $option.on('click', function() {
-    console.log(this.id);
     if (this.id === 'wait-option') game.switchPlayers();
+    else if (this.id === 'cancel') game.$moveOptions.hide();
   });
 };
 
@@ -41,6 +46,7 @@ game.switchPlayers = function switchPlayers() {
   game.$moveOptions.hide();
   game.clearSquares();
   game.checkMoveDistance();
+  game.enterKeydown = !game.enterKeydown;
 };
 
 
@@ -169,8 +175,9 @@ game.checkMoveDistance = function checkMoveDistance() {
 $(() => {
   game.drawBattlefield();
   game.moveCharacter();
-  game.checkMoveDistance();
   game.displayOptions();
   game.$moveOptions = $('#move-options'); //this needs to be internalised somewhere later
   game.$moveOptions.hide();
+  game.checkMoveDistance();
+
 });

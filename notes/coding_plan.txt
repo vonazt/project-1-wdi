@@ -71,10 +71,10 @@ OVERVIEW:
       Get this working
       Put both player 1 and player 2 on the grid - give their divs the classes "player 1/2"
 
-5. Make sure no two characters can occupy the same space
-  - Every move, check surrounding grid coordinates
-    - if one coordinate === occupied, movement key does not work
-    Try this and see!
+5. DONE Make sure no two characters can occupy the same space
+  DONE - Every move, check surrounding grid coordinates
+    DONE - if one coordinate === occupied, movement key does not work
+    DONE Try this and see!
 
 6. Detect distance between player 1 and player 2 characters
   - While checking surrounding grid coordinates, should return true if opposing character is within either 1 or 2 grid squares
