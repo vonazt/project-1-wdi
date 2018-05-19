@@ -1,21 +1,51 @@
 const game = {};
 
-
+//BATTLEFIELD GRID BUILDING AND CHARCTER PLACING
 game.createGameGrid = function createGameGrid() {
   const gameGrid = [];
 
+  //creates a 10 x 10 battlefield grid
   for (let i=0; i < 10; i++) {
     gameGrid.push([]);
     for (let j =0; j< 10; j++) {
       gameGrid[i].push(j);
     }
   }
+
+  //starting positions for playerOne and playerTwo characters
   gameGrid[4][1] = 'playerOne';
   gameGrid[4][8] = 'playerTwo';
   return gameGrid;
 };
 
-game.playerOneTurn = true;
+game.drawBattlefield = function drawBattlefield() {
+  const battlegrid = this.createGameGrid();
+  $.each(battlegrid, (i, row) => {
+    $.each(row, (j, cell) => {
+      //fills grid with divs - if the grid is occupied by a player character (in game.createGrid) they're given a corresponding class
+      //otherwise they default to class battle-cell
+      const $battleSquare = $('<div />');
+      if (cell === 'playerOne') {
+        $battleSquare.addClass('playerOne');
+      } else if (cell === 'playerTwo') {
+        $battleSquare.addClass('playerTwo');
+      } else {
+        $battleSquare.addClass('battle-cell');
+      }
+      //assigns every cell an id for selection in other functions, such as movement
+      $battleSquare.attr('id', `${i}-${j}`);
+      //temp click function for checking grid coords in debugging
+      // $battleSquare.on('click', function() {
+      //   console.log($battleSquare);
+      // });
+      $battleSquare.appendTo('#battle-map');
+    });
+  });
+};
+
+
+//PLAYER OPTIONS AND TURN SWITCHING
+game.playerOneTurn = true; //flag for switching between player turns
 
 game.enterKeydown = false;
 
@@ -55,31 +85,13 @@ game.clearSquares = function clearSquares() {
   $availableSquares.toggleClass('available');
 };
 
-
-
-game.drawBattlefield = function drawBattlefield() {
-  const battlegrid = this.createGameGrid();
-  $.each(battlegrid, (i, row) => {
-    $.each(row, (j, cell) => {
-      const $battleSquare = $('<div />');
-      if (cell === 'playerOne') {
-        $battleSquare.addClass('playerOne');
-      } else if (cell === 'playerTwo') {
-        $battleSquare.addClass('playerTwo');
-      } else {
-        $battleSquare.addClass('battle-cell');
-      }
-      $battleSquare.attr('id', `${i}-${j}`);
-      $battleSquare.on('click', function() {
-        console.log($battleSquare);
-      });
-      $battleSquare.appendTo('#battle-map');
-    });
-  });
-};
+//CHARACTER MOVEMENT
 
 game.characterMovement = function characterMovement(player, e) {
   const $characterOnBoard = $(player);
+
+  //gets the character position based on id
+  //gets id of surrounding squares using character's current cell id
   const characterId = $characterOnBoard.attr('id');
   const upSquare = $(`#${parseInt(characterId[0])-1}-${parseInt(characterId[2])}`);
   const downSquare = $(`#${parseInt(characterId[0])+1}-${parseInt(characterId[2])}`);
@@ -107,6 +119,8 @@ game.moveCharacter = function moveCharacter() {
   });
 };
 
+//swaps cell classes based on direction key pressed to give illusion of character movement
+//available class is related to move stats below
 game.moveCells = function moveCells(player, direction, characterOnBoard) {
   if (direction.attr('class') === 'battle-cell available') {
     direction.removeClass('battle-cell available').addClass(player);
@@ -122,15 +136,10 @@ game.makeMove = function makeMove(direction, characterOnBoard) {
   }
 };
 
-const character = {};
-
-character.moveStats = {
-  x: 2,
-  y: 2
-};
-
+//checks which squares are available for character to move to based on current position and move stats (see character object)
 game.showAvailableSquares = function showAvailableSquares(player) {
   const $characterStartPoint = $(player).attr('id');
+  //gets current location from character's current div id
   const characterXStartpoint = parseInt($characterStartPoint[0]);
   const characterYStartPoint = parseInt($characterStartPoint[2]);
 
@@ -140,6 +149,8 @@ game.showAvailableSquares = function showAvailableSquares(player) {
   const xDistance = i + characterXStartpoint;
   const yDistance = i + characterYStartPoint;
 
+  //this is a very convoluted way to get every necessary coordinate based on player stats
+  //needs major refactoring - main problem is including the right space depending on move stats
   for (i; i <= availableLength; i++) {
     moveArray.push((i + xDistance) + '-' + (i + yDistance));
     moveArray.push((i + xDistance) + '-' + (yDistance - i));
@@ -155,6 +166,7 @@ game.showAvailableSquares = function showAvailableSquares(player) {
     moveArray.push((xDistance - i) + '-' + (yDistance + i-1));
   }
 
+  //compares an array of all battle-cells with the moveArray generated above and adds class .available to those that are the same
   const $gridIds = $('.battle-cell');
   $gridIds.each(function() {
     const id = this.id;
@@ -171,6 +183,16 @@ game.checkMoveDistance = function checkMoveDistance() {
     this.showAvailableSquares('.playerTwo');
   }
 };
+
+//CHARACTER OBJECT
+const character = {};
+
+character.moveStats = {
+  x: 2,
+  y: 2
+};
+
+//GAME INIT
 
 $(() => {
   game.drawBattlefield();
