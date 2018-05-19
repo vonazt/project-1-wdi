@@ -9,7 +9,7 @@ game.createGameGrid = function createGameGrid() {
       gameGrid[i].push(j);
     }
   }
-  gameGrid[4][1] = 'character';
+  gameGrid[4][4] = 'character';
   return gameGrid;
 };
 
@@ -20,6 +20,9 @@ game.drawBattlefield = function drawBattlefield() {
       const $battleSquare = $('<div />');
       cell === 'character' ? $battleSquare.addClass('character') : $battleSquare.addClass('battle-cell');
       $battleSquare.attr('id', `${i}-${j}`);
+      $battleSquare.on('click', function() {
+        console.log($battleSquare);
+      });
       $battleSquare.appendTo('#battle-map');
     });
   });
@@ -57,8 +60,8 @@ game.makeMove = function makeMove(direction, characterOnBoard) {
 const character = {};
 
 character.moveStats = {
-  x: 2,
-  y: 2
+  x: 3,
+  y: 3
 };
 
 game.checkMoveDistance = function checkMoveDistance() {
@@ -69,7 +72,7 @@ game.checkMoveDistance = function checkMoveDistance() {
 
   const moveArray = [];
   let i = 0;
-  const availableLength = character.moveStats.x;
+  const availableLength = character.moveStats.y;
   const xDistance = i + characterXStartpoint;
   const yDistance = i + characterYStartPoint;
 
@@ -82,7 +85,13 @@ game.checkMoveDistance = function checkMoveDistance() {
     moveArray.push(xDistance + '-' + (yDistance - i));
     moveArray.push((xDistance + i) + '-' + (yDistance));
     moveArray.push((xDistance - i) + '-' + (yDistance));
+    moveArray.push((xDistance + i) + '-' + (yDistance - i+1));
+    moveArray.push((xDistance + i) + '-' + (yDistance + i-1));
+    moveArray.push((xDistance - i) + '-' + (yDistance - i + 1));
+    moveArray.push((xDistance - i) + '-' + (yDistance + i-1));
   }
+
+  console.log(moveArray);
 
   const $gridIds = $('.battle-cell');
   $gridIds.each(function() {
