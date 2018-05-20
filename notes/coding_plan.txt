@@ -64,8 +64,8 @@ OVERVIEW:
 4. DONE Switch between player 1 and player 2 at end of turn
   Add function to hit enter at end of turn
     - Create pop-up that gives options of Attack, Magic, Item and Wait - all do the same for now which is end turn
-    - OR Options display on edge of battlefield window - options light up when available (later functionality)
-    - Control then switches to next player
+    - DONE OR Options display on edge of battlefield window - options light up when available (later functionality)
+    - DONE Control then switches to next player
     - HOW?
       DONE - Flag - movement controls only work if player1Turn or player2Turn is set to true - alternates back and forth
       Get this working
@@ -76,12 +76,12 @@ OVERVIEW:
     DONE - if one coordinate === occupied, movement key does not work
     DONE Try this and see!
 
-6. STILL TO DO Detect distance between player 1 and player 2 characters
-  - While checking surrounding grid coordinates, should return true if opposing character is within either 1 or 2 grid squares
+6. DONE Detect distance between player 1 and player 2 characters
+  - DONEISH - FOR 1 SPACE, NOT 2 While checking surrounding grid coordinates, should return true if opposing character is within either 1 or 2 grid squares
   - DONE FOR ATTACK Make Attack and Magic options light up in Options display accordingly (no functionality yet)
 
-7. Create HP stats for characters
-  - Add HP property to character constructor
+7. DONE Create HP stats for characters
+  - DONE Add HP property to character constructor
   - Display character HP next to character
   - Make stats appear with button press - this should eventually show all character stats on button press
   - OR stats window should be permanently displayed outside of battlefield window dependent on character

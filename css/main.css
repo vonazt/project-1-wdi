@@ -62,6 +62,18 @@ body {
   #move-options #wait-option {
     color: white; }
 
+#stats-window {
+  position: absolute;
+  height: 100px;
+  width: 200px;
+  bottom: 100px;
+  right: 220px;
+  background-color: #0032AF; }
+  #stats-window .stats {
+    color: white;
+    font-size: 1em;
+    font-family: "Lucida Grande"; }
+
 @keyframes blinker {
   50% {
     opacity: 0; } }

@@ -77,6 +77,7 @@ game.switchPlayers = function switchPlayers() {
   game.playerOneTurn = !game.playerOneTurn;
   // game.$moveOptions.hide();
   game.clearSquares();
+  game.setStatsWindow();
   game.checkMoveDistance();
   // game.enterKeydown = false;
   // console.log(game.enterKeydown);
@@ -245,7 +246,41 @@ game.turnAttackOff = function turnAttackOff() {
   });
 };
 
+//STATS DISPLAY WINDOW
+game.setStatsWindow = function setStatsWindow() {
+  if (this.playerOneTurn) {
+    this.displayStats('.characterOne');
+  } else {
+    this.displayStats('.characterTwo');
+  }
+};
 
+game.displayStats = function displayStats(character) {
+  const $character = $(character);
+  const $nameStat = $character.attr('name');
+  const $hpStat = $character.attr('hp');
+  const $mpStat = $character.attr('mp');
+  const $dmgStat = $character.attr('dmg');
+  const $defStat = $character.attr('def');
+
+  const initialHP = $hpStat;
+  const initialMP = $mpStat;
+
+  const $nameDisplay = $('#character-name');
+  $nameDisplay.html(`Name: ${$nameStat}`);
+
+  const $hpDisplay = $('#hp-stats');
+  $hpDisplay.html(`HP: ${$hpStat}/${initialHP}`);
+
+  const $mpDisplay = $('#mp-stats');
+  $mpDisplay.html(`MP: ${$mpStat}/${initialMP}`);
+
+  const $dmgDisplay = $('#dmg-stats');
+  $dmgDisplay.html(`DMG: ${$dmgStat}`);
+
+  const $defDisplay = $('#def-stats');
+  $defDisplay.html(`DEF: ${$defStat}`);
+};
 
 //CHARACTER OBJECT
 
@@ -264,9 +299,6 @@ class Character {
 const jonSnow = new Character('Jon Snow', 10, 3, 2, 3, 4, 'playerOne');
 const theMountain = new Character('The Mountain', 15, 0, 1, 6, 7, 'playerTwo');
 
-const characterObj = {};
-characterObj.moveStats = {x: 2, y: 2};
-
 //GAME INIT
 
 $(() => {
@@ -277,4 +309,5 @@ $(() => {
   game.checkMoveDistance();
   game.$attackOption = $('#attack-option');
   game.pickOption();
+  game.setStatsWindow('.characterOne');
 });
