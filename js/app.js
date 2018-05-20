@@ -13,8 +13,8 @@ game.createGameGrid = function createGameGrid() {
   }
 
   //starting positions for playerOne and playerTwo characters
-  gameGrid[4][1] = 'playerOne';
-  gameGrid[4][8] = 'playerTwo';
+  gameGrid[4][1] = 'characterOne';
+  gameGrid[4][8] = 'characterTwo';
   return gameGrid;
 };
 
@@ -25,10 +25,10 @@ game.drawBattlefield = function drawBattlefield() {
       //fills grid with divs - if the grid is occupied by a player character (in game.createGrid) they're given a corresponding class
       //otherwise they default to class battle-cell
       const $battleSquare = $('<div />');
-      if (cell === 'playerOne') {
-        $battleSquare.addClass('playerOne');
-      } else if (cell === 'playerTwo') {
-        $battleSquare.addClass('playerTwo');
+      if (cell === 'characterOne') {
+        $battleSquare.addClass('characterOne');
+      } else if (cell === 'characterTwo') {
+        $battleSquare.addClass('characterTwo');
       } else {
         $battleSquare.addClass('battle-cell');
       }
@@ -92,22 +92,22 @@ game.clearSquares = function clearSquares() {
 
 game.checkMoveDistance = function checkMoveDistance() {
   if (this.playerOneTurn) {
-    this.showAvailableSquares('.playerOne');
+    this.showAvailableSquares('.characterOne');
   } else {
-    this.showAvailableSquares('.playerTwo');
+    this.showAvailableSquares('.characterTwo');
   }
 };
 
 //checks which squares are available for character to move to based on current position and move stats (see character object)
-game.showAvailableSquares = function showAvailableSquares(player) {
-  const $characterStartPoint = $(player).attr('id');
+game.showAvailableSquares = function showAvailableSquares(character) {
+  const $characterStartPoint = $(character).attr('id');
   //gets current location from character's current div id
   const characterXStartpoint = parseInt($characterStartPoint[0]);
   const characterYStartPoint = parseInt($characterStartPoint[2]);
 
   const moveArray = [];
   let i = 0;
-  const availableLength = character.moveStats.y;
+  const availableLength = characterObj.moveStats.y;
   const xDistance = i + characterXStartpoint;
   const yDistance = i + characterYStartPoint;
 
@@ -141,55 +141,54 @@ game.showAvailableSquares = function showAvailableSquares(player) {
 game.moveCharacter = function moveCharacter() {
   $(document).on('keydown', function(e) {
     if (game.playerOneTurn) {
-      game.characterMovement('.playerOne', e);
+      game.characterMovement('.characterOne', e);
     } else {
-      game.characterMovement('.playerTwo', e);
+      game.characterMovement('.characterTwo', e);
     }
   });
 };
 
 
-game.characterMovement = function characterMovement(player, e) {
-  const $characterOnBoard = $(player);
-
+game.characterMovement = function characterMovement(character, e) {
+  const $character = $(character);
   //gets the character position based on id
   //gets id of surrounding squares using character's current cell id
-  const characterId = $characterOnBoard.attr('id');
+  const characterId = $character.attr('id');
   const upSquare = $(`#${parseInt(characterId[0])-1}-${parseInt(characterId[2])}`);
   const downSquare = $(`#${parseInt(characterId[0])+1}-${parseInt(characterId[2])}`);
   const leftSquare = $(`#${parseInt(characterId[0])}-${parseInt(characterId[2]) -1}`);
   const rightSquare = $(`#${parseInt(characterId[0])}-${parseInt(characterId[2]) + 1}`);
 
   if (e.which === 38) {
-    game.makeMove(upSquare, $characterOnBoard);
+    game.makeMove(upSquare, $character);
   } else if (e.which === 40) {
-    game.makeMove(downSquare, $characterOnBoard);
+    game.makeMove(downSquare, $character);
   } else if (e.which === 39) {
-    game.makeMove(rightSquare, $characterOnBoard);
+    game.makeMove(rightSquare, $character);
   } else if (e.which === 37) {
-    game.makeMove(leftSquare, $characterOnBoard);
+    game.makeMove(leftSquare, $character);
   }
 };
 
-game.makeMove = function makeMove(direction, characterOnBoard) {
+game.makeMove = function makeMove(direction, character) {
   if (this.playerOneTurn) {
-    this.moveCells('playerOne', direction, characterOnBoard);
+    this.moveCells('characterOne', direction, character, '.characterTwo');
   } else {
-    this.moveCells('playerTwo', direction, characterOnBoard);
+    this.moveCells('characterTwo', direction, character, '.characterOne');
   }
 };
 
 //swaps cell classes based on direction key pressed to give illusion of character movement
 //available class is related to move stats below
-game.moveCells = function moveCells(player, direction, characterOnBoard) {
+game.moveCells = function moveCells(player, direction, characterOnBoard, defender) {
+  const $defender = $(defender).attr('id');
   this.turnAttackOff();
   if (direction.attr('class') === 'battle-cell available') {
     direction.removeClass('battle-cell available').addClass(player);
     characterOnBoard.removeClass(player).addClass('battle-cell available');
-  } if ($('.playerTwo').attr('id') === direction.attr('id')) {
+  } if ($defender === direction.attr('id')) {
     this.turnAttackOn();
   }
-
 };
 
 
@@ -200,10 +199,7 @@ game.moveCells = function moveCells(player, direction, characterOnBoard) {
 game.attackOn = false;
 
 game.turnAttackOn = function turnAttackOn() {
-  console.log('attack on');
   this.attackOn = true;
-  console.log(this.attackOn);
-  console.log(this.$attackOption);
   this.$attackOption.css({
     'color': 'white',
     'cursor': 'pointer'
@@ -211,10 +207,7 @@ game.turnAttackOn = function turnAttackOn() {
 };
 
 game.turnAttackOff = function turnAttackOff() {
-  console.log('attack on');
   this.attackOn = false;
-  console.log(this.attackOn);
-  console.log(this.$attackOption);
   this.$attackOption.css({
     'color': 'gray',
     'cursor': 'default'
@@ -224,9 +217,9 @@ game.turnAttackOff = function turnAttackOff() {
 
 
 //CHARACTER OBJECT
-const character = {};
+const characterObj = {};
 
-character.moveStats = {
+characterObj.moveStats = {
   x: 2,
   y: 2
 };

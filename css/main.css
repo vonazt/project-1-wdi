@@ -16,7 +16,7 @@ body {
     float: left;
     margin: 0;
     background-color: #C5E3BF; }
-  #battle-map .playerOne {
+  #battle-map .characterOne {
     height: 50px;
     width: 50px;
     box-sizing: border-box;
@@ -24,7 +24,7 @@ body {
     float: left;
     margin: 0;
     background-color: yellow; }
-  #battle-map .playerTwo {
+  #battle-map .characterTwo {
     height: 50px;
     width: 50px;
     box-sizing: border-box;
