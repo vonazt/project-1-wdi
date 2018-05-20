@@ -182,6 +182,7 @@ game.makeMove = function makeMove(direction, characterOnBoard) {
 //swaps cell classes based on direction key pressed to give illusion of character movement
 //available class is related to move stats below
 game.moveCells = function moveCells(player, direction, characterOnBoard) {
+  this.turnAttackOff();
   if (direction.attr('class') === 'battle-cell available') {
     direction.removeClass('battle-cell available').addClass(player);
     characterOnBoard.removeClass(player).addClass('battle-cell available');
@@ -208,6 +209,19 @@ game.turnAttackOn = function turnAttackOn() {
     'cursor': 'pointer'
   });
 };
+
+game.turnAttackOff = function turnAttackOff() {
+  console.log('attack on');
+  this.attackOn = false;
+  console.log(this.attackOn);
+  console.log(this.$attackOption);
+  this.$attackOption.css({
+    'color': 'gray',
+    'cursor': 'default'
+  });
+};
+
+
 
 //CHARACTER OBJECT
 const character = {};

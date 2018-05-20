@@ -78,7 +78,7 @@ OVERVIEW:
 
 6. Detect distance between player 1 and player 2 characters
   - While checking surrounding grid coordinates, should return true if opposing character is within either 1 or 2 grid squares
-  - Make Attack and Magic options light up in Options display accordingly (no functionality yet)
+  - DONE FOR ATTACK Make Attack and Magic options light up in Options display accordingly (no functionality yet)
 
 7. Create HP stats for characters
   - Add HP property to character constructor
