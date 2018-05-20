@@ -241,9 +241,9 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
     this.turnAttackOn();
     $('.defender-stats-window').show();
     if ($characterPlayer === 'playerOne') {
-      this.displayDefendStats('.characterTwo');
+      this.displayStats('.characterTwo', 'defence');
     } else {
-      this.displayDefendStats('.characterOne');
+      this.displayStats('.characterOne', 'defence');
     }
   }
 };
@@ -274,7 +274,20 @@ game.attackDefender = function attackDefender(attacker, defender) {
   $defenderHP = parseInt($defenderHP) - parseInt(attackPower);
   $(defender).attr('hp', $defenderHP);
   this.displayDamageMessage(attacker, defender);
+  this.checkForDeath(defender);
   this.switchPlayers();
+};
+
+game.checkForDeath = function checkForDeath(defender) {
+  const $defenderHP = $(defender).attr('hp');
+  if (parseInt($defenderHP) <= 0) this.actionOnDeath(defender);
+};
+
+game.actionOnDeath = function actionOnDeath(defender) {
+  const $deadCharacter = $(defender);
+  const $deadCharacterName = $deadCharacter.attr('name');
+  $('#damage-message').html(`${$deadCharacterName} was killed!`);
+  $deadCharacter.attr('class', 'battle-cell available');
 };
 
 game.displayDamageMessage = function displayDamageMessage(attacker, defender) {
@@ -293,13 +306,13 @@ game.displayDamageMessage = function displayDamageMessage(attacker, defender) {
 game.setStatsWindow = function setStatsWindow() {
   $('.defender-stats-window').hide();
   if (this.playerOneTurn) {
-    this.displayAttackStats('.characterOne');
+    this.displayStats('.characterOne', 'attack');
   } else {
-    this.displayAttackStats('.characterTwo');
+    this.displayStats('.characterTwo', 'attack');
   }
 };
 
-game.displayAttackStats = function displayAttackStats(character) {
+game.displayStats = function displayStats(character, attackOrDefend) {
   const $character = $(character);
   const $nameStat = $character.attr('name');
   const $hpStat = $character.attr('hp');
@@ -310,46 +323,23 @@ game.displayAttackStats = function displayAttackStats(character) {
   const initialHP = $hpStat;
   const initialMP = $mpStat;
 
-  const $nameDisplay = $('#attack-character-name');
+  let battleType;
+
+  attackOrDefend === 'attack' ? battleType = 'attack' : battleType = 'defend';
+
+  const $nameDisplay = $(`#${battleType}-character-name`);
   $nameDisplay.html(`Name: ${$nameStat}`);
 
-  const $hpDisplay = $('#attack-hp-stats');
+  const $hpDisplay = $(`#${battleType}-hp-stats`);
   $hpDisplay.html(`HP: ${$hpStat}/${initialHP}`);
 
-  const $mpDisplay = $('#attack-mp-stats');
+  const $mpDisplay = $(`#${battleType}-mp-stats`);
   $mpDisplay.html(`MP: ${$mpStat}/${initialMP}`);
 
-  const $dmgDisplay = $('#attack-dmg-stats');
+  const $dmgDisplay = $(`#${battleType}-dmg-stats`);
   $dmgDisplay.html(`DMG: ${$dmgStat}`);
 
-  const $defDisplay = $('#attack-def-stats');
-  $defDisplay.html(`DEF: ${$defStat}`);
-};
-
-game.displayDefendStats = function displayDefendStats(character) {
-  const $character = $(character);
-  const $nameStat = $character.attr('name');
-  const $hpStat = $character.attr('hp');
-  const $mpStat = $character.attr('mp');
-  const $dmgStat = $character.attr('dmg');
-  const $defStat = $character.attr('def');
-
-  const initialHP = $hpStat;
-  const initialMP = $mpStat;
-
-  const $nameDisplay = $('#defend-character-name');
-  $nameDisplay.html(`Name: ${$nameStat}`);
-
-  const $hpDisplay = $('#defend-hp-stats');
-  $hpDisplay.html(`HP: ${$hpStat}/${initialHP}`);
-
-  const $mpDisplay = $('#defend-mp-stats');
-  $mpDisplay.html(`MP: ${$mpStat}/${initialMP}`);
-
-  const $dmgDisplay = $('#defend-dmg-stats');
-  $dmgDisplay.html(`DMG: ${$dmgStat}`);
-
-  const $defDisplay = $('#defend-def-stats');
+  const $defDisplay = $(`#${battleType}-def-stats`);
   $defDisplay.html(`DEF: ${$defStat}`);
 };
 
