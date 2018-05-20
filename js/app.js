@@ -82,8 +82,6 @@ game.pickOption = function pickOption() {
   });
 };
 
-game.playerOneCharactersAlive = 1;
-
 game.switchPlayers = function switchPlayers() {
   //checks if players are still on board for endgame
 
@@ -290,12 +288,14 @@ game.checkForDeath = function checkForDeath(defender) {
 game.actionOnDeath = function actionOnDeath(defender) {
   const $deadCharacter = $(defender);
   const $deadCharacterName = $deadCharacter.attr('name');
+  const $deadCharacterPlayer = $deadCharacter.attr('player');
   $('#damage-message').html(`${$deadCharacterName} was killed!`);
   $deadCharacter.attr('class', 'battle-cell available');
 
   //BASIC ENDGAME BIT
-  this.playerOneCharactersAlive -= 1;
-  if (this.playerOneCharactersAlive === 0) {
+  $deadCharacterPlayer === 'playerOne' ? this.playerOneCharactersAlive -= 1 : this.playerTwoCharactersAlive -=1;
+
+  if (this.playerOneCharactersAlive === 0 || this.playerTwoCharactersAlive === 0) {
     $('#damage-message').html('GAME OVER!!');
   }
 };
@@ -370,6 +370,8 @@ class Character {
 const jonSnow = new Character('Jon Snow', 10, 3, 6, 4, 4, 'playerOne');
 const theMountain = new Character('The Mountain', 15, 0, 1, 6, 7, 'playerTwo');
 
+game.playerOneCharactersAlive = 1;
+game.playerTwoCharactersAlive = 1;
 //GAME INIT
 
 $(() => {
