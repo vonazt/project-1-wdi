@@ -329,6 +329,7 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   const $mpStat = $character.attr('mp');
   const $dmgStat = $character.attr('dmg');
   const $defStat = $character.attr('def');
+  const $typeStat = $character.attr('type');
 
   const initialHP = $hpStat;
   const initialMP = $mpStat;
@@ -343,8 +344,11 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   const $hpDisplay = $(`#${battleType}-hp-stats`);
   $hpDisplay.html(`HP: ${$hpStat}/${initialHP}`);
 
-  if ($mpStat !== undefined) {
-    const $mpDisplay = $(`#${battleType}-mp-stats`);
+  const $mpDisplay = $(`#${battleType}-mp-stats`);
+  if ($typeStat === 'melee' || $mpStat === undefined) {
+    $mpDisplay.hide();
+  } else {
+    $mpDisplay.show();
     $mpDisplay.html(`MP: ${$mpStat}/${initialMP}`);
   }
 
@@ -355,34 +359,34 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   $defDisplay.html(`DEF: ${$defStat}`);
 };
 
-//CHARACTER CLASSES
+//CHARACTER OBJECT
 
 class BaseCharacter {
-  constructor(name, hp, moveStats, def, dmg, player) {
+  constructor(name, hp, moveStats, def, dmg, type, player) {
     this.name = name;
     this.hp = hp;
     this.moveStats = moveStats;
     this.def = def;
     this.dmg = dmg;
+    this.type = type;
     this.player = player;
   }
 }
 
+class MagicCharacter extends BaseCharacter {
+  constructor(name, hp, mp, moveStats, def, dmg, type, player) {
+    super(name, hp, moveStats, def, dmg, type, player);
+    this.mp = mp;
+  }
+}
 class MeleeCharacter extends BaseCharacter {
   constructor(name, hp, moveStats, def, dmg, player) {
     super(name, hp, moveStats, def, dmg, player);
   }
 }
 
-class MagicCharacter extends BaseCharacter {
-  constructor(name, hp, mp, moveStats, def, dmg, player) {
-    super(name, hp, moveStats, def, dmg, player);
-    this.mp = mp;
-  }
-}
-
-const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 6, 4, 4, 'playerOne');
-const theMountain = new MeleeCharacter('The Mountain', 15, 1, 6, 7, 'playerTwo');
+const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 6, 4, 4, 'magic', 'playerOne');
+const theMountain = new MeleeCharacter('The Mountain', 15, 1, 6, 7, 'melee', 'playerTwo');
 
 //THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER
 game.playerOneCharactersAlive = 1;
