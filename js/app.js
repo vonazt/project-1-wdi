@@ -85,11 +85,13 @@ game.pickOption = function pickOption() {
 game.switchPlayers = function switchPlayers() {
   //checks if players are still on board for endgame
 
-  game.playerOneTurn = !game.playerOneTurn;
+  this.playerOneTurn = !game.playerOneTurn;
+  this.turnAttackOff();
+  this.turnMagicOff();
   // game.$moveOptions.hide();
-  game.clearSquares();
-  game.setStatsWindow();
-  game.checkMoveDistance();
+  this.clearSquares();
+  this.setStatsWindow();
+  this.checkMoveDistance();
   // game.enterKeydown = false;
   // console.log(game.enterKeydown);
 };
@@ -398,7 +400,7 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   $defDisplay.html(`DEF: ${$defStat}`);
 };
 
-//CHARACTER OBJECT
+//CHARACTER CLASSES
 
 class BaseCharacter {
   constructor(name, hp, moveStats, def, dmg, type, player) {
