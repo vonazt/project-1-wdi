@@ -313,10 +313,12 @@ game.turnMagicOff = function turnMagicOff() {
 
 game.attackDefender = function attackDefender(attacker, defender) {
   const attackPower = $(attacker).attr('dmg');
+  const defPower = $(defender).attr('def');
+  const actualDamage = Math.floor((parseInt(attackPower) * (defPower/.7)));
   let $defenderHP = $(defender).attr('hp');
-  $defenderHP = parseInt($defenderHP) - parseInt(attackPower);
+  $defenderHP = parseInt($defenderHP) - actualDamage;
   $(defender).attr('hp', $defenderHP);
-  this.displayDamageMessage(attacker, defender);
+  this.displayDamageMessage(attacker, defender, actualDamage);
   this.checkForDeath(defender);
   this.switchPlayers();
 };
@@ -341,13 +343,12 @@ game.actionOnDeath = function actionOnDeath(defender) {
   }
 };
 
-game.displayDamageMessage = function displayDamageMessage(attacker, defender) {
+game.displayDamageMessage = function displayDamageMessage(attacker, defender, damage) {
   $('.feedback').show();
   const $messageWindow = $('#damage-message');
   const attackerName = $(attacker).attr('name');
   const defenderName = $(defender).attr('name');
-  const damageDone = $(attacker).attr('dmg');
-  $messageWindow.html(`${attackerName} attacked ${defenderName} and did ${damageDone} damage!`);
+  $messageWindow.html(`${attackerName} attacked ${defenderName} and did ${damage} damage!`);
   setTimeout(function() {
     $('.feedback').hide();
   }, 1200);
@@ -426,7 +427,7 @@ class MagicCharacter extends BaseCharacter {
 //   }
 // }
 
-const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 6, 4, 4, 'magic', 'playerOne');
+const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 6, 4, 7, 'magic', 'playerOne');
 const theMountain = new BaseCharacter('The Mountain', 15, 1, 6, 7, 'melee', 'playerTwo');
 
 //THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER
