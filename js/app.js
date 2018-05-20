@@ -220,14 +220,19 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
     direction.attr('def', $characterDef);
     direction.attr('dmg', $characterDmg);
     direction.attr('player', $characterPlayer);
-    characterObj.attr('class', 'battle-cell available');
-    characterObj.removeAttr('name');
-    characterObj.removeAttr('hp');
-    characterObj.removeAttr('mp');
-    characterObj.removeAttr('movestats');
-    characterObj.removeAttr('def');
-    characterObj.removeAttr('dmg');
-    characterObj.removeAttr('player');
+
+    //removes all attributes except id and then reapplies correct class after
+    $characterDetails.each(function() {
+      const attributes = $.map(this.attributes, function(item) {
+        return item.name;
+      });
+      const details = $(this);
+      $.each(attributes, function(i, item) {
+        if (item !== 'id') details.removeAttr(item);
+      });
+    });
+    $characterDetails.attr('class', 'battle-cell available');
+
   } if ( $directionId === $defender
       || $directionId === $defenderLeftId
       || $directionId === $defenderRightId
@@ -281,7 +286,7 @@ game.displayDamageMessage = function displayDamageMessage(attacker, defender) {
   $messageWindow.html(`${attackerName} attacked ${defenderName} and did ${damageDone} damage!`);
   setTimeout(function() {
     $('.feedback').hide();
-  }, 2000);
+  }, 1200);
 };
 
 //STATS DISPLAY WINDOW
