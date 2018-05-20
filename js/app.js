@@ -343,8 +343,10 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   const $hpDisplay = $(`#${battleType}-hp-stats`);
   $hpDisplay.html(`HP: ${$hpStat}/${initialHP}`);
 
-  const $mpDisplay = $(`#${battleType}-mp-stats`);
-  $mpDisplay.html(`MP: ${$mpStat}/${initialMP}`);
+  if ($mpStat !== undefined) {
+    const $mpDisplay = $(`#${battleType}-mp-stats`);
+    $mpDisplay.html(`MP: ${$mpStat}/${initialMP}`);
+  }
 
   const $dmgDisplay = $(`#${battleType}-dmg-stats`);
   $dmgDisplay.html(`DMG: ${$dmgStat}`);
@@ -353,13 +355,12 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   $defDisplay.html(`DEF: ${$defStat}`);
 };
 
-//CHARACTER OBJECT
+//CHARACTER CLASSES
 
-class Character {
-  constructor(name, hp, mp, moveStats, def, dmg, player) {
+class BaseCharacter {
+  constructor(name, hp, moveStats, def, dmg, player) {
     this.name = name;
     this.hp = hp;
-    this.mp = mp;
     this.moveStats = moveStats;
     this.def = def;
     this.dmg = dmg;
@@ -367,9 +368,23 @@ class Character {
   }
 }
 
-const jonSnow = new Character('Jon Snow', 10, 3, 6, 4, 4, 'playerOne');
-const theMountain = new Character('The Mountain', 15, 0, 1, 6, 7, 'playerTwo');
+class MeleeCharacter extends BaseCharacter {
+  constructor(name, hp, moveStats, def, dmg, player) {
+    super(name, hp, moveStats, def, dmg, player);
+  }
+}
 
+class MagicCharacter extends BaseCharacter {
+  constructor(name, hp, mp, moveStats, def, dmg, player) {
+    super(name, hp, moveStats, def, dmg, player);
+    this.mp = mp;
+  }
+}
+
+const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 6, 4, 4, 'playerOne');
+const theMountain = new MeleeCharacter('The Mountain', 15, 1, 6, 7, 'playerTwo');
+
+//THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER
 game.playerOneCharactersAlive = 1;
 game.playerTwoCharactersAlive = 1;
 //GAME INIT

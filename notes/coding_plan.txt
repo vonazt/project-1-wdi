@@ -97,11 +97,11 @@ OVERVIEW:
     -change Defender's HP stat and display in Stats window
     DONE - switch control from player 1 to player 2
 
-10. Allow Attacker to kill Defender
-  - Attacker Attacks Defender
-    - If Defender HP <= 0, Defender dies
-    - Display "Attacker killed Defender" in Stats window
-    - Remove Defender from Battlefield - hide or remove div
+10. DONE Allow Attacker to kill Defender
+  DONE - Attacker Attacks Defender
+  DONE   - If Defender HP <= 0, Defender dies
+  DONE   - Display "Attacker killed Defender" in Stats window
+  DONE  - Remove Defender from Battlefield - hide or remove div
 
 11. Create MP stats for character
   - Add to character constructor - MP and Magic DMG
