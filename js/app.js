@@ -35,9 +35,9 @@ game.drawBattlefield = function drawBattlefield() {
       //assigns every cell an id for selection in other functions, such as movement
       $battleSquare.attr('id', `${i}-${j}`);
       //temp click function for checking grid coords in debugging
-      // $battleSquare.on('click', function() {
-      //   console.log($battleSquare);
-      // });
+      $battleSquare.on('click', function() {
+        console.log($battleSquare);
+      });
       $battleSquare.appendTo('#battle-map');
     });
   });
@@ -191,6 +191,12 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
   const $characterPlayer = $characterDetails.attr('player');
 
   const $defender = $(defender).attr('id');
+  const $defenderLeftId = `${parseInt($defender[0]) - 1}-${parseInt($defender[2])}`;
+  const $defenderRightId = `${parseInt($defender[0]) + 1}-${parseInt($defender[2])}`;
+  const $defenderUpId = `${parseInt($defender[0])}-${parseInt($defender[2]) - 1}`;
+  const $defenderDownId = `${parseInt($defender[0])}-${parseInt($defender[2]) + 1}`;
+
+  const $directionId = $(direction).attr('id');
 
   this.turnAttackOff();
 
@@ -211,13 +217,13 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
     characterObj.removeAttr('def');
     characterObj.removeAttr('dmg');
     characterObj.removeAttr('player');
-  } if ($defender === direction.attr('id')) {
+  } if ($directionId === $defenderLeftId
+      || $directionId === $defenderRightId
+      || $directionId === $defenderDownId
+      || $directionId === $defenderUpId) {
     this.turnAttackOn();
   }
 };
-
-
-
 
 
 //BATTLE EVENTS
