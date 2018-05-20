@@ -26,9 +26,9 @@ game.drawBattlefield = function drawBattlefield() {
       //otherwise they default to class battle-cell
       const $battleSquare = $('<div />');
       if (cell === 'characterOne') {
-        $battleSquare.addClass('characterOne');
+        $battleSquare.addClass('characterOne').attr(jonSnow);
       } else if (cell === 'characterTwo') {
-        $battleSquare.addClass('characterTwo');
+        $battleSquare.addClass('characterTwo').attr(theMountain);
       } else {
         $battleSquare.addClass('battle-cell');
       }
@@ -107,13 +107,13 @@ game.showAvailableSquares = function showAvailableSquares(character) {
 
   const moveArray = [];
   let i = 0;
-  const availableLength = characterObj.moveStats.y;
+  const availableDistance = $(character).attr('moveStats');
   const xDistance = i + characterXStartpoint;
   const yDistance = i + characterYStartPoint;
 
   //this is a very convoluted way to get every necessary coordinate based on player stats
   //needs major refactoring - main problem is including the right space depending on move stats
-  for (i; i <= availableLength; i++) {
+  for (i; i <= availableDistance; i++) {
     moveArray.push((i + xDistance) + '-' + (i + yDistance));
     moveArray.push((i + xDistance) + '-' + (yDistance - i));
     moveArray.push((xDistance - i) + '-' + (yDistance - i));
@@ -217,12 +217,22 @@ game.turnAttackOff = function turnAttackOff() {
 
 
 //CHARACTER OBJECT
-const characterObj = {};
 
-characterObj.moveStats = {
-  x: 2,
-  y: 2
-};
+class Character {
+  constructor(name, hp, mp, moveStats, def, dmg, player) {
+    this.name = name;
+    this.hp = hp;
+    this.mp = mp;
+    this.moveStats = moveStats;
+    this.def = def;
+    this.dmg = dmg;
+    this.player = player;
+  }
+}
+
+const jonSnow = new Character('Jon Snow', 10, 3, 2, 3, 4, 'playerOne');
+const theMountain = new Character('The Mountain', 15, 0, 1, 6, 7, 'playerTwo');
+
 
 //GAME INIT
 
