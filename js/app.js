@@ -233,6 +233,12 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
       || $directionId === $defenderDownId
       || $directionId === $defenderUpId) {
     this.turnAttackOn();
+    $('.defender-stats-window').show();
+    if ($characterPlayer === 'playerOne') {
+      this.displayDefendStats('.characterTwo');
+    } else {
+      this.displayDefendStats('.characterOne');
+    }
   }
 };
 
@@ -264,16 +270,22 @@ game.attackDefender = function attackDefender(attacker, defender) {
   this.switchPlayers();
 };
 
+game.displayDamageMessage = function displayDameMessage() {
+
+};
+
 //STATS DISPLAY WINDOW
 game.setStatsWindow = function setStatsWindow() {
   if (this.playerOneTurn) {
-    this.displayStats('.characterOne');
+    this.displayAttackStats('.characterOne');
+    $('.defender-stats-window').hide();
   } else {
-    this.displayStats('.characterTwo');
+    this.displayAttackStats('.characterTwo');
+    $('.defender-stats-window').hide();
   }
 };
 
-game.displayStats = function displayStats(character) {
+game.displayAttackStats = function displayAttackStats(character) {
   const $character = $(character);
   const $nameStat = $character.attr('name');
   const $hpStat = $character.attr('hp');
@@ -284,21 +296,51 @@ game.displayStats = function displayStats(character) {
   const initialHP = $hpStat;
   const initialMP = $mpStat;
 
-  const $nameDisplay = $('#character-name');
+  const $nameDisplay = $('#attack-character-name');
   $nameDisplay.html(`Name: ${$nameStat}`);
 
-  const $hpDisplay = $('#hp-stats');
+  const $hpDisplay = $('#attack-hp-stats');
   $hpDisplay.html(`HP: ${$hpStat}/${initialHP}`);
 
-  const $mpDisplay = $('#mp-stats');
+  const $mpDisplay = $('#attack-mp-stats');
   $mpDisplay.html(`MP: ${$mpStat}/${initialMP}`);
 
-  const $dmgDisplay = $('#dmg-stats');
+  const $dmgDisplay = $('#attack-dmg-stats');
   $dmgDisplay.html(`DMG: ${$dmgStat}`);
 
-  const $defDisplay = $('#def-stats');
+  const $defDisplay = $('#attack-def-stats');
   $defDisplay.html(`DEF: ${$defStat}`);
 };
+
+game.displayDefendStats = function displayDefendStats(character) {
+  const $character = $(character);
+  const $nameStat = $character.attr('name');
+  const $hpStat = $character.attr('hp');
+  const $mpStat = $character.attr('mp');
+  const $dmgStat = $character.attr('dmg');
+  const $defStat = $character.attr('def');
+
+  const initialHP = $hpStat;
+  const initialMP = $mpStat;
+
+  const $nameDisplay = $('#defend-character-name');
+  $nameDisplay.html(`Name: ${$nameStat}`);
+
+  const $hpDisplay = $('#defend-hp-stats');
+  $hpDisplay.html(`HP: ${$hpStat}/${initialHP}`);
+
+  const $mpDisplay = $('#defend-mp-stats');
+  $mpDisplay.html(`MP: ${$mpStat}/${initialMP}`);
+
+  const $dmgDisplay = $('#defend-dmg-stats');
+  $dmgDisplay.html(`DMG: ${$dmgStat}`);
+
+  const $defDisplay = $('#defend-def-stats');
+  $defDisplay.html(`DEF: ${$defStat}`);
+};
+
+game.$defenderStatsWindow = $('.defender-stats-window');
+game.$defenderStatsWindow.hide();
 
 //CHARACTER OBJECT
 

@@ -62,14 +62,26 @@ body {
   #move-options #wait-option {
     color: white; }
 
-#attacker-stats-window {
+.attacker-stats-window {
   position: absolute;
   height: 100px;
   width: 200px;
-  bottom: 100px;
   right: 220px;
+  bottom: 150px;
   background-color: #0032AF; }
-  #attacker-stats-window .stats {
+  .attacker-stats-window .stats {
+    color: white;
+    font-size: 1em;
+    font-family: "Lucida Grande"; }
+
+.defender-stats-window {
+  position: absolute;
+  height: 100px;
+  width: 200px;
+  right: 220px;
+  bottom: 0;
+  background-color: #0032AF; }
+  .defender-stats-window .stats {
     color: white;
     font-size: 1em;
     font-family: "Lucida Grande"; }
