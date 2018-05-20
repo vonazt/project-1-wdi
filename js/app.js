@@ -180,12 +180,37 @@ game.makeMove = function makeMove(direction, character) {
 
 //swaps cell classes based on direction key pressed to give illusion of character movement
 //available class is related to move stats below
-game.moveCells = function moveCells(player, direction, characterOnBoard, defender) {
+game.moveCells = function moveCells(characterClass, direction, characterObj, defender) {
+  const $characterDetails = $(characterObj);
+  const $characterName = $characterDetails.attr('name');
+  const $characterHp = $characterDetails.attr('hp');
+  const $characterMp = $characterDetails.attr('mp');
+  const $characterMove = $characterDetails.attr('moveStats');
+  const $characterDef = $characterDetails.attr('def');
+  const $characterDmg = $characterDetails.attr('dmg');
+  const $characterPlayer = $characterDetails.attr('player');
+
   const $defender = $(defender).attr('id');
+
   this.turnAttackOff();
+
   if (direction.attr('class') === 'battle-cell available') {
-    direction.removeClass('battle-cell available').addClass(player);
-    characterOnBoard.removeClass(player).addClass('battle-cell available');
+    direction.attr('class', characterClass);
+    direction.attr('name', $characterName);
+    direction.attr('hp', $characterHp);
+    direction.attr('mp', $characterMp);
+    direction.attr('movestats', $characterMove);
+    direction.attr('def', $characterDef);
+    direction.attr('dmg', $characterDmg);
+    direction.attr('player', $characterPlayer);
+    characterObj.attr('class', 'battle-cell available');
+    characterObj.removeAttr('name');
+    characterObj.removeAttr('hp');
+    characterObj.removeAttr('mp');
+    characterObj.removeAttr('movestats');
+    characterObj.removeAttr('def');
+    characterObj.removeAttr('dmg');
+    characterObj.removeAttr('player');
   } if ($defender === direction.attr('id')) {
     this.turnAttackOn();
   }
@@ -233,6 +258,8 @@ class Character {
 const jonSnow = new Character('Jon Snow', 10, 3, 2, 3, 4, 'playerOne');
 const theMountain = new Character('The Mountain', 15, 0, 1, 6, 7, 'playerTwo');
 
+const characterObj = {};
+characterObj.moveStats = {x: 2, y: 2};
 
 //GAME INIT
 
