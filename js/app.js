@@ -201,6 +201,7 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
   const $characterMove = $characterDetails.attr('moveStats');
   const $characterDef = $characterDetails.attr('def');
   const $characterDmg = $characterDetails.attr('dmg');
+  const $characterType = $characterDetails.attr('type');
   const $characterPlayer = $characterDetails.attr('player');
 
   const $defender = $(defender).attr('id');
@@ -209,9 +210,15 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
   const $defenderUpId = `${parseInt($defender[0])}-${parseInt($defender[2]) - 1}`;
   const $defenderDownId = `${parseInt($defender[0])}-${parseInt($defender[2]) + 1}`;
 
+  const $magicLeftId = `${parseInt($defender[0]) - 2}-${parseInt($defender[2])}`;
+  const $magicRightId = `${parseInt($defender[0]) + 2}-${parseInt($defender[2])}`;
+  const $magicUpId = `${parseInt($defender[0])}-${parseInt($defender[2]) - 2}`;
+  const $magicDownId = `${parseInt($defender[0])}-${parseInt($defender[2]) + 2}`;
+
   const $directionId = $(direction).attr('id');
 
   this.turnAttackOff();
+  this.turnMagicOff();
 
   if (direction.attr('class') === 'battle-cell available') {
     direction.attr('class', characterClass);
@@ -221,6 +228,7 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
     direction.attr('movestats', $characterMove);
     direction.attr('def', $characterDef);
     direction.attr('dmg', $characterDmg);
+    direction.attr('type', $characterType);
     direction.attr('player', $characterPlayer);
 
     //removes all attributes except id and then reapplies correct class after
@@ -235,12 +243,25 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
     });
     $characterDetails.attr('class', 'battle-cell available');
 
-  } if ( $directionId === $defender
+  } if ($directionId === $magicLeftId
+      || $directionId === $magicRightId
+      || $directionId === $magicDownId
+      || $directionId === $magicUpId
+      && $characterType === 'magic') {
+    this.turnMagicOn();
+    $('.defender-stats-window').show();
+    if ($characterPlayer === 'playerOne') {
+      this.displayStats('.characterTwo', 'defence');
+    } else {
+      this.displayStats('.characterOne', 'defence');
+    }
+  } else if ($directionId === $defender
       || $directionId === $defenderLeftId
       || $directionId === $defenderRightId
       || $directionId === $defenderDownId
       || $directionId === $defenderUpId) {
     this.turnAttackOn();
+    if ($characterType === 'magic') this.turnMagicOn();
     $('.defender-stats-window').show();
     if ($characterPlayer === 'playerOne') {
       this.displayStats('.characterTwo', 'defence');
@@ -253,6 +274,7 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
 
 //BATTLE EVENTS
 game.attackOn = false;
+game.magicOn = false;
 
 game.turnAttackOn = function turnAttackOn() {
   this.attackOn = true;
@@ -269,6 +291,23 @@ game.turnAttackOff = function turnAttackOff() {
     'cursor': 'default'
   });
 };
+
+game.turnMagicOn = function turnMagicOn() {
+  this.magicOn = true;
+  this.$magicOption.css({
+    'color': 'white',
+    'cursor': 'pointer'
+  });
+};
+
+game.turnMagicOff = function turnMagicOff() {
+  this.magicOn = false;
+  this.$magicOption.css({
+    'color': 'gray',
+    'cursor': 'default'
+  });
+};
+
 
 game.attackDefender = function attackDefender(attacker, defender) {
   const attackPower = $(attacker).attr('dmg');
@@ -379,14 +418,14 @@ class MagicCharacter extends BaseCharacter {
     this.mp = mp;
   }
 }
-class MeleeCharacter extends BaseCharacter {
-  constructor(name, hp, moveStats, def, dmg, player) {
-    super(name, hp, moveStats, def, dmg, player);
-  }
-}
+// class MeleeCharacter extends BaseCharacter {
+//   constructor(name, hp, moveStats, def, dmg, type, player) {
+//     super(name, hp, moveStats, def, dmg, player);
+//   }
+// }
 
 const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 6, 4, 4, 'magic', 'playerOne');
-const theMountain = new MeleeCharacter('The Mountain', 15, 1, 6, 7, 'melee', 'playerTwo');
+const theMountain = new BaseCharacter('The Mountain', 15, 1, 6, 7, 'melee', 'playerTwo');
 
 //THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER
 game.playerOneCharactersAlive = 1;
@@ -400,6 +439,7 @@ $(() => {
   // game.$moveOptions.hide();
   game.checkMoveDistance();
   game.$attackOption = $('#attack-option');
+  game.$magicOption = $('#magic-option');
   game.pickOption();
   game.setStatsWindow('.characterOne');
 });
