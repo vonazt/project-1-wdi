@@ -47,36 +47,37 @@ game.drawBattlefield = function drawBattlefield() {
 //PLAYER OPTIONS AND TURN SWITCHING
 game.playerOneTurn = true; //flag for switching between player turns
 
-game.enterKeydown = false;
-
-game.displayOptions = function displayOptions() {
-
-  $(document).on('keydown', function(e) {
-    if (e.which === 13) {
-      game.enterKeydown = !game.enterKeydown;
-      console.log(game.enterKeydown);
-      if (game.enterKeydown) {
-        game.$moveOptions.show();
-        game.pickOption();
-      }
-    }
-  });
-};
+// game.enterKeydown = false;
+//
+// game.displayOptions = function displayOptions() {
+//   $(document).on('keydown', function(e) {
+//     if (e.which === 13) {
+//       if (!game.enterKeydown) {
+//         game.enterKeydown = true;
+//         console.log(game.enterKeydown);
+//         // game.$moveOptions.show();
+//         game.pickOption();
+//       }
+//     }
+//   });
+//
+// };
 
 game.pickOption = function pickOption() {
   const $option = $('.option');
   $option.on('click', function() {
     if (this.id === 'wait-option') game.switchPlayers();
-    else if (this.id === 'cancel') game.$moveOptions.hide();
+    // else if (this.id === 'cancel') game.$moveOptions.hide();
   });
 };
 
 game.switchPlayers = function switchPlayers() {
   game.playerOneTurn = !game.playerOneTurn;
-  game.$moveOptions.hide();
+  // game.$moveOptions.hide();
   game.clearSquares();
   game.checkMoveDistance();
-  game.enterKeydown = !game.enterKeydown;
+  // game.enterKeydown = false;
+  // console.log(game.enterKeydown);
 };
 
 
@@ -197,9 +198,9 @@ character.moveStats = {
 $(() => {
   game.drawBattlefield();
   game.moveCharacter();
-  game.displayOptions();
-  game.$moveOptions = $('#move-options'); //this needs to be internalised somewhere later
-  game.$moveOptions.hide();
+  game.pickOption();
+  // game.$moveOptions = $('#move-options'); //this needs to be internalised somewhere later
+  // game.$moveOptions.hide();
   game.checkMoveDistance();
 
 });
