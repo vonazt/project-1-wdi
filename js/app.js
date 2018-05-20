@@ -82,7 +82,11 @@ game.pickOption = function pickOption() {
   });
 };
 
+game.playerOneCharactersAlive = 1;
+
 game.switchPlayers = function switchPlayers() {
+  //checks if players are still on board for endgame
+
   game.playerOneTurn = !game.playerOneTurn;
   // game.$moveOptions.hide();
   game.clearSquares();
@@ -288,6 +292,12 @@ game.actionOnDeath = function actionOnDeath(defender) {
   const $deadCharacterName = $deadCharacter.attr('name');
   $('#damage-message').html(`${$deadCharacterName} was killed!`);
   $deadCharacter.attr('class', 'battle-cell available');
+
+  //BASIC ENDGAME BIT
+  this.playerOneCharactersAlive -= 1;
+  if (this.playerOneCharactersAlive === 0) {
+    $('#damage-message').html('GAME OVER!!');
+  }
 };
 
 game.displayDamageMessage = function displayDamageMessage(attacker, defender) {
