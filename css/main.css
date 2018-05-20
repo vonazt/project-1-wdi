@@ -67,7 +67,7 @@ body {
   height: 100px;
   width: 200px;
   right: 220px;
-  bottom: 150px;
+  top: 250px;
   background-color: #0032AF; }
   .attacker-stats-window .stats {
     color: white;
@@ -79,7 +79,7 @@ body {
   height: 100px;
   width: 200px;
   right: 220px;
-  bottom: 0;
+  top: 400px;
   background-color: #0032AF; }
   .defender-stats-window .stats {
     color: white;

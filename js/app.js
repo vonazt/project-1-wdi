@@ -181,6 +181,7 @@ game.characterMovement = function characterMovement(character, e) {
 };
 
 game.makeMove = function makeMove(direction, character) {
+  $('.defender-stats-window').hide();
   if (this.playerOneTurn) {
     this.moveCells('characterOne', direction, character, '.characterTwo');
   } else {
@@ -276,12 +277,11 @@ game.displayDamageMessage = function displayDameMessage() {
 
 //STATS DISPLAY WINDOW
 game.setStatsWindow = function setStatsWindow() {
+  $('.defender-stats-window').hide();
   if (this.playerOneTurn) {
     this.displayAttackStats('.characterOne');
-    $('.defender-stats-window').hide();
   } else {
     this.displayAttackStats('.characterTwo');
-    $('.defender-stats-window').hide();
   }
 };
 
