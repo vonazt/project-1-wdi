@@ -218,7 +218,8 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
     characterObj.removeAttr('def');
     characterObj.removeAttr('dmg');
     characterObj.removeAttr('player');
-  } if ($directionId === $defenderLeftId
+  } if ( $directionId === $defender
+      || $directionId === $defenderLeftId
       || $directionId === $defenderRightId
       || $directionId === $defenderDownId
       || $directionId === $defenderUpId) {
