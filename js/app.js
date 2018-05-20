@@ -69,6 +69,15 @@ game.pickOption = function pickOption() {
   const $option = $('.option');
   $option.on('click', function() {
     if (this.id === 'wait-option') game.switchPlayers();
+    if (this.id === 'attack-option') {
+      if (game.attackOn) {
+        if (game.playerOneTurn) {
+          game.attackDefender('.characterOne', '.characterTwo');
+        } else {
+          game.attackDefender('.characterTwo', '.characterOne');
+        }
+      }
+    }
     // else if (this.id === 'cancel') game.$moveOptions.hide();
   });
 };
@@ -247,6 +256,14 @@ game.turnAttackOff = function turnAttackOff() {
   });
 };
 
+game.attackDefender = function attackDefender(attacker, defender) {
+  const attackPower = $(attacker).attr('dmg');
+  let $defenderHP = $(defender).attr('hp');
+  $defenderHP = parseInt($defenderHP) - parseInt(attackPower);
+  $(defender).attr('hp', $defenderHP);
+  this.switchPlayers();
+};
+
 //STATS DISPLAY WINDOW
 game.setStatsWindow = function setStatsWindow() {
   if (this.playerOneTurn) {
@@ -297,7 +314,7 @@ class Character {
   }
 }
 
-const jonSnow = new Character('Jon Snow', 10, 3, 2, 3, 4, 'playerOne');
+const jonSnow = new Character('Jon Snow', 10, 3, 6, 4, 4, 'playerOne');
 const theMountain = new Character('The Mountain', 15, 0, 1, 6, 7, 'playerTwo');
 
 //GAME INIT

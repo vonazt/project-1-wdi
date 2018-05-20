@@ -82,17 +82,15 @@ OVERVIEW:
 
 7. DONE Create HP stats for characters
   - DONE Add HP property to character constructor
-  - Display character HP next to character
-  - Make stats appear with button press - this should eventually show all character stats on button press
-  - OR stats window should be permanently displayed outside of battlefield window dependent on character
-    - this will be much easier than pop-up
+  - DONE Display character HP next to character
+  - DONE stats window should be permanently displayed outside of battlefield window dependent on character
 
-8. Create DMG stats for character
-  - All DMG property to character constructor
-  - Display DMG in stats window
+8. DONE Create DMG stats for character
+  DONE All DMG property to character constructor
+  DONE Display DMG in stats window
 
 9. Allow Attacker to successfully Attack Defender (no Mini-Game)
-  - check if Attacker is within one grid space of Defender
+  - DONE check if Attacker is within one grid space of Defender
     -(display both Attacker and Defender stats in Stats window)
     -if true, then Attack option is available in Options display
     -when Attack is selected, Defender's HP decreases by Attack amount (character.hp -= dmg);
