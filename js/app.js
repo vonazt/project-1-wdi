@@ -63,6 +63,8 @@ game.playerOneTurn = true; //flag for switching between player turns
 //
 // };
 
+
+
 game.pickOption = function pickOption() {
   const $option = $('.option');
   $option.on('click', function() {
@@ -88,52 +90,11 @@ game.clearSquares = function clearSquares() {
 
 //CHARACTER MOVEMENT
 
-game.characterMovement = function characterMovement(player, e) {
-  const $characterOnBoard = $(player);
-
-  //gets the character position based on id
-  //gets id of surrounding squares using character's current cell id
-  const characterId = $characterOnBoard.attr('id');
-  const upSquare = $(`#${parseInt(characterId[0])-1}-${parseInt(characterId[2])}`);
-  const downSquare = $(`#${parseInt(characterId[0])+1}-${parseInt(characterId[2])}`);
-  const leftSquare = $(`#${parseInt(characterId[0])}-${parseInt(characterId[2]) -1}`);
-  const rightSquare = $(`#${parseInt(characterId[0])}-${parseInt(characterId[2]) + 1}`);
-
-  if (e.which === 38) {
-    game.makeMove(upSquare, $characterOnBoard);
-  } else if (e.which === 40) {
-    game.makeMove(downSquare, $characterOnBoard);
-  } else if (e.which === 39) {
-    game.makeMove(rightSquare, $characterOnBoard);
-  } else if (e.which === 37) {
-    game.makeMove(leftSquare, $characterOnBoard);
-  }
-};
-
-game.moveCharacter = function moveCharacter() {
-  $(document).on('keydown', function(e) {
-    if (game.playerOneTurn) {
-      game.characterMovement('.playerOne', e);
-    } else {
-      game.characterMovement('.playerTwo', e);
-    }
-  });
-};
-
-//swaps cell classes based on direction key pressed to give illusion of character movement
-//available class is related to move stats below
-game.moveCells = function moveCells(player, direction, characterOnBoard) {
-  if (direction.attr('class') === 'battle-cell available') {
-    direction.removeClass('battle-cell available').addClass(player);
-    characterOnBoard.removeClass(player).addClass('battle-cell available');
-  }
-};
-
-game.makeMove = function makeMove(direction, characterOnBoard) {
+game.checkMoveDistance = function checkMoveDistance() {
   if (this.playerOneTurn) {
-    this.moveCells('playerOne', direction, characterOnBoard);
+    this.showAvailableSquares('.playerOne');
   } else {
-    this.moveCells('playerTwo', direction, characterOnBoard);
+    this.showAvailableSquares('.playerTwo');
   }
 };
 
@@ -177,12 +138,75 @@ game.showAvailableSquares = function showAvailableSquares(player) {
   });
 };
 
-game.checkMoveDistance = function checkMoveDistance() {
-  if (this.playerOneTurn) {
-    this.showAvailableSquares('.playerOne');
-  } else {
-    this.showAvailableSquares('.playerTwo');
+game.moveCharacter = function moveCharacter() {
+  $(document).on('keydown', function(e) {
+    if (game.playerOneTurn) {
+      game.characterMovement('.playerOne', e);
+    } else {
+      game.characterMovement('.playerTwo', e);
+    }
+  });
+};
+
+
+game.characterMovement = function characterMovement(player, e) {
+  const $characterOnBoard = $(player);
+
+  //gets the character position based on id
+  //gets id of surrounding squares using character's current cell id
+  const characterId = $characterOnBoard.attr('id');
+  const upSquare = $(`#${parseInt(characterId[0])-1}-${parseInt(characterId[2])}`);
+  const downSquare = $(`#${parseInt(characterId[0])+1}-${parseInt(characterId[2])}`);
+  const leftSquare = $(`#${parseInt(characterId[0])}-${parseInt(characterId[2]) -1}`);
+  const rightSquare = $(`#${parseInt(characterId[0])}-${parseInt(characterId[2]) + 1}`);
+
+  if (e.which === 38) {
+    game.makeMove(upSquare, $characterOnBoard);
+  } else if (e.which === 40) {
+    game.makeMove(downSquare, $characterOnBoard);
+  } else if (e.which === 39) {
+    game.makeMove(rightSquare, $characterOnBoard);
+  } else if (e.which === 37) {
+    game.makeMove(leftSquare, $characterOnBoard);
   }
+};
+
+game.makeMove = function makeMove(direction, characterOnBoard) {
+  if (this.playerOneTurn) {
+    this.moveCells('playerOne', direction, characterOnBoard);
+  } else {
+    this.moveCells('playerTwo', direction, characterOnBoard);
+  }
+};
+
+//swaps cell classes based on direction key pressed to give illusion of character movement
+//available class is related to move stats below
+game.moveCells = function moveCells(player, direction, characterOnBoard) {
+  if (direction.attr('class') === 'battle-cell available') {
+    direction.removeClass('battle-cell available').addClass(player);
+    characterOnBoard.removeClass(player).addClass('battle-cell available');
+  } if ($('.playerTwo').attr('id') === direction.attr('id')) {
+    this.turnAttackOn();
+  }
+
+};
+
+
+
+
+
+//BATTLE EVENTS
+game.attackOn = false;
+
+game.turnAttackOn = function turnAttackOn() {
+  console.log('attack on');
+  this.attackOn = true;
+  console.log(this.attackOn);
+  console.log(this.$attackOption);
+  this.$attackOption.css({
+    'color': 'white',
+    'cursor': 'pointer'
+  });
 };
 
 //CHARACTER OBJECT
@@ -198,9 +222,9 @@ character.moveStats = {
 $(() => {
   game.drawBattlefield();
   game.moveCharacter();
-  game.pickOption();
   // game.$moveOptions = $('#move-options'); //this needs to be internalised somewhere later
   // game.$moveOptions.hide();
   game.checkMoveDistance();
-
+  game.$attackOption = $('#attack-option');
+  game.pickOption();
 });

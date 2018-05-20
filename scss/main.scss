@@ -59,6 +59,20 @@ body {
   // border:
   .option {
     display: block;
+    border: none;
+    background-color: #0032AF;
+    cursor: pointer;
+    font-size: 1em;
+  }
+  #attack-option {
+    color: gray;
+    cursor: default;
+  }
+  #magic-option {
+    color: gray;
+  }
+  #wait-option {
+    color: white;
   }
 }
 
