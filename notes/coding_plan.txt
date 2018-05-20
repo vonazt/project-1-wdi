@@ -91,7 +91,7 @@ OVERVIEW:
 
 9. Allow Attacker to successfully Attack Defender (no Mini-Game)
   - DONE check if Attacker is within one grid space of Defender
-    STILL TO DO -(display both Attacker and Defender stats in Stats window)
+    DONE -(display both Attacker and Defender stats in Stats window)
     DONE -if true, then Attack option is available in Options display
     DONE -when Attack is selected, Defender's HP decreases by Attack amount (character.hp -= dmg);
     -change Defender's HP stat and display in Stats window

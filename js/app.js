@@ -268,11 +268,20 @@ game.attackDefender = function attackDefender(attacker, defender) {
   let $defenderHP = $(defender).attr('hp');
   $defenderHP = parseInt($defenderHP) - parseInt(attackPower);
   $(defender).attr('hp', $defenderHP);
+  this.displayDamageMessage(attacker, defender);
   this.switchPlayers();
 };
 
-game.displayDamageMessage = function displayDameMessage() {
-
+game.displayDamageMessage = function displayDamageMessage(attacker, defender) {
+  $('.feedback').show();
+  const $messageWindow = $('#damage-message');
+  const attackerName = $(attacker).attr('name');
+  const defenderName = $(defender).attr('name');
+  const damageDone = $(attacker).attr('dmg');
+  $messageWindow.html(`${attackerName} attacked ${defenderName} and did ${damageDone} damage!`);
+  setTimeout(function() {
+    $('.feedback').hide();
+  }, 2000);
 };
 
 //STATS DISPLAY WINDOW
@@ -338,9 +347,6 @@ game.displayDefendStats = function displayDefendStats(character) {
   const $defDisplay = $('#defend-def-stats');
   $defDisplay.html(`DEF: ${$defStat}`);
 };
-
-game.$defenderStatsWindow = $('.defender-stats-window');
-game.$defenderStatsWindow.hide();
 
 //CHARACTER OBJECT
 

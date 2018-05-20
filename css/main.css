@@ -81,10 +81,20 @@ body {
   right: 220px;
   top: 400px;
   background-color: #0032AF; }
-  .defender-stats-window .stats {
-    color: white;
-    font-size: 1em;
-    font-family: "Lucida Grande"; }
+
+.stats {
+  color: white;
+  font-size: 1em;
+  font-family: "Lucida Grande"; }
+
+.feedback {
+  display: none;
+  position: absolute;
+  height: 100px;
+  width: 300px;
+  left: 570px;
+  top: 300px;
+  background-color: #0032AF; }
 
 @keyframes blinker {
   50% {
