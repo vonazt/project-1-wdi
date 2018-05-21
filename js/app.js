@@ -1,3 +1,5 @@
+const game = {};
+
 //CHARACTER CONSTRUCTOR CLASSES
 
 class BaseCharacter {
@@ -38,9 +40,13 @@ const cerseiLannister = new MagicCharacter('Cersei Lannister', 15, 10, 4, 3, 'Ic
 const theHound = new MeleeCharacter('The Hound', 12, 2, 8, 6, 'melee', 'playerTwo');
 const aryaStark = new MagicCharacter('Arya Stark', 10, 9, 3, 3, 'Fire', 6, 6, 5, 'magic', 'playerTwo');
 const jaimeLannister = new MeleeCharacter('Jaime Lannister', 14, 4, 7, 6, 'melee', 'playerTwo');
+
+//THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER
+game.playerOneCharactersAlive = 5;
+game.playerTwoCharactersAlive = 5;
 //GAME SETUP
 
-const game = {};
+
 
 //BATTLEFIELD GRID BUILDING AND CHARCTER PLACING
 game.createGameGrid = function createGameGrid() {
@@ -104,8 +110,7 @@ game.drawBattlefield = function drawBattlefield() {
         $battleSquare.addClass('characterNine').attr(aryaStark);
       } else if (cell === 'characterTen') {
         $battleSquare.addClass('characterTen').attr(jaimeLannister);
-      }
-      else {
+      } else {
         $battleSquare.addClass('battle-cell');
       }
       //assigns every cell an id for selection in other functions, such as movement
@@ -617,9 +622,7 @@ game.displayStats = function displayStats(character, attackOrDefend) {
 
 
 
-//THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER
-game.playerOneCharactersAlive = 1;
-game.playerTwoCharactersAlive = 1;
+
 //GAME INIT
 
 $(() => {
