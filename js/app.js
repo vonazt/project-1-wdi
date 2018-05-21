@@ -50,10 +50,9 @@ game.createGameGrid = function createGameGrid() {
 
   //starting positions for playerOne and playerTwo characters
   gameGrid[4][1] = 'characterOne';
-  console.log(gameGrid[4][1]);
-  // gameGrid[5][1] = 'characterTwo';
-  gameGrid[4][8] = 'characterTwo';
-  // gameGrid[5][8] = 'characterFour';
+  gameGrid[5][1] = 'characterTwo';
+  gameGrid[4][8] = 'characterThree';
+  gameGrid[5][8] = 'characterFour';
   return gameGrid;
 };
 
@@ -76,19 +75,19 @@ game.drawBattlefield = function drawBattlefield() {
         $battleSquare.addClass('characterOne').attr(jonSnow);
       } else if (cell === 'characterTwo') {
         $battleSquare.addClass('characterTwo').attr(theMountain);
-      // } else if (cell === 'characterThree') {
-      //   $battleSquare.addClass('characterThree').attr(tyrionLannister);
-      // } else if (cell === 'characterFour') {
-      //   $battleSquare.addClass('characterFour').attr(theMountain);
+      } else if (cell === 'characterThree') {
+        $battleSquare.addClass('characterThree').attr(tyrionLannister);
+      } else if (cell === 'characterFour') {
+        $battleSquare.addClass('characterFour').attr(theMountain);
       } else {
         $battleSquare.addClass('battle-cell');
       }
       //assigns every cell an id for selection in other functions, such as movement
       $battleSquare.attr('id', `${i}-${j}`);
       //temp click function for checking grid coords in debugging
-      $battleSquare.on('click', function() {
-        console.log($battleSquare);
-      });
+      // $battleSquare.on('click', function() {
+      //   console.log($battleSquare);
+      // });
       $battleSquare.appendTo('#battle-map');
     });
   });
@@ -123,17 +122,17 @@ game.pickOption = function pickOption() {
     if (this.id === 'attack-option') {
       if (game.attackOn) {
         if (game.playerOneTurn) {
-          game.attackDefender('.characterOne', '.characterTwo');
+          game.attackDefender(game.playerOneCharacter, game.playerTwoCharacter);
         } else {
-          game.attackDefender('.characterTwo', '.characterOne');
+          game.attackDefender(game.playerTwoCharacter, game.playerOneCharacter);
         }
       }
     } if (this.id === 'magic-option') {
       if (game.magicOn) {
         if (game.playerOneTurn) {
-          game.castMagic('.characterOne', '.characterTwo');
+          game.castMagic(game.playerOneCharacter, game.playerTwoCharacter);
         } else {
-          game.castMagic('.characterOne', '.characterTwo');
+          game.castMagic(game.playerOneCharacter, game.playerTwoCharacter);
         }
       }
     }
@@ -155,19 +154,31 @@ game.switchPlayers = function switchPlayers() {
   // console.log(game.enterKeydown);
 };
 
-// game.characterOneTurn = true;
-// game.chararcterTwoTurn = false;
-//
-// $(document).on('keydown', function(e) {
-//   if (e.which === 9) {
-//     game.switchCharacter();
-//   }
-// });
+game.playerOneCharacter = '.characterOne';
+game.playerOneCharacterClass = 'characterOne';
+game.playerTwoCharacter = '.characterThree';
+game.playerTwoCharacterClass = 'characterThree';
 
-// game.switchCharacter = function switchCharacter() {
-//   const $currentCharacter = $('.characterOne');
-//   console.log($currentCharacter);
-// };
+game.switchCharacter = function switchCharacter() {
+  $(document).on('keydown', function(e) {
+    if (e.which === 9) {
+      console.log('tab clicked');
+      if (game.playerOneCharacter === '.characterOne') {
+        game.playerOneCharacter === '.characterTwo';
+        game.playerOneCharacterClass = 'characterTwo';
+      } else if (game.playerOneCharacter === '.characterTwo') {
+        game.playerOneCharacter === '.characterOne';
+        game.playerOneCharacterClass = 'characterOne';
+      }
+      game.turnAttackOff();
+      game.turnMagicOff();
+      // game.$moveOptions.hide();
+      game.clearSquares();
+      game.setStatsWindow();
+      game.checkMoveDistance();
+    }
+  });
+};
 
 
 game.clearSquares = function clearSquares() {
@@ -179,9 +190,9 @@ game.clearSquares = function clearSquares() {
 
 game.checkMoveDistance = function checkMoveDistance() {
   if (this.playerOneTurn) {
-    this.showAvailableSquares('.characterOne');
+    this.showAvailableSquares(this.playerOneCharacter);
   } else {
-    this.showAvailableSquares('.characterTwo');
+    this.showAvailableSquares(this.playerTwoCharacter);
   }
 };
 
@@ -228,9 +239,9 @@ game.showAvailableSquares = function showAvailableSquares(character) {
 game.moveCharacter = function moveCharacter() {
   $(document).on('keydown', function(e) {
     if (game.playerOneTurn) {
-      game.characterMovement('.characterOne', e);
+      game.characterMovement(game.playerOneCharacter, e);
     } else {
-      game.characterMovement('.characterTwo', e);
+      game.characterMovement(game.playerTwoCharacter, e);
     }
   });
 };
@@ -260,9 +271,9 @@ game.characterMovement = function characterMovement(character, e) {
 game.makeMove = function makeMove(direction, character) {
   $('.defender-stats-window').hide();
   if (this.playerOneTurn) {
-    this.moveCells('characterOne', direction, character, '.characterTwo');
+    this.moveCells(this.playerOneCharacterClass, direction, character, this.playerTwoCharacter);
   } else {
-    this.moveCells('characterTwo', direction, character, '.characterOne');
+    this.moveCells(this.playerTwoCharacterClass, direction, character, this.playerOneCharacter);
   }
 };
 
@@ -326,29 +337,29 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
 
     //use object to make comparisons a la rps
   } if ($directionId === $magicLeftId
-      || $directionId === $magicRightId
-      || $directionId === $magicDownId
-      || $directionId === $magicUpId
-      && $characterType === 'magic') {
+    || $directionId === $magicRightId
+    || $directionId === $magicDownId
+    || $directionId === $magicUpId
+    && $characterType === 'magic') {
     this.turnMagicOn($characterMp);
     $('.defender-stats-window').show();
-    if ($characterPlayer === 'playerOne') {
-      this.displayStats('.characterTwo', 'defence');
+    if ($characterPlayer === this.playerOneCharacterClass) {
+      this.displayStats(this.playerTwoCharacter, 'defence');
     } else {
-      this.displayStats('.characterOne', 'defence');
+      this.displayStats(this.playerOneCharacter, 'defence');
     }
   } else if ($directionId === $defender
-      || $directionId === $defenderLeftId
-      || $directionId === $defenderRightId
-      || $directionId === $defenderDownId
-      || $directionId === $defenderUpId) {
+    || $directionId === $defenderLeftId
+    || $directionId === $defenderRightId
+    || $directionId === $defenderDownId
+    || $directionId === $defenderUpId) {
     this.turnAttackOn();
     if ($characterType === 'magic') this.turnMagicOn($characterMp);
     $('.defender-stats-window').show();
-    if ($characterPlayer === 'playerOne') {
-      this.displayStats('.characterTwo', 'defence');
+    if ($characterPlayer === this.playerOneCharacterClass) {
+      this.displayStats(this.playerTwoCharacter, 'defence');
     } else {
-      this.displayStats('.characterOne', 'defence');
+      this.displayStats(this.playerOneCharacter, 'defence');
     }
   }
 };
@@ -485,7 +496,7 @@ game.displayMagicDamageMessage = function displayMagicDamageMessage(attacker, de
 //STATS DISPLAY WINDOW
 game.setStatsWindow = function setStatsWindow() {
   $('.defender-stats-window').hide();
-  this.playerOneTurn ? this.displayStats('.characterOne', 'attack') :this.displayStats('.characterTwo', 'attack');
+  this.playerOneTurn ? this.displayStats(this.playerOneCharacter, 'attack') : this.displayStats(this.playerTwoCharacter, 'attack');
 };
 
 game.displayStats = function displayStats(character, attackOrDefend) {
@@ -550,8 +561,9 @@ $(() => {
   // game.$moveOptions = $('#move-options'); //this needs to be internalised somewhere later
   // game.$moveOptions.hide();
   game.checkMoveDistance();
+  game.switchCharacter();
   game.$attackOption = $('#attack-option');
   game.$magicOption = $('#magic-option');
   game.pickOption();
-  game.setStatsWindow('.characterOne');
+  game.setStatsWindow(game.playerOneCharacter);
 });
