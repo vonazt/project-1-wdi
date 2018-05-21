@@ -75,11 +75,20 @@ game.createGameGrid = function createGameGrid() {
   return gameGrid;
 };
 
-//
-// const cellTypes = {
-//   characterOne: jonSnow,
-//   characterTwo: theMountain
-// };
+
+game.cellTypes = {
+  characterOne: jonSnow,
+  characterTwo: daenerysTargaryen,
+  characterThree: tyrionLannister,
+  characterFour: theMountain,
+  characterFive: nedStark,
+  characterSix: jorahMormont,
+  characterSeven: cerseiLannister,
+  characterEight: theHound,
+  characterNine: aryaStark,
+  characterTen: jaimeLannister
+};
+
 
 //USE OBJECTS TO MAKE THIS PROCESS SIMPLER
 
@@ -87,29 +96,12 @@ game.drawBattlefield = function drawBattlefield() {
   const battlegrid = this.createGameGrid();
   $.each(battlegrid, (i, row) => {
     $.each(row, (j, cell) => {
-      //fills grid with divs - if the grid is occupied by a player character (in game.createGrid) they're given a corresponding class
-      //otherwise they default to class battle-cell
+      //fills grid with divs
+      //if cell is a string, then it assigns the cell a character based on its character number and object by referencing the cellTypes object above
+      //defaults to .battle-cell class otherwise
       const $battleSquare = $('<div />');
-      if (cell === 'characterOne') {
-        $battleSquare.addClass('characterOne').attr(jonSnow);
-      } else if (cell === 'characterTwo') {
-        $battleSquare.addClass('characterTwo').attr(daenerysTargaryen);
-      } else if (cell === 'characterThree') {
-        $battleSquare.addClass('characterThree').attr(tyrionLannister);
-      } else if (cell === 'characterFour') {
-        $battleSquare.addClass('characterFour').attr(theMountain);
-      } else if (cell === 'characterFive') {
-        $battleSquare.addClass('characterFive').attr(nedStark);
-      } else if (cell === 'characterSix') {
-        $battleSquare.addClass('characterSix').attr(jorahMormont);
-      } else if (cell === 'characterSeven') {
-        $battleSquare.addClass('characterSeven').attr(cerseiLannister);
-      } else if (cell === 'characterEight') {
-        $battleSquare.addClass('characterEight').attr(theHound);
-      } else if (cell === 'characterNine') {
-        $battleSquare.addClass('characterNine').attr(aryaStark);
-      } else if (cell === 'characterTen') {
-        $battleSquare.addClass('characterTen').attr(jaimeLannister);
+      if (typeof cell === 'string') {
+        $battleSquare.addClass(cell).attr(game.cellTypes[cell]);
       } else {
         $battleSquare.addClass('battle-cell');
       }
@@ -201,18 +193,28 @@ game.switchCharacter = function switchCharacter() {
           if (game.playerOneCharacter === '.characterOne') {
             game.playerOneCharacter = '.characterTwo';
             game.playerOneCharacterClass = 'characterTwo';
+            console.log(game.playerOneCharacter);
+            console.log(game.playerOneCharacterClass);
           } else if (game.playerOneCharacter === '.characterTwo') {
             game.playerOneCharacter = '.characterThree';
             game.playerOneCharacterClass = 'characterThree';
+            console.log(game.playerOneCharacter);
+            console.log(game.playerOneCharacterClass);
           } else if (game.playerOneCharacter === '.characterThree') {
             game.playerOneCharacter = '.characterFour';
             game.playerOneCharacterClass = 'characterFour';
+            console.log(game.playerOneCharacter);
+            console.log(game.playerOneCharacterClass);
           } else if (game.playerOneCharacter === '.characterFour') {
             game.playerOneCharacter = '.characterFive';
             game.playerOneCharacterClass = 'characterFive';
+            console.log(game.playerOneCharacter);
+            console.log(game.playerOneCharacterClass);
           } else if (game.playerOneCharacter === '.characterFive') {
             game.playerOneCharacter = '.characterOne';
             game.playerOneCharacterClass = 'characterOne';
+            console.log(game.playerOneCharacter);
+            console.log(game.playerOneCharacterClass);
           }
           game.turnAttackOff();
           game.turnMagicOff();
