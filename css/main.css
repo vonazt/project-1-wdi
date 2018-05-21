@@ -1,13 +1,40 @@
 body {
   display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  background-color: black; }
+
+header {
+  width: 1000px;
+  display: flex;
   justify-content: center; }
+
+#game-title {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-top: 100px; }
+
+h1 {
+  font-family: 'Cinzel Decorative', cursive;
+  color: white;
+  font-size: 8em;
+  text-align: center;
+  margin-bottom: 100px; }
+
+nav {
+  display: flex;
+  justify-content: center;
+  width: 1000px; }
 
 #battle-map {
   height: 500px;
   width: 500px;
   margin-top: 100px;
   top: 20px;
-  left: 100px; }
+  left: 100px;
+  border: 5px solid silver; }
   #battle-map .battle-cell {
     height: 50px;
     width: 50px;
@@ -23,7 +50,10 @@ body {
     border: 1px solid black;
     float: left;
     margin: 0;
-    background-color: yellow; }
+    background-image: url(../images/jon_snow.png);
+    background-size: contain;
+    background-color: white;
+    background-repeat: no-repeat; }
   #battle-map .characterTwo {
     height: 50px;
     width: 50px;
@@ -31,7 +61,10 @@ body {
     border: 1px solid black;
     float: left;
     margin: 0;
-    background-color: red; }
+    background-image: url(../images/daenerys.png);
+    background-size: contain;
+    background-color: white;
+    background-repeat: no-repeat; }
   #battle-map .characterThree {
     height: 50px;
     width: 50px;
@@ -39,7 +72,10 @@ body {
     border: 1px solid black;
     float: left;
     margin: 0;
-    background-color: blue; }
+    background-image: url(../images/tyrion.png);
+    background-size: contain;
+    background-color: white;
+    background-repeat: no-repeat; }
   #battle-map .characterFour {
     height: 50px;
     width: 50px;
@@ -47,7 +83,10 @@ body {
     border: 1px solid black;
     float: left;
     margin: 0;
-    background-color: purple; }
+    background-image: url(../images/the_mountain.png);
+    background-size: contain;
+    background-color: white;
+    background-repeat: no-repeat; }
   #battle-map .characterFive {
     height: 50px;
     width: 50px;
@@ -55,7 +94,10 @@ body {
     border: 1px solid black;
     float: left;
     margin: 0;
-    background-color: chartreuse; }
+    background-image: url(../images/ned_stark.png);
+    background-size: contain;
+    background-color: white;
+    background-repeat: no-repeat; }
   #battle-map .characterSix {
     height: 50px;
     width: 50px;
@@ -63,7 +105,10 @@ body {
     border: 1px solid black;
     float: left;
     margin: 0;
-    background-color: saddleBrown; }
+    background-image: url(../images/jorah_mormont.png);
+    background-size: contain;
+    background-color: white;
+    background-repeat: no-repeat; }
   #battle-map .characterSeven {
     height: 50px;
     width: 50px;
@@ -71,7 +116,10 @@ body {
     border: 1px solid black;
     float: left;
     margin: 0;
-    background-color: peachPuff; }
+    background-image: url(../images/cersei_lannister.png);
+    background-size: contain;
+    background-color: white;
+    background-repeat: no-repeat; }
   #battle-map .characterEight {
     height: 50px;
     width: 50px;
@@ -79,7 +127,10 @@ body {
     border: 1px solid black;
     float: left;
     margin: 0;
-    background-color: orange; }
+    background-image: url(../images/the_hound.png);
+    background-size: contain;
+    background-color: white;
+    background-repeat: no-repeat; }
   #battle-map .characterNine {
     height: 50px;
     width: 50px;
@@ -87,7 +138,10 @@ body {
     border: 1px solid black;
     float: left;
     margin: 0;
-    background-color: black; }
+    background-image: url(../images/arya_stark.png);
+    background-size: contain;
+    background-color: white;
+    background-repeat: no-repeat; }
   #battle-map .characterTen {
     height: 50px;
     width: 50px;
@@ -95,7 +149,10 @@ body {
     border: 1px solid black;
     float: left;
     margin: 0;
-    background-color: fireBrick; }
+    background-image: url(../images/jaime_lannister.png);
+    background-size: contain;
+    background-color: white;
+    background-repeat: no-repeat; }
   #battle-map .clickable-character {
     cursor: pointer; }
   #battle-map .available {
@@ -105,7 +162,7 @@ body {
     border: 1px solid black;
     float: left;
     margin: 0;
-    background-color: white; }
+    background-color: chartreuse; }
 
 #move-options {
   position: absolute;
@@ -113,7 +170,9 @@ body {
   width: 200px;
   top: 100px;
   right: 220px;
-  background-color: #0032AF; }
+  background-color: #0032AF;
+  border: 3px solid silver;
+  border-radius: 5px; }
   #move-options .option {
     display: block;
     border: none;
@@ -134,7 +193,9 @@ body {
   width: 200px;
   right: 220px;
   top: 250px;
-  background-color: #0032AF; }
+  background-color: #0032AF;
+  border: 3px solid silver;
+  border-radius: 5px; }
   .attacker-stats-window .stats {
     color: white;
     font-size: 1em;
@@ -146,7 +207,9 @@ body {
   width: 200px;
   right: 220px;
   top: 400px;
-  background-color: #0032AF; }
+  background-color: #0032AF;
+  border: 3px solid silver;
+  border-radius: 5px; }
 
 .stats {
   color: white;
@@ -160,7 +223,9 @@ body {
   width: 300px;
   left: 570px;
   top: 300px;
-  background-color: #0032AF; }
+  background-color: #0032AF;
+  border: 3px solid silver;
+  border-radius: 5px; }
 
 @keyframes blinker {
   50% {

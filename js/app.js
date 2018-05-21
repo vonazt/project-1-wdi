@@ -621,6 +621,20 @@ game.displayStats = function displayStats(character, attackOrDefend) {
 };
 
 //GAME INIT
+game.hideOpeningCredits = function hideOpeningCredits() {
+  const $gameTitle = $('.game-title');
+  const $startButton = $('#start-button');
+  $startButton.on('click', function() {
+    $('.gameboard').show();
+    $('.options-display').show();
+    $('.attacker-stats-window').show();
+    $('nav').hide();
+    $gameTitle.css({
+      'font-size': '3em',
+      'margin-bottom': '10px'
+    });
+  });
+};
 
 $(() => {
   game.drawBattlefield();
@@ -633,4 +647,10 @@ $(() => {
   game.$magicOption = $('#magic-option');
   game.pickOption();
   game.setStatsWindow(game.playerOneCharacter);
+  $('.gameboard').hide();
+  $('.options-display').hide();
+  $('.attacker-stats-window').hide();
+  $('.defender-stats-window').hide();
+  game.hideOpeningCredits();
+
 });
