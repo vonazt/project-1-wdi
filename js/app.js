@@ -14,7 +14,9 @@ game.createGameGrid = function createGameGrid() {
 
   //starting positions for playerOne and playerTwo characters
   gameGrid[4][1] = 'characterOne';
-  gameGrid[4][8] = 'characterTwo';
+  gameGrid[5][1] = 'characterTwo';
+  gameGrid[4][8] = 'characterThree';
+  gameGrid[5][8] = 'characterFour';
   return gameGrid;
 };
 
@@ -26,9 +28,13 @@ game.drawBattlefield = function drawBattlefield() {
       //otherwise they default to class battle-cell
       const $battleSquare = $('<div />');
       if (cell === 'characterOne') {
-        $battleSquare.addClass('characterOne').attr(daenerysTargaryen);
+        $battleSquare.addClass('characterOne').attr(jonSnow);
       } else if (cell === 'characterTwo') {
-        $battleSquare.addClass('characterTwo').attr(theMountain);
+        $battleSquare.addClass('characterTwo').attr(daenerysTargaryen);
+      } else if (cell === 'characterThree') {
+        $battleSquare.addClass('characterThree').attr(tyrionLannister);
+      } else if (cell === 'characterFour') {
+        $battleSquare.addClass('characterFour').attr(theMountain);
       } else {
         $battleSquare.addClass('battle-cell');
       }
@@ -102,6 +108,20 @@ game.switchPlayers = function switchPlayers() {
   this.checkMoveDistance();
   // game.enterKeydown = false;
   // console.log(game.enterKeydown);
+};
+
+game.characterOneTurn = true;
+game.chararcterTwoTurn = false;
+
+$(document).on('keydown', function(e) {
+  if (e.which === 9) {
+    game.switchCharacter();
+  }
+});
+
+game.switchCharacter = function switchCharacter() {
+  const $currentCharacter = $('.characterOne');
+  console.log($currentCharacter);
 };
 
 
@@ -503,16 +523,16 @@ class MagicCharacter extends BaseCharacter {
     this.magicType = magicType;
   }
 }
-// class MeleeCharacter extends BaseCharacter {
-//   constructor(name, hp, moveStats, def, dmg, type, player) {
-//     super(name, hp, moveStats, def, dmg, player);
-//   }
-// }
+class MeleeCharacter extends BaseCharacter {
+  constructor(name, hp, moveStats, def, dmg, type, player) {
+    super(name, hp, moveStats, def, dmg, player);
+  }
+}
 
 const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 3, 3, 'Ice', 3, 5, 7, 'magic', 'playerOne');
-const theMountain = new BaseCharacter('The Mountain', 15, 1, 4, 7, 'melee', 'playerTwo');
+const theMountain = new MeleeCharacter('The Mountain', 15, 1, 4, 7, 'melee', 'playerTwo');
 const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 12, 15, 4, 'Fire', 6, 5, 2, 'magic', 'playerOne');
-
+const tyrionLannister = new MagicCharacter ('Tyrion Lannister', 10, 10, 4, 4, 'Heal', 4, 3, 3, 'magic', 'playerTwo');
 //THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER
 game.playerOneCharactersAlive = 1;
 game.playerTwoCharactersAlive = 1;
