@@ -48,6 +48,54 @@ body {
     float: left;
     margin: 0;
     background-color: purple; }
+  #battle-map .characterFive {
+    height: 50px;
+    width: 50px;
+    box-sizing: border-box;
+    border: 1px solid black;
+    float: left;
+    margin: 0;
+    background-color: chartreuse; }
+  #battle-map .characterSix {
+    height: 50px;
+    width: 50px;
+    box-sizing: border-box;
+    border: 1px solid black;
+    float: left;
+    margin: 0;
+    background-color: saddleBrown; }
+  #battle-map .characterSeven {
+    height: 50px;
+    width: 50px;
+    box-sizing: border-box;
+    border: 1px solid black;
+    float: left;
+    margin: 0;
+    background-color: peachPuff; }
+  #battle-map .characterEight {
+    height: 50px;
+    width: 50px;
+    box-sizing: border-box;
+    border: 1px solid black;
+    float: left;
+    margin: 0;
+    background-color: orange; }
+  #battle-map .characterNine {
+    height: 50px;
+    width: 50px;
+    box-sizing: border-box;
+    border: 1px solid black;
+    float: left;
+    margin: 0;
+    background-color: black; }
+  #battle-map .characterTen {
+    height: 50px;
+    width: 50px;
+    box-sizing: border-box;
+    border: 1px solid black;
+    float: left;
+    margin: 0;
+    background-color: fireBrick; }
   #battle-map .clickable-character {
     cursor: pointer; }
   #battle-map .available {

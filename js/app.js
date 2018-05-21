@@ -28,10 +28,16 @@ class MeleeCharacter extends BaseCharacter {
 }
 
 const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 3, 3, 'Ice', 3, 5, 7, 'magic', 'playerOne');
-const theMountain = new MeleeCharacter('The Mountain', 15, 1, 4, 7, 'melee', 'playerTwo');
+const theMountain = new MeleeCharacter('The Mountain', 15, 1, 4, 7, 'melee', 'playerOne');
 const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 12, 15, 4, 'Fire', 6, 5, 2, 'magic', 'playerOne');
-const tyrionLannister = new MagicCharacter ('Tyrion Lannister', 10, 10, 4, 4, 'Heal', 4, 3, 3, 'magic', 'playerTwo');
+const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 4, 4, 'Ice', 4, 3, 3, 'magic', 'playerOne');
+const nedStark = new MeleeCharacter('Ned Stark', 15, 3, 8, 6, 'melee', 'playerOne');
 
+const jorahMormont = new MeleeCharacter('Jorah Mormont', 10, 2, 13, 6, 'melee', 'playerTwo');
+const cerseiLannister = new MagicCharacter('Cersei Lannister', 15, 10, 4, 3, 'Ice', 6, 3, 1, 'magic', 'playerTwo');
+const theHound = new MeleeCharacter('The Hound', 12, 2, 8, 6, 'melee', 'playerTwo');
+const aryaStark = new MagicCharacter('Arya Stark', 10, 9, 3, 3, 'Fire', 6, 6, 5, 'magic', 'playerTwo');
+const jaimeLannister = new MeleeCharacter('Jaime Lannister', 14, 4, 7, 6, 'melee', 'playerTwo');
 //GAME SETUP
 
 const game = {};
@@ -51,8 +57,15 @@ game.createGameGrid = function createGameGrid() {
   //starting positions for playerOne and playerTwo characters
   gameGrid[4][1] = 'characterOne';
   gameGrid[5][1] = 'characterTwo';
-  gameGrid[4][8] = 'characterThree';
-  gameGrid[5][8] = 'characterFour';
+  gameGrid[6][1] = 'characterThree';
+  gameGrid[7][1] = 'characterFour';
+  gameGrid[8][1] = 'characterFive';
+  gameGrid[4][8] = 'characterSix';
+  gameGrid[5][8] = 'characterSeven';
+  gameGrid[6][8] = 'characterEight';
+  gameGrid[7][8] = 'characterNine';
+  gameGrid[8][8] = 'characterTen';
+
   return gameGrid;
 };
 
@@ -74,12 +87,25 @@ game.drawBattlefield = function drawBattlefield() {
       if (cell === 'characterOne') {
         $battleSquare.addClass('characterOne').attr(jonSnow);
       } else if (cell === 'characterTwo') {
-        $battleSquare.addClass('characterTwo').attr(theMountain);
+        $battleSquare.addClass('characterTwo').attr(daenerysTargaryen);
       } else if (cell === 'characterThree') {
         $battleSquare.addClass('characterThree').attr(tyrionLannister);
       } else if (cell === 'characterFour') {
         $battleSquare.addClass('characterFour').attr(theMountain);
-      } else {
+      } else if (cell === 'characterFive') {
+        $battleSquare.addClass('characterFive').attr(nedStark);
+      } else if (cell === 'characterSix') {
+        $battleSquare.addClass('characterSix').attr(jorahMormont);
+      } else if (cell === 'characterSeven') {
+        $battleSquare.addClass('characterSeven').attr(cerseiLannister);
+      } else if (cell === 'characterEight') {
+        $battleSquare.addClass('characterEight').attr(theHound);
+      } else if (cell === 'characterNine') {
+        $battleSquare.addClass('characterNine').attr(aryaStark);
+      } else if (cell === 'characterTen') {
+        $battleSquare.addClass('characterTen').attr(jaimeLannister);
+      }
+      else {
         $battleSquare.addClass('battle-cell');
       }
       //assigns every cell an id for selection in other functions, such as movement
@@ -158,28 +184,63 @@ game.canSwitchCharacters = true;
 
 game.playerOneCharacter = '.characterOne';
 game.playerOneCharacterClass = 'characterOne';
-game.playerTwoCharacter = '.characterThree';
-game.playerTwoCharacterClass = 'characterThree';
+game.playerTwoCharacter = '.characterSix';
+game.playerTwoCharacterClass = 'characterSix';
 
 game.switchCharacter = function switchCharacter() {
   $(document).on('keydown', function(e) {
     if (e.which === 9) {
       e.preventDefault();
-      if (game.canSwitchCharacters) {
-        if (game.playerOneCharacter === '.characterOne') {
-          game.playerOneCharacter = '.characterTwo';
-          console.log(game.playerOneCharacter);
-          game.playerOneCharacterClass = 'characterTwo';
-        } else if (game.playerOneCharacter === '.characterTwo') {
-          game.playerOneCharacter = '.characterOne';
-          game.playerOneCharacterClass = 'characterOne';
+      if (game.playerOneTurn) {
+        if (game.canSwitchCharacters) {
+          if (game.playerOneCharacter === '.characterOne') {
+            game.playerOneCharacter = '.characterTwo';
+            game.playerOneCharacterClass = 'characterTwo';
+          } else if (game.playerOneCharacter === '.characterTwo') {
+            game.playerOneCharacter = '.characterThree';
+            game.playerOneCharacterClass = 'characterThree';
+          } else if (game.playerOneCharacter === '.characterThree') {
+            game.playerOneCharacter = '.characterFour';
+            game.playerOneCharacterClass = 'characterFour';
+          } else if (game.playerOneCharacter === '.characterFour') {
+            game.playerOneCharacter = '.characterFive';
+            game.playerOneCharacterClass = 'characterFive';
+          } else if (game.playerOneCharacter === '.characterFive') {
+            game.playerOneCharacter = '.characterOne';
+            game.playerOneCharacterClass = 'characterOne';
+          }
+          game.turnAttackOff();
+          game.turnMagicOff();
+          // game.$moveOptions.hide();
+          game.clearSquares();
+          game.setStatsWindow();
+          game.checkMoveDistance();
         }
-        game.turnAttackOff();
-        game.turnMagicOff();
-        // game.$moveOptions.hide();
-        game.clearSquares();
-        game.setStatsWindow();
-        game.checkMoveDistance();
+      } else if (!game.playerOneTurn) {
+        if (game.canSwitchCharacters) {
+          if (game.playerTwoCharacter === '.characterSix') {
+            game.playerTwoCharacter = '.characterSeven';
+            game.playerTwoCharacterClass = 'characterSeven';
+          } else if (game.playerTwoCharacter === '.characterSeven') {
+            game.playerTwoCharacter = '.characterEight';
+            game.playerTwoCharacterClass = 'characterEight';
+          } else if (game.playerTwoCharacter === '.characterEight') {
+            game.playerTwoCharacter = '.characterNine';
+            game.playerTwoCharacterClass = 'characterNine';
+          } else if (game.playerTwoCharacter === '.characterNine') {
+            game.playerTwoCharacter = '.characterTen';
+            game.playerTwoCharacterClass = 'characterTen';
+          } else if (game.playerTwoCharacter === '.characterTen') {
+            game.playerTwoCharacter = '.characterSix';
+            game.playerTwoCharacterClass = 'characterSix';
+          }
+          game.turnAttackOff();
+          game.turnMagicOff();
+          // game.$moveOptions.hide();
+          game.clearSquares();
+          game.setStatsWindow();
+          game.checkMoveDistance();
+        }
       }
     }
   });
