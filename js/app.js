@@ -1,3 +1,39 @@
+//CHARACTER CONSTRUCTOR CLASSES
+
+class BaseCharacter {
+  constructor(name, hp, moveStats, def, dmg, type, player) {
+    this.name = name;
+    this.hp = hp;
+    this.moveStats = moveStats;
+    this.def = def;
+    this.dmg = dmg;
+    this.type = type;
+    this.player = player;
+  }
+}
+
+class MagicCharacter extends BaseCharacter {
+  constructor(name, hp, mp, mgdmg, spellCost, magicType, moveStats, def, dmg, type, player) {
+    super(name, hp, moveStats, def, dmg, type, player);
+    this.mp = mp;
+    this.mgdmg = mgdmg;
+    this.spellCost = spellCost;
+    this.magicType = magicType;
+  }
+}
+class MeleeCharacter extends BaseCharacter {
+  constructor(name, hp, moveStats, def, dmg, type, player) {
+    super(name, hp, moveStats, def, dmg, player);
+  }
+}
+
+const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 3, 3, 'Ice', 3, 5, 7, 'magic', 'playerOne');
+const theMountain = new MeleeCharacter('The Mountain', 15, 1, 4, 7, 'melee', 'playerTwo');
+const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 12, 15, 4, 'Fire', 6, 5, 2, 'magic', 'playerOne');
+const tyrionLannister = new MagicCharacter ('Tyrion Lannister', 10, 10, 4, 4, 'Heal', 4, 3, 3, 'magic', 'playerTwo');
+
+//GAME SETUP
+
 const game = {};
 
 //BATTLEFIELD GRID BUILDING AND CHARCTER PLACING
@@ -14,11 +50,20 @@ game.createGameGrid = function createGameGrid() {
 
   //starting positions for playerOne and playerTwo characters
   gameGrid[4][1] = 'characterOne';
-  gameGrid[5][1] = 'characterTwo';
-  gameGrid[4][8] = 'characterThree';
-  gameGrid[5][8] = 'characterFour';
+  console.log(gameGrid[4][1]);
+  // gameGrid[5][1] = 'characterTwo';
+  gameGrid[4][8] = 'characterTwo';
+  // gameGrid[5][8] = 'characterFour';
   return gameGrid;
 };
+
+//
+// const cellTypes = {
+//   characterOne: jonSnow,
+//   characterTwo: theMountain
+// };
+
+//USE OBJECTS TO MAKE THIS PROCESS SIMPLER
 
 game.drawBattlefield = function drawBattlefield() {
   const battlegrid = this.createGameGrid();
@@ -30,11 +75,11 @@ game.drawBattlefield = function drawBattlefield() {
       if (cell === 'characterOne') {
         $battleSquare.addClass('characterOne').attr(jonSnow);
       } else if (cell === 'characterTwo') {
-        $battleSquare.addClass('characterTwo').attr(daenerysTargaryen);
-      } else if (cell === 'characterThree') {
-        $battleSquare.addClass('characterThree').attr(tyrionLannister);
-      } else if (cell === 'characterFour') {
-        $battleSquare.addClass('characterFour').attr(theMountain);
+        $battleSquare.addClass('characterTwo').attr(theMountain);
+      // } else if (cell === 'characterThree') {
+      //   $battleSquare.addClass('characterThree').attr(tyrionLannister);
+      // } else if (cell === 'characterFour') {
+      //   $battleSquare.addClass('characterFour').attr(theMountain);
       } else {
         $battleSquare.addClass('battle-cell');
       }
@@ -110,19 +155,19 @@ game.switchPlayers = function switchPlayers() {
   // console.log(game.enterKeydown);
 };
 
-game.characterOneTurn = true;
-game.chararcterTwoTurn = false;
+// game.characterOneTurn = true;
+// game.chararcterTwoTurn = false;
+//
+// $(document).on('keydown', function(e) {
+//   if (e.which === 9) {
+//     game.switchCharacter();
+//   }
+// });
 
-$(document).on('keydown', function(e) {
-  if (e.which === 9) {
-    game.switchCharacter();
-  }
-});
-
-game.switchCharacter = function switchCharacter() {
-  const $currentCharacter = $('.characterOne');
-  console.log($currentCharacter);
-};
+// game.switchCharacter = function switchCharacter() {
+//   const $currentCharacter = $('.characterOne');
+//   console.log($currentCharacter);
+// };
 
 
 game.clearSquares = function clearSquares() {
@@ -279,6 +324,7 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
     });
     $characterDetails.attr('class', 'battle-cell available');
 
+    //use object to make comparisons a la rps
   } if ($directionId === $magicLeftId
       || $directionId === $magicRightId
       || $directionId === $magicDownId
@@ -409,7 +455,7 @@ game.actionOnDeath = function actionOnDeath(defender) {
     $('#damage-message').html('GAME OVER!!');
   }
 };
-
+//condense into one function
 game.displayAttackDamageMessage = function displayDamageMessage(attacker, defender, damage) {
   $('.feedback').show();
   const $messageWindow = $('#damage-message');
@@ -439,11 +485,7 @@ game.displayMagicDamageMessage = function displayMagicDamageMessage(attacker, de
 //STATS DISPLAY WINDOW
 game.setStatsWindow = function setStatsWindow() {
   $('.defender-stats-window').hide();
-  if (this.playerOneTurn) {
-    this.displayStats('.characterOne', 'attack');
-  } else {
-    this.displayStats('.characterTwo', 'attack');
-  }
+  this.playerOneTurn ? this.displayStats('.characterOne', 'attack') :this.displayStats('.characterTwo', 'attack');
 };
 
 game.displayStats = function displayStats(character, attackOrDefend) {
@@ -472,23 +514,18 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   $hpDisplay.html(`HP: ${$hpStat}/${initialHP}`);
 
   const $mpDisplay = $(`#${battleType}-mp-stats`);
-  if ($typeStat === 'melee' || $mpStat === undefined) {
+  const $mgDmgDisplay = $(`#${battleType}-mg-dmg-stats`);
+  const $mgTypeDisplay = $(`#${battleType}-mg-type-stats`);
+
+  if ($typeStat === 'melee' || !$mpStat) {
     $mpDisplay.hide();
+    $mgDmgDisplay.hide();
+    $mgTypeDisplay.hide();
   } else {
     $mpDisplay.show();
     $mpDisplay.html(`MP: ${$mpStat}/${initialMP}`);
-  }
-  const $mgDmgDisplay = $(`#${battleType}-mg-dmg-stats`);
-  if ($typeStat === 'melee' || $mpStat === undefined) {
-    $mgDmgDisplay.hide();
-  } else {
     $mgDmgDisplay.show();
     $mgDmgDisplay.html(`MAGIC DMG: ${$mgDmgStat}`);
-  }
-  const $mgTypeDisplay = $(`#${battleType}-mg-type-stats`);
-  if ($typeStat === 'melee' || $mpStat === undefined) {
-    $mgTypeDisplay.hide();
-  } else {
     $mgTypeDisplay.show();
     $mgDmgDisplay.html(`Type: ${$mgTypeStat} | Cost: ${$mgCostStat}MP`);
   }
@@ -500,39 +537,8 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   $defDisplay.html(`DEF: ${$defStat}`);
 };
 
-//CHARACTER CLASSES
 
-class BaseCharacter {
-  constructor(name, hp, moveStats, def, dmg, type, player) {
-    this.name = name;
-    this.hp = hp;
-    this.moveStats = moveStats;
-    this.def = def;
-    this.dmg = dmg;
-    this.type = type;
-    this.player = player;
-  }
-}
 
-class MagicCharacter extends BaseCharacter {
-  constructor(name, hp, mp, mgdmg, spellCost, magicType, moveStats, def, dmg, type, player) {
-    super(name, hp, moveStats, def, dmg, type, player);
-    this.mp = mp;
-    this.mgdmg = mgdmg;
-    this.spellCost = spellCost;
-    this.magicType = magicType;
-  }
-}
-class MeleeCharacter extends BaseCharacter {
-  constructor(name, hp, moveStats, def, dmg, type, player) {
-    super(name, hp, moveStats, def, dmg, player);
-  }
-}
-
-const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 3, 3, 'Ice', 3, 5, 7, 'magic', 'playerOne');
-const theMountain = new MeleeCharacter('The Mountain', 15, 1, 4, 7, 'melee', 'playerTwo');
-const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 12, 15, 4, 'Fire', 6, 5, 2, 'magic', 'playerOne');
-const tyrionLannister = new MagicCharacter ('Tyrion Lannister', 10, 10, 4, 4, 'Heal', 4, 3, 3, 'magic', 'playerTwo');
 //THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER
 game.playerOneCharactersAlive = 1;
 game.playerTwoCharactersAlive = 1;
