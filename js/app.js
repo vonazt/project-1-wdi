@@ -142,7 +142,7 @@ game.pickOption = function pickOption() {
 
 game.switchPlayers = function switchPlayers() {
   //checks if players are still on board for endgame
-
+  this.canSwitchCharacters = true;
   this.playerOneTurn = !game.playerOneTurn;
   this.turnAttackOff();
   this.turnMagicOff();
@@ -154,6 +154,8 @@ game.switchPlayers = function switchPlayers() {
   // console.log(game.enterKeydown);
 };
 
+game.canSwitchCharacters = true;
+
 game.playerOneCharacter = '.characterOne';
 game.playerOneCharacterClass = 'characterOne';
 game.playerTwoCharacter = '.characterThree';
@@ -162,21 +164,23 @@ game.playerTwoCharacterClass = 'characterThree';
 game.switchCharacter = function switchCharacter() {
   $(document).on('keydown', function(e) {
     if (e.which === 9) {
-      console.log('tab clicked');
-      if (game.playerOneCharacter === '.characterOne') {
-        game.playerOneCharacter = '.characterTwo';
-        console.log(game.playerOneCharacter);
-        game.playerOneCharacterClass = 'characterTwo';
-      } else if (game.playerOneCharacter === '.characterTwo') {
-        game.playerOneCharacter = '.characterOne';
-        game.playerOneCharacterClass = 'characterOne';
+      e.preventDefault();
+      if (game.canSwitchCharacters) {
+        if (game.playerOneCharacter === '.characterOne') {
+          game.playerOneCharacter = '.characterTwo';
+          console.log(game.playerOneCharacter);
+          game.playerOneCharacterClass = 'characterTwo';
+        } else if (game.playerOneCharacter === '.characterTwo') {
+          game.playerOneCharacter = '.characterOne';
+          game.playerOneCharacterClass = 'characterOne';
+        }
+        game.turnAttackOff();
+        game.turnMagicOff();
+        // game.$moveOptions.hide();
+        game.clearSquares();
+        game.setStatsWindow();
+        game.checkMoveDistance();
       }
-      game.turnAttackOff();
-      game.turnMagicOff();
-      // game.$moveOptions.hide();
-      game.clearSquares();
-      game.setStatsWindow();
-      game.checkMoveDistance();
     }
   });
 };
@@ -270,6 +274,7 @@ game.characterMovement = function characterMovement(character, e) {
 };
 
 game.makeMove = function makeMove(direction, character) {
+  game.canSwitchCharacters = false;
   $('.defender-stats-window').hide();
   if (this.playerOneTurn) {
     this.moveCells(this.playerOneCharacterClass, direction, character, this.playerTwoCharacter);
