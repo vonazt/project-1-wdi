@@ -77,6 +77,14 @@ game.pickOption = function pickOption() {
           game.attackDefender('.characterTwo', '.characterOne');
         }
       }
+    } if (this.id === 'magic-option') {
+      if (game.magicOn) {
+        if (game.playerOneTurn) {
+          game.castMagic('.characterOne', '.characterTwo');
+        } else {
+          game.castMagic('.characterOne', '.characterTwo');
+        }
+      }
     }
     // else if (this.id === 'cancel') game.$moveOptions.hide();
   });
@@ -200,6 +208,9 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
   const $characterName = $characterDetails.attr('name');
   const $characterHp = $characterDetails.attr('hp');
   const $characterMp = $characterDetails.attr('mp');
+  const $characterMgdmg = $characterDetails.attr('mgdmg');
+  const $characterSpellCost = $characterDetails.attr('spellCost');
+  const $characterMagicType = $characterDetails.attr('magicType');
   const $characterMove = $characterDetails.attr('moveStats');
   const $characterDef = $characterDetails.attr('def');
   const $characterDmg = $characterDetails.attr('dmg');
@@ -227,6 +238,9 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
     direction.attr('name', $characterName);
     direction.attr('hp', $characterHp);
     direction.attr('mp', $characterMp);
+    direction.attr('mgdmg', $characterMgdmg);
+    direction.attr('spellCost', $characterSpellCost);
+    direction.attr('magicType', $characterMagicType);
     direction.attr('movestats', $characterMove);
     direction.attr('def', $characterDef);
     direction.attr('dmg', $characterDmg);
@@ -310,11 +324,32 @@ game.turnMagicOff = function turnMagicOff() {
   });
 };
 
+game.castMagic = function castMagic(attacker, defender) {
+  const spellPower = $(attacker).attr('mgdmg');
+  const spellCost = $(attacker).attr('spellCost');
+  let mp = $(attacker).attr('mp');
+  console.log(mp);
+
+  let magicResistance = $(defender).attr('def');
+  const actualDamage = Math.ceil((parseInt(spellPower) / (spellPower*0.6)));
+  const defDamage = Math.ceil(parseInt(magicResistance) / (parseInt(spellPower*0.9)));
+
+  let $defenderHP = $(defender).attr('hp');
+  $defenderHP = parseInt($defenderHP) - actualDamage;
+  $(defender).attr('hp', $defenderHP);
+
+  magicResistance = parseInt(magicResistance) - defDamage;
+  $(defender).attr('def', magicResistance);
+
+  mp = parseInt(mp) - parseInt(spellCost);
+  console.log(mp);
+  $(attacker).attr('mp', spellCost);
+};
 
 game.attackDefender = function attackDefender(attacker, defender) {
   const attackPower = $(attacker).attr('dmg');
   const defPower = $(defender).attr('def');
-  const actualDamage = Math.floor((parseInt(attackPower) * (defPower/.7)));
+  const actualDamage = Math.ceil((parseInt(attackPower) / (defPower*0.4)));
   let $defenderHP = $(defender).attr('hp');
   $defenderHP = parseInt($defenderHP) - actualDamage;
   $(defender).attr('hp', $defenderHP);
@@ -369,6 +404,8 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   const $nameStat = $character.attr('name');
   const $hpStat = $character.attr('hp');
   const $mpStat = $character.attr('mp');
+  // const $mgdmg = $character.attr('mgdmg');
+  // const $magicType = $character.attr('magicType');
   const $dmgStat = $character.attr('dmg');
   const $defStat = $character.attr('def');
   const $typeStat = $character.attr('type');
@@ -416,9 +453,12 @@ class BaseCharacter {
 }
 
 class MagicCharacter extends BaseCharacter {
-  constructor(name, hp, mp, moveStats, def, dmg, type, player) {
+  constructor(name, hp, mp, mgdmg, spellCost, magicType, moveStats, def, dmg, type, player) {
     super(name, hp, moveStats, def, dmg, type, player);
     this.mp = mp;
+    this.mgdmg = mgdmg;
+    this.spellCost = spellCost;
+    this.magicType = magicType;
   }
 }
 // class MeleeCharacter extends BaseCharacter {
@@ -427,8 +467,8 @@ class MagicCharacter extends BaseCharacter {
 //   }
 // }
 
-const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 6, 4, 7, 'magic', 'playerOne');
-const theMountain = new BaseCharacter('The Mountain', 15, 1, 6, 7, 'melee', 'playerTwo');
+const jonSnow = new MagicCharacter('Jon Snow', 10, 8, 3, 3, 'ice', 6, 5, 7, 'magic', 'playerOne');
+const theMountain = new BaseCharacter('The Mountain', 15, 1, 4, 7, 'melee', 'playerTwo');
 
 //THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER
 game.playerOneCharactersAlive = 1;

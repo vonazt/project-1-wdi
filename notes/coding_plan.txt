@@ -124,8 +124,8 @@ OVERVIEW:
   - Select TeamMate
   - Increase TeamMate HP by Magic DMG amount
 
-16. Create DEF stats for character constructor
-  - During Attack, DMG -= DEF
+16. DONE Create DEF stats for character constructor
+  -DONE During Attack, DMG -= DEF
 
 17. Populate Battlefield with multiple characters
  - Assign starting positions
