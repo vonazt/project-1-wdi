@@ -44,9 +44,9 @@ const jaimeLannister = new MeleeCharacter('Jaime Lannister', 14, 4, 7, 6, 'melee
 //THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER
 game.playerOneCharactersAlive = 5;
 game.playerTwoCharactersAlive = 5;
+
+
 //GAME SETUP
-
-
 
 //BATTLEFIELD GRID BUILDING AND CHARCTER PLACING
 game.createGameGrid = function createGameGrid() {
@@ -75,7 +75,7 @@ game.createGameGrid = function createGameGrid() {
   return gameGrid;
 };
 
-
+//assigns class attributes in drawBattlefield()
 game.cellTypes = {
   characterOne: jonSnow,
   characterTwo: daenerysTargaryen,
@@ -88,9 +88,6 @@ game.cellTypes = {
   characterNine: aryaStark,
   characterTen: jaimeLannister
 };
-
-
-//USE OBJECTS TO MAKE THIS PROCESS SIMPLER
 
 game.drawBattlefield = function drawBattlefield() {
   const battlegrid = this.createGameGrid();
@@ -120,69 +117,93 @@ game.drawBattlefield = function drawBattlefield() {
 //PLAYER OPTIONS AND TURN SWITCHING
 game.playerOneTurn = true; //flag for switching between player turns
 
-// game.enterKeydown = false;
-//
-// game.displayOptions = function displayOptions() {
-//   $(document).on('keydown', function(e) {
-//     if (e.which === 13) {
-//       if (!game.enterKeydown) {
-//         game.enterKeydown = true;
-//         console.log(game.enterKeydown);
-//         // game.$moveOptions.show();
-//         game.pickOption();
-//       }
-//     }
-//   });
-//
-// };
-
-
 
 game.pickOption = function pickOption() {
-  const $option = $('.option');
+  const $option = $('.option'); //selects option window
   $option.on('click', function() {
     if (this.id === 'wait-option') game.switchPlayers();
     if (this.id === 'attack-option') {
-      if (game.attackOn) {
+      if (game.attackOn) { //flag for checking that attacker is in range of defender
         if (game.playerOneTurn) {
+          //NEED REFERENCE FUNCTION TO MAKE SURE THAT game.playerOneCharacter AND game.playerTwoCharacter are correct
           game.attackDefender(game.playerOneCharacter, game.playerTwoCharacter);
         } else {
           game.attackDefender(game.playerTwoCharacter, game.playerOneCharacter);
         }
       }
     } if (this.id === 'magic-option') {
-      if (game.magicOn) {
+      if (game.magicOn) { //flag for checking that attacker is in magic range
         if (game.playerOneTurn) {
+          //NEED REFERENCE FUNCTION TO MAKE SURE THAT game.playerOneCharacter AND game.playerTwoCharacter are correct
           game.castMagic(game.playerOneCharacter, game.playerTwoCharacter);
         } else {
           game.castMagic(game.playerOneCharacter, game.playerTwoCharacter);
         }
       }
     }
-    // else if (this.id === 'cancel') game.$moveOptions.hide();
   });
 };
 
 game.switchPlayers = function switchPlayers() {
   //checks if players are still on board for endgame
-  this.canSwitchCharacters = true;
-  this.playerOneTurn = !game.playerOneTurn;
-  this.turnAttackOff();
+  this.canSwitchCharacters = true; //resets canSwitchCharacters flag so that players can tab through character select
+  this.playerOneTurn = !game.playerOneTurn; //flag that switches player control
+  this.turnAttackOff(); //resets Attack in options window to gray
   this.turnMagicOff();
-  // game.$moveOptions.hide();
   this.clearSquares();
   this.setStatsWindow();
   this.checkMoveDistance();
-  // game.enterKeydown = false;
-  // console.log(game.enterKeydown);
 };
 
-game.canSwitchCharacters = true;
+game.canSwitchCharacters = true; //turned to false after player has moved character to prevent leapfrogging across gameboard
+//player cannot switch characters after moving
 
+//these are the default starting points to be used when referencing which character to switch to
 game.playerOneCharacter = '.characterOne';
-game.playerOneCharacterClass = 'characterOne';
+game.playerOneCharacterObjectReference = 'characterOne'; //this is called in checkCharacterToSwapTo to get right value in playerCharacterSwitches object
+
 game.playerTwoCharacter = '.characterSix';
-game.playerTwoCharacterClass = 'characterSix';
+game.playerTwoCharacterObjectReference = 'characterSix';
+
+game.playerCharacterSwitches = {
+  characterOne: '.characterTwo',
+  characterTwo: '.characterThree',
+  characterThree: '.characterFour',
+  characterFour: '.characterFive',
+  characterFive: '.characterOne',
+
+  characterSix: '.characterSeven',
+  characterSeven: '.characterEight',
+  characterEight: '.characterNine',
+  characterNine: '.characterTen',
+  characterTen: '.characterSix'
+};
+
+game.playerCharacterObjectReference = {
+  characterOne: 'characterTwo',
+  characterTwo: 'characterThree',
+  characterThree: 'characterFour',
+  characterFour: 'characterFive',
+  characterFive: 'characterOne',
+
+  characterSix: 'characterSix',
+  characterSeven: 'characterSeven',
+  characterEight: 'characterEight',
+  characterNine: 'characterNine',
+  characterTen: 'characterSix'
+};
+
+game.checkPlayerOneCharacterToSwapTo = function checkPlayerOneCharacterToSwapTo(currentCharacter) {
+    this.playerOneCharacter = this.playerCharacterSwitches[currentCharacter];
+    this.playerOneCharacterObjectReference = this.playerCharacterObjectReference[currentCharacter];
+};
+
+//these two need to be separate because of different starting points
+
+game.checkPlayerTwoCharacterToSwapTo = function checkPlayerTwoCharacterToSwapTo(currentCharacter) {
+  this.playerOneCharacter = this.playerCharacterSwitches[currentCharacter];
+  this.playerOneCharacterObjectReference = this.playerCharacterObjectReference[currentCharacter];
+};
 
 game.switchCharacter = function switchCharacter() {
   $(document).on('keydown', function(e) {
@@ -190,65 +211,18 @@ game.switchCharacter = function switchCharacter() {
       e.preventDefault();
       if (game.playerOneTurn) {
         if (game.canSwitchCharacters) {
-          if (game.playerOneCharacter === '.characterOne') {
-            game.playerOneCharacter = '.characterTwo';
-            game.playerOneCharacterClass = 'characterTwo';
-            console.log(game.playerOneCharacter);
-            console.log(game.playerOneCharacterClass);
-          } else if (game.playerOneCharacter === '.characterTwo') {
-            game.playerOneCharacter = '.characterThree';
-            game.playerOneCharacterClass = 'characterThree';
-            console.log(game.playerOneCharacter);
-            console.log(game.playerOneCharacterClass);
-          } else if (game.playerOneCharacter === '.characterThree') {
-            game.playerOneCharacter = '.characterFour';
-            game.playerOneCharacterClass = 'characterFour';
-            console.log(game.playerOneCharacter);
-            console.log(game.playerOneCharacterClass);
-          } else if (game.playerOneCharacter === '.characterFour') {
-            game.playerOneCharacter = '.characterFive';
-            game.playerOneCharacterClass = 'characterFive';
-            console.log(game.playerOneCharacter);
-            console.log(game.playerOneCharacterClass);
-          } else if (game.playerOneCharacter === '.characterFive') {
-            game.playerOneCharacter = '.characterOne';
-            game.playerOneCharacterClass = 'characterOne';
-            console.log(game.playerOneCharacter);
-            console.log(game.playerOneCharacterClass);
-          }
-          game.turnAttackOff();
-          game.turnMagicOff();
-          // game.$moveOptions.hide();
-          game.clearSquares();
-          game.setStatsWindow();
-          game.checkMoveDistance();
+          game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
         }
       } else if (!game.playerOneTurn) {
         if (game.canSwitchCharacters) {
-          if (game.playerTwoCharacter === '.characterSix') {
-            game.playerTwoCharacter = '.characterSeven';
-            game.playerTwoCharacterClass = 'characterSeven';
-          } else if (game.playerTwoCharacter === '.characterSeven') {
-            game.playerTwoCharacter = '.characterEight';
-            game.playerTwoCharacterClass = 'characterEight';
-          } else if (game.playerTwoCharacter === '.characterEight') {
-            game.playerTwoCharacter = '.characterNine';
-            game.playerTwoCharacterClass = 'characterNine';
-          } else if (game.playerTwoCharacter === '.characterNine') {
-            game.playerTwoCharacter = '.characterTen';
-            game.playerTwoCharacterClass = 'characterTen';
-          } else if (game.playerTwoCharacter === '.characterTen') {
-            game.playerTwoCharacter = '.characterSix';
-            game.playerTwoCharacterClass = 'characterSix';
-          }
-          game.turnAttackOff();
-          game.turnMagicOff();
-          // game.$moveOptions.hide();
-          game.clearSquares();
-          game.setStatsWindow();
-          game.checkMoveDistance();
+          game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
         }
       }
+      game.turnAttackOff();
+      game.turnMagicOff();
+      game.clearSquares();
+      game.setStatsWindow();
+      game.checkMoveDistance();
     }
   });
 };
