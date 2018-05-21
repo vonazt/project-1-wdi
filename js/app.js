@@ -165,6 +165,7 @@ game.playerOneCharacterObjectReference = 'characterOne'; //this is called in che
 game.playerTwoCharacter = '.characterSix';
 game.playerTwoCharacterObjectReference = 'characterSix';
 
+//all the characters and which class they should switch to when tabbing through
 game.playerCharacterSwitches = {
   characterOne: '.characterTwo',
   characterTwo: '.characterThree',
@@ -186,48 +187,49 @@ game.playerCharacterObjectReference = {
   characterFour: 'characterFive',
   characterFive: 'characterOne',
 
-  characterSix: 'characterSix',
-  characterSeven: 'characterSeven',
-  characterEight: 'characterEight',
-  characterNine: 'characterNine',
+  characterSix: 'characterSeven',
+  characterSeven: 'characterEight',
+  characterEight: 'characterNine',
+  characterNine: 'characterTen',
   characterTen: 'characterSix'
 };
 
+//references the objects above and changes the current selected character accordingly
 game.checkPlayerOneCharacterToSwapTo = function checkPlayerOneCharacterToSwapTo(currentCharacter) {
-    this.playerOneCharacter = this.playerCharacterSwitches[currentCharacter];
-    this.playerOneCharacterObjectReference = this.playerCharacterObjectReference[currentCharacter];
-};
-
-//these two need to be separate because of different starting points
-
-game.checkPlayerTwoCharacterToSwapTo = function checkPlayerTwoCharacterToSwapTo(currentCharacter) {
   this.playerOneCharacter = this.playerCharacterSwitches[currentCharacter];
   this.playerOneCharacterObjectReference = this.playerCharacterObjectReference[currentCharacter];
+};
+
+//these two need to be separate because of need for different starting points at beginning of player turn
+
+game.checkPlayerTwoCharacterToSwapTo = function checkPlayerTwoCharacterToSwapTo(currentCharacter) {
+  this.playerTwoCharacter = this.playerCharacterSwitches[currentCharacter];
+  this.playerTwoCharacterObjectReference = this.playerCharacterObjectReference[currentCharacter];
 };
 
 game.switchCharacter = function switchCharacter() {
   $(document).on('keydown', function(e) {
     if (e.which === 9) {
-      e.preventDefault();
-      if (game.playerOneTurn) {
-        if (game.canSwitchCharacters) {
+      e.preventDefault(); //stops tab from moving around the window
+      if (game.canSwitchCharacters) {
+        if (game.playerOneTurn) {
+          //switches character according to what the characterObjectReference is
           game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
-        }
-      } else if (!game.playerOneTurn) {
-        if (game.canSwitchCharacters) {
+        } else if (!game.playerOneTurn) {
           game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
         }
+        //resets all the movement, display stats and available spaces while tabbing through characters
+        game.turnAttackOff();
+        game.turnMagicOff();
+        game.clearSquares();
+        game.setStatsWindow();
+        game.checkMoveDistance();
       }
-      game.turnAttackOff();
-      game.turnMagicOff();
-      game.clearSquares();
-      game.setStatsWindow();
-      game.checkMoveDistance();
     }
   });
 };
 
-
+//resets available squares each time characters or players switch
 game.clearSquares = function clearSquares() {
   const $availableSquares = $('.available');
   $availableSquares.toggleClass('available');
@@ -316,18 +318,20 @@ game.characterMovement = function characterMovement(character, e) {
 };
 
 game.makeMove = function makeMove(direction, character) {
-  game.canSwitchCharacters = false;
+  game.canSwitchCharacters = false; //switches flag so player can no longer tab through characters to prevent leapfrogging
   $('.defender-stats-window').hide();
   if (this.playerOneTurn) {
-    this.moveCells(this.playerOneCharacterClass, direction, character, this.playerTwoCharacter);
+    //playerCharacterObjectReference has to be passed because of selector in moveCells() that requires 'character', not .'character'
+    this.moveCells(this.playerOneCharacterObjectReference, direction, character, this.playerTwoCharacter);
   } else {
-    this.moveCells(this.playerTwoCharacterClass, direction, character, this.playerOneCharacter);
+    this.moveCells(this.playerTwoCharacterObjectReference, direction, character, this.playerOneCharacter);
   }
 };
 
 //swaps cell classes based on direction key pressed to give illusion of character movement
 //available class is related to move stats below
 game.moveCells = function moveCells(characterClass, direction, characterObj, defender) {
+  //all these variables are necessary for passing character attributes between divs - not sure how to refactor these
   const $characterDetails = $(characterObj);
   const $characterName = $characterDetails.attr('name');
   const $characterHp = $characterDetails.attr('hp');
