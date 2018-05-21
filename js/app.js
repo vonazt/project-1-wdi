@@ -25,7 +25,7 @@ class MagicCharacter extends BaseCharacter {
 }
 class MeleeCharacter extends BaseCharacter {
   constructor(name, hp, moveStats, def, dmg, type, player) {
-    super(name, hp, moveStats, def, dmg, player);
+    super(name, hp, moveStats, def, dmg, type, player);
   }
 }
 
@@ -61,16 +61,16 @@ game.createGameGrid = function createGameGrid() {
   }
 
   //starting positions for playerOne and playerTwo characters
-  gameGrid[4][1] = 'characterOne';
-  gameGrid[5][1] = 'characterTwo';
-  gameGrid[6][1] = 'characterThree';
-  gameGrid[7][1] = 'characterFour';
-  gameGrid[8][1] = 'characterFive';
-  gameGrid[4][8] = 'characterSix';
-  gameGrid[5][8] = 'characterSeven';
-  gameGrid[6][8] = 'characterEight';
-  gameGrid[7][8] = 'characterNine';
-  gameGrid[8][8] = 'characterTen';
+  gameGrid[3][1] = 'characterOne';
+  gameGrid[4][1] = 'characterTwo';
+  gameGrid[5][1] = 'characterThree';
+  gameGrid[6][1] = 'characterFour';
+  gameGrid[7][1] = 'characterFive';
+  gameGrid[3][8] = 'characterSix';
+  gameGrid[4][8] = 'characterSeven';
+  gameGrid[5][8] = 'characterEight';
+  gameGrid[6][8] = 'characterNine';
+  gameGrid[7][8] = 'characterTen';
 
   return gameGrid;
 };
@@ -329,11 +329,28 @@ game.makeMove = function makeMove(direction, character) {
   }
 };
 
-game.getDefendersDetails = function getDefendersDetails(character, direction) {
- //NEED TO PASS ALL DEFENDERS INTO THIS AND CHECK AGAINST ARRAY
- //USE THESE TO GET IDS AND THEN SET DISPLAY WINDOW
- //
-}
+game.getDefendersDetails = function getDefendersDetails($directionId) {
+  //NEED TO PASS ALL DEFENDERS INTO THIS AND CHECK AGAINST ARRAY
+  //USE THESE TO GET IDS AND THEN SET DISPLAY WINDOW
+  const $playerTwoPositions = $("div[player*='playerTwo']");
+  //iterate through all these and see if they match
+  $playerTwoPositions.each(function() {
+    const id = this.id;
+    if (`${parseInt(id[0]) - 1}-${parseInt(id[2])}` === $directionId
+      || `${parseInt(id[0]) + 1}-${parseInt(id[2])}` === $directionId
+      || `${parseInt(id[0])}-${parseInt(id[2]) - 1}` === $directionId
+      || `${parseInt(id[0])}-${parseInt(id[2]) + 1}` === $directionId) {
+      console.log(id);
+    }
+  });
+
+  // defenderIds
+
+
+
+
+
+};
 
 //swaps cell classes based on direction key pressed to give illusion of character movement
 //available class is related to move stats below
@@ -367,6 +384,8 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
   const $magicDownId = `${parseInt($defender[0])}-${parseInt($defender[2]) + 2}`;
 
   const $directionId = $(direction).attr('id');
+
+  this.getDefendersDetails($directionId);
 
   this.turnAttackOff();
   this.turnMagicOff();
@@ -647,10 +666,11 @@ $(() => {
   game.$magicOption = $('#magic-option');
   game.pickOption();
   game.setStatsWindow(game.playerOneCharacter);
-  $('.gameboard').hide();
-  $('.options-display').hide();
-  $('.attacker-stats-window').hide();
-  $('.defender-stats-window').hide();
-  game.hideOpeningCredits();
+  game.getDefendersDetails();
+  // $('.gameboard').hide();
+  // $('.options-display').hide();
+  // $('.attacker-stats-window').hide();
+  // $('.defender-stats-window').hide();
+  // game.hideOpeningCredits();
 
 });
