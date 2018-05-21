@@ -164,10 +164,11 @@ game.switchCharacter = function switchCharacter() {
     if (e.which === 9) {
       console.log('tab clicked');
       if (game.playerOneCharacter === '.characterOne') {
-        game.playerOneCharacter === '.characterTwo';
+        game.playerOneCharacter = '.characterTwo';
+        console.log(game.playerOneCharacter);
         game.playerOneCharacterClass = 'characterTwo';
       } else if (game.playerOneCharacter === '.characterTwo') {
-        game.playerOneCharacter === '.characterOne';
+        game.playerOneCharacter = '.characterOne';
         game.playerOneCharacterClass = 'characterOne';
       }
       game.turnAttackOff();
