@@ -26,7 +26,7 @@ game.drawBattlefield = function drawBattlefield() {
       //otherwise they default to class battle-cell
       const $battleSquare = $('<div />');
       if (cell === 'characterOne') {
-        $battleSquare.addClass('characterOne').attr(jonSnow);
+        $battleSquare.addClass('characterOne').attr(daenerysTargaryen);
       } else if (cell === 'characterTwo') {
         $battleSquare.addClass('characterTwo').attr(theMountain);
       } else {
@@ -331,23 +331,29 @@ game.castMagic = function castMagic(attacker, defender, magic) {
   const spellCost = $(attacker).attr('spellCost');
   let mp = $(attacker).attr('mp');
   magic = $(attacker).attr('magicType');
+  const magicResistance = $(defender).attr('def');
+  let defenderDmgStat = $(defender).attr('dmg');
 
-  let magicResistance = $(defender).attr('def');
-  const actualDamage = Math.ceil((parseInt(spellPower) / (spellPower*0.6)));
-  const defDamage = Math.ceil(parseInt(magicResistance) / (parseInt(spellPower*0.9)));
+  const magicDamage = Math.ceil((parseInt(spellPower) / (magicResistance*0.6)));
+
+  let statDamage = Math.ceil(parseInt(magicResistance) / (parseInt(spellPower*0.9)));
+  statDamage = parseInt(magicResistance) - statDamage;
+  defenderDmgStat = parseInt(defenderDmgStat) - statDamage;
 
   let $defenderHP = $(defender).attr('hp');
-  $defenderHP = parseInt($defenderHP) - actualDamage;
+  $defenderHP = parseInt($defenderHP) - magicDamage;
   $(defender).attr('hp', $defenderHP);
 
-  magicResistance = parseInt(magicResistance) - defDamage;
-  $(defender).attr('def', magicResistance);
+  if (magic === 'Fire') {
+    $(defender).attr('def', magicResistance);
+  } else if (magic === 'Ice') {
+    $(defender).attr('dmg', defenderDmgStat);
+  }
 
   mp = parseInt(mp) - parseInt(spellCost);
-  console.log(mp);
   $(attacker).attr('mp', mp);
 
-  this.displayMagicDamageMessage(attacker, defender, magic, defDamage, magicResistance);
+  this.displayMagicDamageMessage(attacker, defender, magic, magicDamage, statDamage);
   this.checkForDeath(defender);
   this.switchPlayers();
 };
@@ -395,12 +401,16 @@ game.displayAttackDamageMessage = function displayDamageMessage(attacker, defend
   }, 2000);
 };
 
-game.displayMagicDamageMessage = function displayMagicDamageMessage(attacker, defender, magic, defDamage, magicResistance) {
+game.displayMagicDamageMessage = function displayMagicDamageMessage(attacker, defender, magic, magicDamage, statDamage) {
   $('.feedback').show();
   const $messageWindow = $('#damage-message');
   const attackerName = $(attacker).attr('name');
   const defenderName = $(defender).attr('name');
-  $messageWindow.html(`${attackerName} cast ${magic} and did ${magicResistance} damage to ${defenderName}. ${defenderName}'s DEF decreased by ${defDamage}!`);
+
+  let statType;
+  magic === 'Fire' ? statType = 'DEF' : statType = 'DMG';
+
+  $messageWindow.html(`${attackerName} cast ${magic} and did ${magicDamage} damage to ${defenderName}. ${defenderName}'s ${statType} decreased by ${statDamage}!`);
   setTimeout(function() {
     $('.feedback').hide();
   }, 3000);
@@ -421,8 +431,9 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   const $nameStat = $character.attr('name');
   const $hpStat = $character.attr('hp');
   const $mpStat = $character.attr('mp');
-  // const $mgdmg = $character.attr('mgdmg');
-  // const $magicType = $character.attr('magicType');
+  const $mgDmgStat = $character.attr('mgdmg');
+  const $mgTypeStat = $character.attr('magicType');
+  const $mgCostStat = $character.attr('spellCost');
   const $dmgStat = $character.attr('dmg');
   const $defStat = $character.attr('def');
   const $typeStat = $character.attr('type');
@@ -446,6 +457,20 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   } else {
     $mpDisplay.show();
     $mpDisplay.html(`MP: ${$mpStat}/${initialMP}`);
+  }
+  const $mgDmgDisplay = $(`#${battleType}-mg-dmg-stats`);
+  if ($typeStat === 'melee' || $mpStat === undefined) {
+    $mgDmgDisplay.hide();
+  } else {
+    $mgDmgDisplay.show();
+    $mgDmgDisplay.html(`MAGIC DMG: ${$mgDmgStat}`);
+  }
+  const $mgTypeDisplay = $(`#${battleType}-mg-type-stats`);
+  if ($typeStat === 'melee' || $mpStat === undefined) {
+    $mgTypeDisplay.hide();
+  } else {
+    $mgTypeDisplay.show();
+    $mgDmgDisplay.html(`Type: ${$mgTypeStat} | Cost: ${$mgCostStat}MP`);
   }
 
   const $dmgDisplay = $(`#${battleType}-dmg-stats`);
@@ -484,8 +509,9 @@ class MagicCharacter extends BaseCharacter {
 //   }
 // }
 
-const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 3, 3, 'ice', 6, 5, 7, 'magic', 'playerOne');
+const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 3, 3, 'Ice', 3, 5, 7, 'magic', 'playerOne');
 const theMountain = new BaseCharacter('The Mountain', 15, 1, 4, 7, 'melee', 'playerTwo');
+const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 12, 15, 4, 'Fire', 6, 5, 2, 'magic', 'playerOne');
 
 //THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER
 game.playerOneCharactersAlive = 1;
