@@ -161,7 +161,7 @@ game.canSwitchCharacters = true; //turned to false after player has moved charac
 //these are the default starting points to be used when referencing which character to switch to
 game.playerOneCharacter = '.characterOne';
 game.playerOneCharacterObjectReference = 'characterOne'; //this is called in checkCharacterToSwapTo to get right value in playerCharacterSwitches object
-
+//THESE SHOULD ONLY BE REFERENCED IN TERMS OF MOVEMENT - NOT FOR DESIGNATING DEFENDER
 game.playerTwoCharacter = '.characterSix';
 game.playerTwoCharacterObjectReference = 'characterSix';
 
@@ -322,15 +322,23 @@ game.makeMove = function makeMove(direction, character) {
   $('.defender-stats-window').hide();
   if (this.playerOneTurn) {
     //playerCharacterObjectReference has to be passed because of selector in moveCells() that requires 'character', not .'character'
+    //this.playerTwoCharacter is wrong - there needs to be a check as to which character is the adjacent one
     this.moveCells(this.playerOneCharacterObjectReference, direction, character, this.playerTwoCharacter);
   } else {
     this.moveCells(this.playerTwoCharacterObjectReference, direction, character, this.playerOneCharacter);
   }
 };
 
+game.getDefendersDetails = function getDefendersDetails(character, direction) {
+ //NEED TO PASS ALL DEFENDERS INTO THIS AND CHECK AGAINST ARRAY
+ //USE THESE TO GET IDS AND THEN SET DISPLAY WINDOW
+ //
+}
+
 //swaps cell classes based on direction key pressed to give illusion of character movement
 //available class is related to move stats below
 game.moveCells = function moveCells(characterClass, direction, characterObj, defender) {
+  // DEFENDER SHOULD BE ALL DEFENDERS - PASS IT ALL OPPOSTION CLASSES?
   //all these variables are necessary for passing character attributes between divs - not sure how to refactor these
   const $characterDetails = $(characterObj);
   const $characterName = $characterDetails.attr('name');
@@ -345,6 +353,8 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
   const $characterType = $characterDetails.attr('type');
   const $characterPlayer = $characterDetails.attr('player');
 
+  //THIS GETS ALL THE SQUARES THAT ARE SURROUNDING ANY OPPOSITION PLAYERS - LIKELY CAUSING A LOT OF BUGS
+  //GET ALL DEFENDER POSITIONS BY player ATTRIBUTE, CREATE SEPARATE ARRAYS FOR EACH, COMPARE AND THEN SET CORRESPONDING IDS
   const $defender = $(defender).attr('id');
   const $defenderLeftId = `${parseInt($defender[0]) - 1}-${parseInt($defender[2])}`;
   const $defenderRightId = `${parseInt($defender[0]) + 1}-${parseInt($defender[2])}`;
@@ -361,6 +371,7 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
   this.turnAttackOff();
   this.turnMagicOff();
 
+  //passes all the character's attributes from one div into the one being moved into
   if (direction.attr('class') === 'battle-cell available') {
     direction.attr('class', characterClass);
     direction.attr('name', $characterName);
@@ -388,6 +399,8 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
     $characterDetails.attr('class', 'battle-cell available');
 
     //use object to make comparisons a la rps
+
+
   } if ($directionId === $magicLeftId
     || $directionId === $magicRightId
     || $directionId === $magicDownId
@@ -395,7 +408,9 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
     && $characterType === 'magic') {
     this.turnMagicOn($characterMp);
     $('.defender-stats-window').show();
-    if ($characterPlayer === this.playerOneCharacterClass) {
+
+    //THIS IS VERY BUGGY - WHERE IS IT PULLING THIS FROM? NEEDS TO CHECK EACH TIME
+    if ($characterPlayer === 'playerOne') {
       this.displayStats(this.playerTwoCharacter, 'defence');
     } else {
       this.displayStats(this.playerOneCharacter, 'defence');
@@ -408,7 +423,7 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
     this.turnAttackOn();
     if ($characterType === 'magic') this.turnMagicOn($characterMp);
     $('.defender-stats-window').show();
-    if ($characterPlayer === this.playerOneCharacterClass) {
+    if ($characterPlayer === 'playerOne') {
       this.displayStats(this.playerTwoCharacter, 'defence');
     } else {
       this.displayStats(this.playerOneCharacter, 'defence');
@@ -456,6 +471,7 @@ game.turnMagicOff = function turnMagicOff() {
 };
 
 game.castMagic = function castMagic(attacker, defender, magic) {
+  const attackType = 'magic'; //for displayDamageMessage() below
   const spellPower = $(attacker).attr('mgdmg');
   const spellCost = $(attacker).attr('spellCost');
   let mp = $(attacker).attr('mp');
@@ -463,8 +479,10 @@ game.castMagic = function castMagic(attacker, defender, magic) {
   const magicResistance = $(defender).attr('def');
   let defenderDmgStat = $(defender).attr('dmg');
 
+  //sets the amount of hp that is taken off by spell, weighted by defender's def stat
   const magicDamage = Math.ceil((parseInt(spellPower) / (magicResistance*0.6)));
 
+  //sets the amount the defender's def or dmg is decreased relative to def stat and spell power - NEEDS TWEAKING
   let statDamage = Math.ceil(parseInt(magicResistance) / (parseInt(spellPower*0.9)));
   statDamage = parseInt(magicResistance) - statDamage;
   defenderDmgStat = parseInt(defenderDmgStat) - statDamage;
@@ -473,30 +491,56 @@ game.castMagic = function castMagic(attacker, defender, magic) {
   $defenderHP = parseInt($defenderHP) - magicDamage;
   $(defender).attr('hp', $defenderHP);
 
+  //sets whether def or dmg stat is affected depending on magic type
   if (magic === 'Fire') {
     $(defender).attr('def', magicResistance);
   } else if (magic === 'Ice') {
     $(defender).attr('dmg', defenderDmgStat);
   }
 
+  //reduces the attacker's mp by amount of spell cost
   mp = parseInt(mp) - parseInt(spellCost);
   $(attacker).attr('mp', mp);
 
-  this.displayMagicDamageMessage(attacker, defender, magic, magicDamage, statDamage);
+  this.displayDamageMessage(attackType, attacker, defender, magicDamage, magic, statDamage);
   this.checkForDeath(defender);
   this.switchPlayers();
 };
 
 game.attackDefender = function attackDefender(attacker, defender) {
+  const attackType = 'attack';
   const attackPower = $(attacker).attr('dmg');
   const defPower = $(defender).attr('def');
+
   const actualDamage = Math.ceil((parseInt(attackPower) / (defPower*0.4)));
   let $defenderHP = $(defender).attr('hp');
   $defenderHP = parseInt($defenderHP) - actualDamage;
   $(defender).attr('hp', $defenderHP);
-  this.displayAttackDamageMessage(attacker, defender, actualDamage);
+
+  this.displayDamageMessage(attackType, attacker, defender, actualDamage);
   this.checkForDeath(defender);
   this.switchPlayers();
+};
+
+//condense into one function
+game.displayDamageMessage = function displayDamageMessage(attackType, attacker, defender, damage,  magic, statDamage) {
+  $('.feedback').show();
+  const $messageWindow = $('#damage-message');
+  const attackerName = $(attacker).attr('name');
+  const defenderName = $(defender).attr('name');
+  if (attackType === 'attack') {
+    $messageWindow.html(`${attackerName} attacked ${defenderName} and did ${damage} damage!`);
+    setTimeout(function() {
+      $('.feedback').hide();
+    }, 2000);
+  } else if (attackType === 'magic') {
+    let statType;
+    magic === 'Fire' ? statType = 'DEF' : statType = 'DMG';
+    $messageWindow.html(`${attackerName} cast ${magic} and did ${damage} damage to ${defenderName}. ${defenderName}'s ${statType} decreased by ${statDamage}!`);
+    setTimeout(function() {
+      $('.feedback').hide();
+    }, 3000);
+  }
 };
 
 game.checkForDeath = function checkForDeath(defender) {
@@ -504,6 +548,7 @@ game.checkForDeath = function checkForDeath(defender) {
   if (parseInt($defenderHP) <= 0) this.actionOnDeath(defender);
 };
 
+//THIS IS CURRENTLY BREAKING THE GAME BECAUSE IT CAN'T FIND THE CHARACTER
 game.actionOnDeath = function actionOnDeath(defender) {
   const $deadCharacter = $(defender);
   const $deadCharacterName = $deadCharacter.attr('name');
@@ -518,32 +563,7 @@ game.actionOnDeath = function actionOnDeath(defender) {
     $('#damage-message').html('GAME OVER!!');
   }
 };
-//condense into one function
-game.displayAttackDamageMessage = function displayDamageMessage(attacker, defender, damage) {
-  $('.feedback').show();
-  const $messageWindow = $('#damage-message');
-  const attackerName = $(attacker).attr('name');
-  const defenderName = $(defender).attr('name');
-  $messageWindow.html(`${attackerName} attacked ${defenderName} and did ${damage} damage!`);
-  setTimeout(function() {
-    $('.feedback').hide();
-  }, 2000);
-};
 
-game.displayMagicDamageMessage = function displayMagicDamageMessage(attacker, defender, magic, magicDamage, statDamage) {
-  $('.feedback').show();
-  const $messageWindow = $('#damage-message');
-  const attackerName = $(attacker).attr('name');
-  const defenderName = $(defender).attr('name');
-
-  let statType;
-  magic === 'Fire' ? statType = 'DEF' : statType = 'DMG';
-
-  $messageWindow.html(`${attackerName} cast ${magic} and did ${magicDamage} damage to ${defenderName}. ${defenderName}'s ${statType} decreased by ${statDamage}!`);
-  setTimeout(function() {
-    $('.feedback').hide();
-  }, 3000);
-};
 
 //STATS DISPLAY WINDOW
 game.setStatsWindow = function setStatsWindow() {
@@ -567,7 +587,7 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   const initialMP = $mpStat;
 
   let battleType;
-
+  //
   attackOrDefend === 'attack' ? battleType = 'attack' : battleType = 'defend';
 
   const $nameDisplay = $(`#${battleType}-character-name`);
@@ -599,9 +619,6 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   const $defDisplay = $(`#${battleType}-def-stats`);
   $defDisplay.html(`DEF: ${$defStat}`);
 };
-
-
-
 
 //GAME INIT
 
