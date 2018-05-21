@@ -264,7 +264,7 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
       || $directionId === $magicDownId
       || $directionId === $magicUpId
       && $characterType === 'magic') {
-    this.turnMagicOn();
+    this.turnMagicOn($characterMp);
     $('.defender-stats-window').show();
     if ($characterPlayer === 'playerOne') {
       this.displayStats('.characterTwo', 'defence');
@@ -277,7 +277,7 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
       || $directionId === $defenderDownId
       || $directionId === $defenderUpId) {
     this.turnAttackOn();
-    if ($characterType === 'magic') this.turnMagicOn();
+    if ($characterType === 'magic') this.turnMagicOn($characterMp);
     $('.defender-stats-window').show();
     if ($characterPlayer === 'playerOne') {
       this.displayStats('.characterTwo', 'defence');
@@ -308,12 +308,14 @@ game.turnAttackOff = function turnAttackOff() {
   });
 };
 
-game.turnMagicOn = function turnMagicOn() {
-  this.magicOn = true;
-  this.$magicOption.css({
-    'color': 'white',
-    'cursor': 'pointer'
-  });
+game.turnMagicOn = function turnMagicOn(attackerMP) {
+  if (parseInt(attackerMP) > 0) {
+    this.magicOn = true;
+    this.$magicOption.css({
+      'color': 'white',
+      'cursor': 'pointer'
+    });
+  }
 };
 
 game.turnMagicOff = function turnMagicOff() {
@@ -324,11 +326,11 @@ game.turnMagicOff = function turnMagicOff() {
   });
 };
 
-game.castMagic = function castMagic(attacker, defender) {
+game.castMagic = function castMagic(attacker, defender, magic) {
   const spellPower = $(attacker).attr('mgdmg');
   const spellCost = $(attacker).attr('spellCost');
   let mp = $(attacker).attr('mp');
-  console.log(mp);
+  magic = $(attacker).attr('magicType');
 
   let magicResistance = $(defender).attr('def');
   const actualDamage = Math.ceil((parseInt(spellPower) / (spellPower*0.6)));
@@ -343,7 +345,11 @@ game.castMagic = function castMagic(attacker, defender) {
 
   mp = parseInt(mp) - parseInt(spellCost);
   console.log(mp);
-  $(attacker).attr('mp', spellCost);
+  $(attacker).attr('mp', mp);
+
+  this.displayMagicDamageMessage(attacker, defender, magic, defDamage, magicResistance);
+  this.checkForDeath(defender);
+  this.switchPlayers();
 };
 
 game.attackDefender = function attackDefender(attacker, defender) {
@@ -353,7 +359,7 @@ game.attackDefender = function attackDefender(attacker, defender) {
   let $defenderHP = $(defender).attr('hp');
   $defenderHP = parseInt($defenderHP) - actualDamage;
   $(defender).attr('hp', $defenderHP);
-  this.displayDamageMessage(attacker, defender, actualDamage);
+  this.displayAttackDamageMessage(attacker, defender, actualDamage);
   this.checkForDeath(defender);
   this.switchPlayers();
 };
@@ -378,7 +384,7 @@ game.actionOnDeath = function actionOnDeath(defender) {
   }
 };
 
-game.displayDamageMessage = function displayDamageMessage(attacker, defender, damage) {
+game.displayAttackDamageMessage = function displayDamageMessage(attacker, defender, damage) {
   $('.feedback').show();
   const $messageWindow = $('#damage-message');
   const attackerName = $(attacker).attr('name');
@@ -386,7 +392,18 @@ game.displayDamageMessage = function displayDamageMessage(attacker, defender, da
   $messageWindow.html(`${attackerName} attacked ${defenderName} and did ${damage} damage!`);
   setTimeout(function() {
     $('.feedback').hide();
-  }, 1200);
+  }, 2000);
+};
+
+game.displayMagicDamageMessage = function displayMagicDamageMessage(attacker, defender, magic, defDamage, magicResistance) {
+  $('.feedback').show();
+  const $messageWindow = $('#damage-message');
+  const attackerName = $(attacker).attr('name');
+  const defenderName = $(defender).attr('name');
+  $messageWindow.html(`${attackerName} cast ${magic} and did ${magicResistance} damage to ${defenderName}. ${defenderName}'s DEF decreased by ${defDamage}!`);
+  setTimeout(function() {
+    $('.feedback').hide();
+  }, 3000);
 };
 
 //STATS DISPLAY WINDOW
@@ -467,7 +484,7 @@ class MagicCharacter extends BaseCharacter {
 //   }
 // }
 
-const jonSnow = new MagicCharacter('Jon Snow', 10, 8, 3, 3, 'ice', 6, 5, 7, 'magic', 'playerOne');
+const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 3, 3, 'ice', 6, 5, 7, 'magic', 'playerOne');
 const theMountain = new BaseCharacter('The Mountain', 15, 1, 4, 7, 'melee', 'playerTwo');
 
 //THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER

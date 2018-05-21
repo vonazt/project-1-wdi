@@ -103,18 +103,18 @@ OVERVIEW:
   DONE   - Display "Attacker killed Defender" in Stats window
   DONE  - Remove Defender from Battlefield - hide or remove div
 
-11. Create MP stats for character
-  - Add to character constructor - MP and Magic DMG
-  - Display in Stats window
+11. DONE Create MP stats for character
+  DONE - Add to character constructor - MP and Magic DMG
+  DONE WITH BUGS- Display in Stats window
 
 12. Create Spells
-  - Spell types: Earth, Fire, Wind, Water - different DMG and MP amounts
+  DONE ICE - Spell types: ICE, FIRE AND HEAL - different DMG and MP amounts
 
-13. Allow Attack to Cast Spell on Defender
-  - check if Attacker is within 2 or less squares of Defender
-  - if true, then Magic lights up in Options display
-  - when selected, Defender's HP decreases by Magic DMG amount
-  - Attacker's MP decreases by Spell Cost amount
+13.DONE  Allow Attack to Cast Spell on Defender
+  DONE - check if Attacker is within 2 or less squares of Defender
+  DONE - if true, then Magic lights up in Options display
+  DONE - when selected, Defender's HP decreases by Magic DMG amount
+  DONE - Attacker's MP decreases by Spell Cost amount
 
 14. Allow Attacker to Heal self with Spell
   - If Heal (Wind) is selected, increase HP by Magic DMG amount
