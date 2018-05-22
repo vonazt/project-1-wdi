@@ -11,6 +11,7 @@ class BaseCharacter {
     this.dmg = dmg;
     this.type = type;
     this.player = player;
+    this.isDead = false;
   }
 }
 
@@ -357,6 +358,7 @@ game.moveCells = function moveCells(characterClass, direction, characterObj) {
   const $characterDmg = $characterDetails.attr('dmg');
   const $characterType = $characterDetails.attr('type');
   const $characterPlayer = $characterDetails.attr('player');
+  const $characterIsDead = $characterDetails.attr('isDead');
 
   const $directionId = $(direction).attr('id');
 
@@ -377,6 +379,7 @@ game.moveCells = function moveCells(characterClass, direction, characterObj) {
     direction.attr('dmg', $characterDmg);
     direction.attr('type', $characterType);
     direction.attr('player', $characterPlayer);
+    direction.attr('isDead', $characterIsDead);
 
     //removes all attributes except id and then reapplies correct class after
     $characterDetails.each(function() {
@@ -403,6 +406,8 @@ game.getDefencePositionsForAttack = function getDefencePositionsForAttack(player
   const $characterType = $(character).attr('type');
   const $characterMP = $(character).attr('mp');
   game.defenderPosition = []; //this is what's referred to for attack function
+  console.log(game.defenderPosition);
+  game.magicDefenderPosition = [];
   let $defenderPositions;
   this.playerOneTurn ? $defenderPositions = $("div[player*='playerTwo']") : $defenderPositions = $("div[player*='playerOne']"); //searches by attribute so only opposition characters will be selected for attack
   //iterates through all these oppostion characters and sees if they match
@@ -410,33 +415,29 @@ game.getDefencePositionsForAttack = function getDefencePositionsForAttack(player
     const id = this.id;
     const itemClass = this.className;
     game.defenderIndex = 0;
+    game.magicDefenderIndex = 0;
 
     //these are all the up, down, left and right squares of the player
-    if ((`${parseInt(id[0]) - 1}-${parseInt(id[2])}` === playerPositionOrMovement
+    if (`${parseInt(id[0]) - 1}-${parseInt(id[2])}` === playerPositionOrMovement
       || `${parseInt(id[0]) + 1}-${parseInt(id[2])}` === playerPositionOrMovement
       || `${parseInt(id[0])}-${parseInt(id[2]) - 1}` === playerPositionOrMovement
-      || `${parseInt(id[0])}-${parseInt(id[2]) + 1}` === playerPositionOrMovement)
-      ||
-      ($characterType === 'magic' //all needs to be bunched together to work properly, but this is hella ugly
-        && (`${parseInt(id[0]) - 2}-${parseInt(id[2])}` === playerPositionOrMovement
-        || `${parseInt(id[0]) + 2}-${parseInt(id[2])}` === playerPositionOrMovement
-        || `${parseInt(id[0])}-${parseInt(id[2]) - 2}` === playerPositionOrMovement
-        || `${parseInt(id[0])}-${parseInt(id[2]) + 2}` === playerPositionOrMovement))) {
-      game.defenderPosition.push('.' + itemClass); //makes string into a class for displaying defender stats and making attack
+      || `${parseInt(id[0])}-${parseInt(id[2]) + 1}` === playerPositionOrMovement) {
+      game.defenderPosition.push('.' + itemClass);
+      console.log(game.defenderPosition);
       game.turnAttackOn();
       if ($characterType === 'magic') game.turnMagicOn($characterMP);
-
       $('.defender-stats-window').show();
       if (game.defenderPosition.length > 1) {
         $(document).on('keydown', function(e) {
-          //this entire if statement is checking if a player is surrounded - if they are then they can switch the selected defender by pressing 's'
           if (e.which === 83) {
             game.defenderIndex++;
-            if (game.defenderIndex === game.defenderPosition.length) game.defenderIndex = 0;
+            if (game.defenderIndex >= game.defenderPosition.length) game.defenderIndex = 0;
+            console.log('multipleattak', game.defenderIndex);
             game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
           }
         });
       } else {
+        console.log('single attack', game.defenderIndex);
         game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
       }
     }
@@ -564,13 +565,19 @@ game.checkForDeath = function checkForDeath(defender) {
 
 //THIS IS CURRENTLY BREAKING THE GAME BECAUSE IT CAN'T FIND THE CHARACTER
 game.actionOnDeath = function actionOnDeath(defender) {
+  // console.log(defender);
   const $deadCharacter = $(defender);
   console.log($deadCharacter);
   const $deadCharacterName = $deadCharacter.attr('name');
   const $deadCharacterPlayer = $deadCharacter.attr('player');
+  let $deadCharacterIsDead = $deadCharacter.attr('isDead');
+  $deadCharacterIsDead = $deadCharacter.attr('isDead', true);
+  console.log($deadCharacterIsDead);
+
 
   $('#damage-message').html(`${$deadCharacterName} was killed!`);
   $deadCharacter.addClass('dead');
+
 
   console.log($deadCharacter);
 
@@ -594,9 +601,8 @@ game.setStatsWindow = function setStatsWindow() {
 };
 
 game.displayStats = function displayStats(character, attackOrDefend) {
-  if ($(this.playerTwoCharacter).attr('class').includes('dead')) {
-    $('.defender-stats-window').hide();
-  }
+
+
   const $character = $(character);
   // const characterClass = $character.attr('class');
   const $nameStat = $character.attr('name');
@@ -616,6 +622,7 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   let battleType;
   //
   attackOrDefend === 'attack' ? battleType = 'attack' : battleType = 'defend';
+  // battleType = attackOrDefend === 'attack' ? 'attack' : 'defend';
 
   const $nameDisplay = $(`#${battleType}-character-name`);
   $nameDisplay.html(`Name: ${$nameStat}`);
