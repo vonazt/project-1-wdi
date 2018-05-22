@@ -226,6 +226,10 @@ game.switchCharacter = function switchCharacter() {
         game.turnMagicOff();
         game.clearSquares();
         game.setStatsWindow();
+        //these are so a character doesn't have to move if already adjacent to a defender
+        const $playerOneId = $(game.playerOneCharacter).attr('id');
+        const $playerTwoId = $(game.playerTwoCharacter).attr('id');
+        game.playerOneTurn ? game.getDefencePositionsForAttack($playerOneId) : game.getDefencePositionsForAttack($playerTwoId);
         game.checkMoveDistance();
       }
     }
@@ -335,7 +339,6 @@ game.makeMove = function makeMove(direction, character) {
 //swaps cell classes based on direction key pressed to give illusion of character movement
 //available class is related to move stats below
 game.moveCells = function moveCells(characterClass, direction, characterObj) {
-  // DEFENDER SHOULD BE ALL DEFENDERS - PASS IT ALL OPPOSTION CLASSES?
   //all these variables are necessary for passing character attributes between divs - not sure how to refactor these
   const $characterDetails = $(characterObj);
   const $characterName = $characterDetails.attr('name');
@@ -359,7 +362,6 @@ game.moveCells = function moveCells(characterClass, direction, characterObj) {
 
   this.turnAttackOff();
   this.turnMagicOff();
-  //NEED TO PASS ALL DEFENDERS INTO THIS AND CHECK AGAINST ARRAY
 
 
   //passes all the character's attributes from one div into the one being moved into
@@ -388,25 +390,13 @@ game.moveCells = function moveCells(characterClass, direction, characterObj) {
       });
     });
     $characterDetails.attr('class', 'battle-cell available');
-
     this.getDefencePositionsForAttack($directionId);
-
-    // }  if ($directionId === $defender
-    //     || $directionId === $defenderLeftId
-    //     || $directionId === $defenderRightId
-    //     || $directionId === $defenderDownId
-    //     || $directionId === $defenderUpId) {
-    //     this.turnAttackOn();
-    //     if ($characterType === 'magic') this.turnMagicOn($characterMp);
-    //     $('.defender-stats-window').show();
-    //     if ($characterPlayer === 'playerOne') {
-    //       this.displayStats(matchedPositionString, 'defence');
-    //     } else {
-    //       this.displayStats(this.playerOneCharacter, 'defence');
-    //     }
-    //   }
-
-
+  } else if (direction.attr('player') === 'playerTwo') {
+    const $playerOneId = $(game.playerOneCharacter).attr('id');
+    game.getDefencePositionsForAttack($playerOneId);
+  } else if (direction.attr('player') === 'playerOne') {
+    const $playerTwoId = $(game.playerTwoCharacter).attr('id');
+    game.getDefencePositionsForAttack($playerTwoId);
   }
 };
 
