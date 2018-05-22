@@ -154,7 +154,7 @@ game.switchPlayers = function switchPlayers() {
   this.setStatsWindow();
   const $playerOneId = $(this.playerOneCharacter).attr('id');
   const $playerTwoId = $(this.playerTwoCharacter).attr('id');
-  this.playerOneTurn ? this.getDefencePositionsForAttack($playerOneId) : this.getDefencePositionsForAttack($playerTwoId);
+  this.playerOneTurn ? this.getDefencePositionsForAttack($playerOneId, this.playerOneCharacter) : this.getDefencePositionsForAttack($playerTwoId, this.playerTwoCharacter);
   this.checkMoveDistance();
 };
 
@@ -353,10 +353,6 @@ game.moveCells = function moveCells(characterClass, direction, characterObj) {
   const $characterType = $characterDetails.attr('type');
   const $characterPlayer = $characterDetails.attr('player');
 
-  // const $magicLeftId = `${parseInt($defender[0]) - 2}-${parseInt($defender[2])}`;
-  // const $magicRightId = `${parseInt($defender[0]) + 2}-${parseInt($defender[2])}`;
-  // const $magicUpId = `${parseInt($defender[0])}-${parseInt($defender[2]) - 2}`;
-  // const $magicDownId = `${parseInt($defender[0])}-${parseInt($defender[2]) + 2}`;
 
   const $directionId = $(direction).attr('id');
 
@@ -390,17 +386,20 @@ game.moveCells = function moveCells(characterClass, direction, characterObj) {
       });
     });
     $characterDetails.attr('class', 'battle-cell available');
-    this.getDefencePositionsForAttack($directionId);
+    this.playerOneTurn ? this.getDefencePositionsForAttack($directionId, game.playerOneCharacter) : this.getDefencePositionsForAttack($directionId, game.playerTwoCharacter);
   } else if (direction.attr('player') === 'playerTwo') {
     const $playerOneId = $(game.playerOneCharacter).attr('id');
-    game.getDefencePositionsForAttack($playerOneId);
+    game.getDefencePositionsForAttack($playerOneId, game.playerOneCharacter);
   } else if (direction.attr('player') === 'playerOne') {
     const $playerTwoId = $(game.playerTwoCharacter).attr('id');
-    game.getDefencePositionsForAttack($playerTwoId);
+    game.getDefencePositionsForAttack($playerTwoId, game.playerTwoCharacter);
   }
 };
 
-game.getDefencePositionsForAttack = function getDefencePositionsForAttack(playerPositionOrMovement) {
+game.getDefencePositionsForAttack = function getDefencePositionsForAttack(playerPositionOrMovement, character) {
+  const $characterType = $(character).attr('type');
+  const $characterMP = $(character).attr('mp');
+  console.log($characterType);
   game.defenderPosition = []; //this is what's referred to for attack function
   let $defenderPositions;
   this.playerOneTurn ? $defenderPositions = $("div[player*='playerTwo']") : $defenderPositions = $("div[player*='playerOne']"); //searches by attribute so only opposition characters will be selected for attack
@@ -408,6 +407,18 @@ game.getDefencePositionsForAttack = function getDefencePositionsForAttack(player
   $defenderPositions.each(function() {
     const id = this.id;
     const itemClass = this.className;
+    game.defenderIndex = 0;
+    if ($characterType === 'magic') {
+      if (`${parseInt(id[0]) - 2}-${parseInt(id[2])}` === playerPositionOrMovement
+      || `${parseInt(id[0]) + 2}-${parseInt(id[2])}` === playerPositionOrMovement
+      || `${parseInt(id[0])}-${parseInt(id[2]) - 2}` === playerPositionOrMovement
+      || `${parseInt(id[0])}-${parseInt(id[2]) + 2}` === playerPositionOrMovement) {
+
+        game.defenderPosition.push('.' + itemClass);
+        game.turnMagicOn($characterMP);
+        $('.defender-stats-window').show();
+      }
+    }
     //these are all the up, down, left and right squares of the player
     if (`${parseInt(id[0]) - 1}-${parseInt(id[2])}` === playerPositionOrMovement
       || `${parseInt(id[0]) + 1}-${parseInt(id[2])}` === playerPositionOrMovement
@@ -415,19 +426,21 @@ game.getDefencePositionsForAttack = function getDefencePositionsForAttack(player
       || `${parseInt(id[0])}-${parseInt(id[2]) + 1}` === playerPositionOrMovement) {
       game.defenderPosition.push('.' + itemClass); //makes string into a class for displaying defender stats and making attack
       game.turnAttackOn();
-      game.defenderIndex = 0;
+      if ($characterType === 'magic') game.turnMagicOn($characterMP);
+
       $('.defender-stats-window').show();
-      if (game.defenderPosition.length > 1) {
-        $(document).on('keydown', function(e) {
-          if (e.which === 83) {
-            game.defenderIndex++;
-            if (game.defenderIndex === game.defenderPosition.length) game.defenderIndex = 0;
-            game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
-          }
-        });
-      } else {
-        game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
-      }
+    }
+    //this entire if statement is checking if a player is surrounded - if they are then they can switch the selected defender by pressing 's'
+    if (game.defenderPosition.length > 1) {
+      $(document).on('keydown', function(e) {
+        if (e.which === 83) {
+          game.defenderIndex++;
+          if (game.defenderIndex === game.defenderPosition.length) game.defenderIndex = 0;
+          game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
+        }
+      });
+    } else {
+      game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
     }
   });
 };
