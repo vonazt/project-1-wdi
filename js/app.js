@@ -126,9 +126,9 @@ game.pickOption = function pickOption() {
       if (game.attackOn) { //flag for checking that attacker is in range of defender
         if (game.playerOneTurn) {
           //NEED REFERENCE FUNCTION TO MAKE SURE THAT game.playerOneCharacter AND game.playerTwoCharacter are correct
-          game.attackDefender(game.playerOneCharacter, game.playerTwoCharacter);
+          game.attackDefender(game.playerOneCharacter, game.matchedPositionString);
         } else {
-          game.attackDefender(game.playerTwoCharacter, game.playerOneCharacter);
+          game.attackDefender(game.playerTwoCharacter, game.matchedPositionString);
         }
       }
     } if (this.id === 'magic-option') {
@@ -323,38 +323,27 @@ game.makeMove = function makeMove(direction, character) {
   if (this.playerOneTurn) {
     //playerCharacterObjectReference has to be passed because of selector in moveCells() that requires 'character', not .'character'
     //this.playerTwoCharacter is wrong - there needs to be a check as to which character is the adjacent one
-    this.moveCells(this.playerOneCharacterObjectReference, direction, character, this.playerTwoCharacter);
+    this.moveCells(this.playerOneCharacterObjectReference, direction, character);
   } else {
-    this.moveCells(this.playerTwoCharacterObjectReference, direction, character, this.playerOneCharacter);
+    this.moveCells(this.playerTwoCharacterObjectReference, direction, character);
   }
 };
 
-game.getDefendersDetails = function getDefendersDetails($directionId) {
-  //NEED TO PASS ALL DEFENDERS INTO THIS AND CHECK AGAINST ARRAY
-  //USE THESE TO GET IDS AND THEN SET DISPLAY WINDOW
-  const $playerTwoPositions = $("div[player*='playerTwo']");
-  //iterate through all these and see if they match
-  $playerTwoPositions.each(function() {
-    const id = this.id;
-    if (`${parseInt(id[0]) - 1}-${parseInt(id[2])}` === $directionId
-      || `${parseInt(id[0]) + 1}-${parseInt(id[2])}` === $directionId
-      || `${parseInt(id[0])}-${parseInt(id[2]) - 1}` === $directionId
-      || `${parseInt(id[0])}-${parseInt(id[2]) + 1}` === $directionId) {
-      console.log(id);
-    }
-  });
-
-  // defenderIds
-
-
-
-
-
-};
+// game.getDefendersDetails = function getDefendersDetails($directionId) {
+//
+//   });
+//
+//   // defenderIds
+//
+//
+//
+//
+//
+// };
 
 //swaps cell classes based on direction key pressed to give illusion of character movement
 //available class is related to move stats below
-game.moveCells = function moveCells(characterClass, direction, characterObj, defender) {
+game.moveCells = function moveCells(characterClass, direction, characterObj) {
   // DEFENDER SHOULD BE ALL DEFENDERS - PASS IT ALL OPPOSTION CLASSES?
   //all these variables are necessary for passing character attributes between divs - not sure how to refactor these
   const $characterDetails = $(characterObj);
@@ -372,23 +361,52 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
 
   //THIS GETS ALL THE SQUARES THAT ARE SURROUNDING ANY OPPOSITION PLAYERS - LIKELY CAUSING A LOT OF BUGS
   //GET ALL DEFENDER POSITIONS BY player ATTRIBUTE, CREATE SEPARATE ARRAYS FOR EACH, COMPARE AND THEN SET CORRESPONDING IDS
-  const $defender = $(defender).attr('id');
-  const $defenderLeftId = `${parseInt($defender[0]) - 1}-${parseInt($defender[2])}`;
-  const $defenderRightId = `${parseInt($defender[0]) + 1}-${parseInt($defender[2])}`;
-  const $defenderUpId = `${parseInt($defender[0])}-${parseInt($defender[2]) - 1}`;
-  const $defenderDownId = `${parseInt($defender[0])}-${parseInt($defender[2]) + 1}`;
+  // const $defender = $(defender).attr('id');
+  // const $defenderLeftId = `${parseInt($defender[0]) - 1}-${parseInt($defender[2])}`;
+  // const $defenderRightId = `${parseInt($defender[0]) + 1}-${parseInt($defender[2])}`;
+  // const $defenderUpId = `${parseInt($defender[0])}-${parseInt($defender[2]) - 1}`;
+  // const $defenderDownId = `${parseInt($defender[0])}-${parseInt($defender[2]) + 1}`;
 
-  const $magicLeftId = `${parseInt($defender[0]) - 2}-${parseInt($defender[2])}`;
-  const $magicRightId = `${parseInt($defender[0]) + 2}-${parseInt($defender[2])}`;
-  const $magicUpId = `${parseInt($defender[0])}-${parseInt($defender[2]) - 2}`;
-  const $magicDownId = `${parseInt($defender[0])}-${parseInt($defender[2]) + 2}`;
+  // const $magicLeftId = `${parseInt($defender[0]) - 2}-${parseInt($defender[2])}`;
+  // const $magicRightId = `${parseInt($defender[0]) + 2}-${parseInt($defender[2])}`;
+  // const $magicUpId = `${parseInt($defender[0])}-${parseInt($defender[2]) - 2}`;
+  // const $magicDownId = `${parseInt($defender[0])}-${parseInt($defender[2]) + 2}`;
 
   const $directionId = $(direction).attr('id');
 
-  this.getDefendersDetails($directionId);
-
   this.turnAttackOff();
   this.turnMagicOff();
+  //NEED TO PASS ALL DEFENDERS INTO THIS AND CHECK AGAINST ARRAY
+  game.matchedPositionString = '';
+  //USE THESE TO GET IDS AND THEN SET DISPLAY WINDOW
+  const $playerTwoPositions = $("div[player*='playerTwo']");
+  //iterate through all these and see if they match
+  $playerTwoPositions.each(function() {
+    const id = this.id;
+    const itemClass = this.className;
+    if (`${parseInt(id[0]) - 1}-${parseInt(id[2])}` === $directionId
+      || `${parseInt(id[0]) + 1}-${parseInt(id[2])}` === $directionId
+      || `${parseInt(id[0])}-${parseInt(id[2]) - 1}` === $directionId
+      || `${parseInt(id[0])}-${parseInt(id[2]) + 1}` === $directionId) {
+      game.matchedPositionString += '.' + itemClass;
+      game.turnAttackOn();
+      $('.defender-stats-window').show();
+      game.displayStats(game.matchedPositionString, 'defence');
+    }
+  });
+
+
+  // let $defenderDetails;
+  // if (matchedPositionString.length > 1) {
+  //   console.log(matchedPositionString);
+  //   $defenderDetails = $(matchedPositionString);
+  // }
+  // console.log($defenderDetails);
+
+
+
+  // this.turnAttackOff();
+  // this.turnMagicOff();
 
   //passes all the character's attributes from one div into the one being moved into
   if (direction.attr('class') === 'battle-cell available') {
@@ -417,37 +435,42 @@ game.moveCells = function moveCells(characterClass, direction, characterObj, def
     });
     $characterDetails.attr('class', 'battle-cell available');
 
+
+
     //use object to make comparisons a la rps
 
-
-  } if ($directionId === $magicLeftId
-    || $directionId === $magicRightId
-    || $directionId === $magicDownId
-    || $directionId === $magicUpId
-    && $characterType === 'magic') {
-    this.turnMagicOn($characterMp);
-    $('.defender-stats-window').show();
-
-    //THIS IS VERY BUGGY - WHERE IS IT PULLING THIS FROM? NEEDS TO CHECK EACH TIME
-    if ($characterPlayer === 'playerOne') {
-      this.displayStats(this.playerTwoCharacter, 'defence');
-    } else {
-      this.displayStats(this.playerOneCharacter, 'defence');
-    }
-  } else if ($directionId === $defender
-    || $directionId === $defenderLeftId
-    || $directionId === $defenderRightId
-    || $directionId === $defenderDownId
-    || $directionId === $defenderUpId) {
-    this.turnAttackOn();
-    if ($characterType === 'magic') this.turnMagicOn($characterMp);
-    $('.defender-stats-window').show();
-    if ($characterPlayer === 'playerOne') {
-      this.displayStats(this.playerTwoCharacter, 'defence');
-    } else {
-      this.displayStats(this.playerOneCharacter, 'defence');
-    }
-  }
+  //
+  // } if ($directionId === $magicLeftId
+  //   || $directionId === $magicRightId
+  //   || $directionId === $magicDownId
+  //   || $directionId === $magicUpId
+  //   && $characterType === 'magic') {
+  //   this.turnMagicOn($characterMp);
+  //   $('.defender-stats-window').show();
+  //
+  //   //THIS IS VERY BUGGY - WHERE IS IT PULLING THIS FROM? NEEDS TO CHECK EACH TIME
+  //   if(matchedPositionString.length > 2) {
+  //     if ($characterPlayer === 'playerOne') {
+  //       this.displayStats(matchedPositionString, 'defence');
+  //     } else {
+  //       this.displayStats(this.playerOneCharacter, 'defence');
+  //     }
+  //   }
+// }  if ($directionId === $defender
+//     || $directionId === $defenderLeftId
+//     || $directionId === $defenderRightId
+//     || $directionId === $defenderDownId
+//     || $directionId === $defenderUpId) {
+//     this.turnAttackOn();
+//     if ($characterType === 'magic') this.turnMagicOn($characterMp);
+//     $('.defender-stats-window').show();
+//     if ($characterPlayer === 'playerOne') {
+//       this.displayStats(matchedPositionString, 'defence');
+//     } else {
+//       this.displayStats(this.playerOneCharacter, 'defence');
+//     }
+//   }
+}
 };
 
 
@@ -666,7 +689,6 @@ $(() => {
   game.$magicOption = $('#magic-option');
   game.pickOption();
   game.setStatsWindow(game.playerOneCharacter);
-  game.getDefendersDetails();
   // $('.gameboard').hide();
   // $('.options-display').hide();
   // $('.attacker-stats-window').hide();
