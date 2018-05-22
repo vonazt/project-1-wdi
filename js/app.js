@@ -126,9 +126,9 @@ game.pickOption = function pickOption() {
       if (game.attackOn) { //flag for checking that attacker is in range of defender
         if (game.playerOneTurn) {
           //NEED REFERENCE FUNCTION TO MAKE SURE THAT game.playerOneCharacter AND game.playerTwoCharacter are correct
-          game.attackDefender(game.playerOneCharacter, game.defenderPosition); //this is set below in makeMove()
+          game.attackDefender(game.playerOneCharacter, game.defenderPosition[game.defenderIndex]); //this is set below in makeMove()
         } else {
-          game.attackDefender(game.playerTwoCharacter, game.defenderPosition);
+          game.attackDefender(game.playerTwoCharacter, game.defenderPosition[game.defenderIndex]);
         }
       }
     } if (this.id === 'magic-option') {
@@ -401,21 +401,33 @@ game.moveCells = function moveCells(characterClass, direction, characterObj) {
 };
 
 game.getDefencePositionsForAttack = function getDefencePositionsForAttack(playerPositionOrMovement) {
-  game.defenderPosition = ''; //this is what's referred to for attack function
+  game.defenderPosition = []; //this is what's referred to for attack function
   let $defenderPositions;
   this.playerOneTurn ? $defenderPositions = $("div[player*='playerTwo']") : $defenderPositions = $("div[player*='playerOne']"); //searches by attribute so only opposition characters will be selected for attack
   //iterates through all these oppostion characters and sees if they match
   $defenderPositions.each(function() {
     const id = this.id;
     const itemClass = this.className;
+    //these are all the up, down, left and right squares of the player
     if (`${parseInt(id[0]) - 1}-${parseInt(id[2])}` === playerPositionOrMovement
       || `${parseInt(id[0]) + 1}-${parseInt(id[2])}` === playerPositionOrMovement
       || `${parseInt(id[0])}-${parseInt(id[2]) - 1}` === playerPositionOrMovement
       || `${parseInt(id[0])}-${parseInt(id[2]) + 1}` === playerPositionOrMovement) {
-      game.defenderPosition += '.' + itemClass; //makes string into a class for displaying defender stats and making attack
+      game.defenderPosition.push('.' + itemClass); //makes string into a class for displaying defender stats and making attack
       game.turnAttackOn();
+      game.defenderIndex = 0;
       $('.defender-stats-window').show();
-      game.displayStats(game.defenderPosition, 'defence');
+      if (game.defenderPosition.length > 1) {
+        $(document).on('keydown', function(e) {
+          if (e.which === 83) {
+            game.defenderIndex++;
+            if (game.defenderIndex === game.defenderPosition.length) game.defenderIndex = 0;
+            game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
+          }
+        });
+      } else {
+        game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
+      }
     }
   });
 };
