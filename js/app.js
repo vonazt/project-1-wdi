@@ -29,7 +29,7 @@ class MeleeCharacter extends BaseCharacter {
   }
 }
 
-const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 6, 3, 'Ice', 3, 5, 14, 'magic', 'playerOne');
+const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 6, 3, 'Ice', 6, 5, 50, 'magic', 'playerOne');
 const theMountain = new MeleeCharacter('The Mountain', 15, 1, 6, 18, 'melee', 'playerOne');
 const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 12, 15, 4, 'Fire', 6, 5, 2, 'magic', 'playerOne');
 const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 9, 4, 'Ice', 4, 8, 5, 'magic', 'playerOne');
@@ -146,6 +146,9 @@ game.pickOption = function pickOption() {
 
 game.switchPlayers = function switchPlayers() {
   //checks if players are still on board for endgame
+  if ($(this.playerTwoCharacter).attr('class').includes('dead')) {
+    game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
+  }
   this.canSwitchCharacters = true; //resets canSwitchCharacters flag so that players can tab through character select
   this.playerOneTurn = !game.playerOneTurn; //flag that switches player control
   this.turnAttackOff(); //resets Attack in options window to gray
@@ -211,6 +214,9 @@ game.checkPlayerTwoCharacterToSwapTo = function checkPlayerTwoCharacterToSwapTo(
 };
 
 game.switchCharacter = function switchCharacter() {
+  if ($(this.playerTwoCharacter).attr('class').includes('dead')) {
+    game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
+  }
   $(document).on('keydown', function(e) {
     if (e.which === 9) {
       e.preventDefault(); //stops tab from moving around the window
@@ -302,7 +308,6 @@ game.moveCharacter = function moveCharacter() {
   });
 };
 
-
 game.characterMovement = function characterMovement(character, e) {
   const $character = $(character);
   //gets the character position based on id
@@ -353,12 +358,10 @@ game.moveCells = function moveCells(characterClass, direction, characterObj) {
   const $characterType = $characterDetails.attr('type');
   const $characterPlayer = $characterDetails.attr('player');
 
-
   const $directionId = $(direction).attr('id');
 
   this.turnAttackOff();
   this.turnMagicOff();
-
 
   //passes all the character's attributes from one div into the one being moved into
   if (direction.attr('class') === 'battle-cell available') {
@@ -490,10 +493,10 @@ game.castMagic = function castMagic(attacker, defender, magic) {
   let defenderDmgStat = $(defender).attr('dmg');
 
   //sets the amount of hp that is taken off by spell, weighted by defender's def stat
-  const magicDamage = Math.ceil(parseInt(spellPower) * (1 / (magicResistance - 1)));
+  const magicDamage = Math.floor(parseInt(spellPower) * (1 / (magicResistance - 1)));
 
   //sets the amount the defender's def or dmg is decreased relative to def stat and spell power - NEEDS TWEAKING
-  const statDamage = Math.ceil(parseInt(spellPower) * (0.8 / (magicResistance - 0.8)));
+  const statDamage = Math.floor(parseInt(spellPower) * (0.5 / (magicResistance - 0.5)));
   let defDamage = parseInt(magicResistance) - statDamage;
   if (defDamage < 1) defDamage = 1;
   defenderDmgStat = parseInt(defenderDmgStat) - statDamage;
@@ -523,7 +526,7 @@ game.attackDefender = function attackDefender(attacker, defender) {
   const attackPower = $(attacker).attr('dmg');
   const defPower = $(defender).attr('def');
 
-  const actualDamage = Math.ceil(parseInt(attackPower) * (1 / (defPower - 1)));
+  const actualDamage = Math.floor(parseInt(attackPower) * (1 / (defPower - 1)));
   let $defenderHP = $(defender).attr('hp');
   $defenderHP = parseInt($defenderHP) - actualDamage;
   $(defender).attr('hp', $defenderHP);
@@ -562,13 +565,18 @@ game.checkForDeath = function checkForDeath(defender) {
 //THIS IS CURRENTLY BREAKING THE GAME BECAUSE IT CAN'T FIND THE CHARACTER
 game.actionOnDeath = function actionOnDeath(defender) {
   const $deadCharacter = $(defender);
+  console.log($deadCharacter);
   const $deadCharacterName = $deadCharacter.attr('name');
   const $deadCharacterPlayer = $deadCharacter.attr('player');
+
   $('#damage-message').html(`${$deadCharacterName} was killed!`);
-  $deadCharacter.attr('class', 'battle-cell available');
+  $deadCharacter.addClass('dead');
+
+  console.log($deadCharacter);
 
   //BASIC ENDGAME BIT
   $deadCharacterPlayer === 'playerOne' ? this.playerOneCharactersAlive -= 1 : this.playerTwoCharactersAlive -=1;
+  console.log(this.playerOneCharactersAlive, this.playerTwoCharactersAlive);
 
   if (this.playerOneCharactersAlive === 0 || this.playerTwoCharactersAlive === 0) {
     $('#damage-message').html('GAME OVER!!');
@@ -578,16 +586,22 @@ game.actionOnDeath = function actionOnDeath(defender) {
 
 //STATS DISPLAY WINDOW
 game.setStatsWindow = function setStatsWindow() {
+  if ($(this.playerTwoCharacter).attr('class').includes('dead')) {
+    game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
+  }
   $('.defender-stats-window').hide();
   this.playerOneTurn ? this.displayStats(this.playerOneCharacter, 'attack') : this.displayStats(this.playerTwoCharacter, 'attack');
 };
 
 game.displayStats = function displayStats(character, attackOrDefend) {
+  if ($(this.playerTwoCharacter).attr('class').includes('dead')) {
+    $('.defender-stats-window').hide();
+  }
   const $character = $(character);
   // const characterClass = $character.attr('class');
   const $nameStat = $character.attr('name');
   const $hpStat = $character.attr('hp');
-  const $mpStat = $character.attr('mp');
+  let $mpStat = $character.attr('mp');
   const $mgDmgStat = $character.attr('mgdmg');
   const $mgTypeStat = $character.attr('magicType');
   const $mgCostStat = $character.attr('spellCost');
@@ -619,6 +633,7 @@ game.displayStats = function displayStats(character, attackOrDefend) {
     $mgTypeDisplay.hide();
   } else {
     $mpDisplay.show();
+    if (parseInt($mpStat) < 0) $mpStat = 0;
     $mpDisplay.html(`MP: ${$mpStat}`);
     $mgDmgDisplay.show();
     $mgDmgDisplay.html(`M. DMG: ${$mgDmgStat}`);

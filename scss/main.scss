@@ -170,6 +170,13 @@ nav {
     background-repeat: no-repeat;
   }
 
+  .dead {
+    background-color: red;
+    background-image: url(../images/gravestone.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+
   .clickable-character {
     cursor: pointer;
   }
@@ -256,6 +263,11 @@ nav {
   background-color: #0032AF;
   border: 3px solid silver;
   border-radius: 5px;
+}
+
+#graveyard {
+  height: 200px;
+  width: 200px;
 }
 
 
