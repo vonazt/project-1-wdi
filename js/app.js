@@ -135,9 +135,9 @@ game.pickOption = function pickOption() {
       if (game.magicOn) { //flag for checking that attacker is in magic range
         if (game.playerOneTurn) {
           //NEED REFERENCE FUNCTION TO MAKE SURE THAT game.playerOneCharacter AND game.playerTwoCharacter are correct
-          game.castMagic(game.playerOneCharacter, game.playerTwoCharacter);
+          game.castMagic(game.playerOneCharacter, game.defenderPosition[game.defenderIndex]);
         } else {
-          game.castMagic(game.playerOneCharacter, game.playerTwoCharacter);
+          game.castMagic(game.playerTwoCharacter, game.defenderPosition[game.defenderIndex]);
         }
       }
     }
@@ -399,7 +399,6 @@ game.moveCells = function moveCells(characterClass, direction, characterObj) {
 game.getDefencePositionsForAttack = function getDefencePositionsForAttack(playerPositionOrMovement, character) {
   const $characterType = $(character).attr('type');
   const $characterMP = $(character).attr('mp');
-  console.log($characterType);
   game.defenderPosition = []; //this is what's referred to for attack function
   let $defenderPositions;
   this.playerOneTurn ? $defenderPositions = $("div[player*='playerTwo']") : $defenderPositions = $("div[player*='playerOne']"); //searches by attribute so only opposition characters will be selected for attack
@@ -408,42 +407,39 @@ game.getDefencePositionsForAttack = function getDefencePositionsForAttack(player
     const id = this.id;
     const itemClass = this.className;
     game.defenderIndex = 0;
-    if ($characterType === 'magic') {
-      if (`${parseInt(id[0]) - 2}-${parseInt(id[2])}` === playerPositionOrMovement
-      || `${parseInt(id[0]) + 2}-${parseInt(id[2])}` === playerPositionOrMovement
-      || `${parseInt(id[0])}-${parseInt(id[2]) - 2}` === playerPositionOrMovement
-      || `${parseInt(id[0])}-${parseInt(id[2]) + 2}` === playerPositionOrMovement) {
 
-        game.defenderPosition.push('.' + itemClass);
-        game.turnMagicOn($characterMP);
-        $('.defender-stats-window').show();
-      }
-    }
     //these are all the up, down, left and right squares of the player
-    if (`${parseInt(id[0]) - 1}-${parseInt(id[2])}` === playerPositionOrMovement
+    if ((`${parseInt(id[0]) - 1}-${parseInt(id[2])}` === playerPositionOrMovement
       || `${parseInt(id[0]) + 1}-${parseInt(id[2])}` === playerPositionOrMovement
       || `${parseInt(id[0])}-${parseInt(id[2]) - 1}` === playerPositionOrMovement
-      || `${parseInt(id[0])}-${parseInt(id[2]) + 1}` === playerPositionOrMovement) {
+      || `${parseInt(id[0])}-${parseInt(id[2]) + 1}` === playerPositionOrMovement)
+      ||
+      ($characterType === 'magic'
+        && (`${parseInt(id[0]) - 2}-${parseInt(id[2])}` === playerPositionOrMovement
+        || `${parseInt(id[0]) + 2}-${parseInt(id[2])}` === playerPositionOrMovement
+        || `${parseInt(id[0])}-${parseInt(id[2]) - 2}` === playerPositionOrMovement
+        || `${parseInt(id[0])}-${parseInt(id[2]) + 2}` === playerPositionOrMovement))) {
       game.defenderPosition.push('.' + itemClass); //makes string into a class for displaying defender stats and making attack
       game.turnAttackOn();
       if ($characterType === 'magic') game.turnMagicOn($characterMP);
 
       $('.defender-stats-window').show();
-    }
-    //this entire if statement is checking if a player is surrounded - if they are then they can switch the selected defender by pressing 's'
-    if (game.defenderPosition.length > 1) {
-      $(document).on('keydown', function(e) {
-        if (e.which === 83) {
-          game.defenderIndex++;
-          if (game.defenderIndex === game.defenderPosition.length) game.defenderIndex = 0;
-          game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
-        }
-      });
-    } else {
-      game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
+      if (game.defenderPosition.length > 1) {
+        $(document).on('keydown', function(e) {
+          //this entire if statement is checking if a player is surrounded - if they are then they can switch the selected defender by pressing 's'
+          if (e.which === 83) {
+            game.defenderIndex++;
+            if (game.defenderIndex === game.defenderPosition.length) game.defenderIndex = 0;
+            game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
+          }
+        });
+      } else {
+        game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
+      }
     }
   });
 };
+
 
 
 //BATTLE EVENTS
@@ -587,6 +583,7 @@ game.setStatsWindow = function setStatsWindow() {
 
 game.displayStats = function displayStats(character, attackOrDefend) {
   const $character = $(character);
+  // const characterClass = $character.attr('class');
   const $nameStat = $character.attr('name');
   const $hpStat = $character.attr('hp');
   const $mpStat = $character.attr('mp');
@@ -597,8 +594,9 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   const $defStat = $character.attr('def');
   const $typeStat = $character.attr('type');
 
-  const initialHP = $hpStat;
-  const initialMP = $mpStat;
+  // game.cellTypes.characterOne.mp
+  // const initialHP = game.cellTypes[characterClass].hp;
+  // const initialMP = game.cellTypes[characterClass].mp;
 
   let battleType;
   //
@@ -608,7 +606,7 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   $nameDisplay.html(`Name: ${$nameStat}`);
 
   const $hpDisplay = $(`#${battleType}-hp-stats`);
-  $hpDisplay.html(`HP: ${$hpStat}/${initialHP}`);
+  $hpDisplay.html(`HP: ${$hpStat}`);
 
   const $mpDisplay = $(`#${battleType}-mp-stats`);
   const $mgDmgDisplay = $(`#${battleType}-mg-dmg-stats`);
@@ -620,7 +618,7 @@ game.displayStats = function displayStats(character, attackOrDefend) {
     $mgTypeDisplay.hide();
   } else {
     $mpDisplay.show();
-    $mpDisplay.html(`MP: ${$mpStat}/${initialMP}`);
+    $mpDisplay.html(`MP: ${$mpStat}`);
     $mgDmgDisplay.show();
     $mgDmgDisplay.html(`MAGIC DMG: ${$mgDmgStat}`);
     $mgTypeDisplay.show();
@@ -661,6 +659,8 @@ $(() => {
   game.$magicOption = $('#magic-option');
   game.pickOption();
   game.setStatsWindow(game.playerOneCharacter);
+
+
   // $('.gameboard').hide();
   // $('.options-display').hide();
   // $('.attacker-stats-window').hide();
