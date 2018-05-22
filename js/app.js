@@ -30,7 +30,7 @@ class MeleeCharacter extends BaseCharacter {
   }
 }
 
-const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 6, 3, 'Ice', 6, 5, 20, 'magic', 'playerOne');
+const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 6, 3, 'Ice', 6, 5, 50, 'magic', 'playerOne');
 const theMountain = new MeleeCharacter('The Mountain', 15, 1, 6, 18, 'melee', 'playerOne');
 const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 12, 15, 4, 'Fire', 6, 5, 2, 'magic', 'playerOne');
 const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 9, 4, 'Ice', 4, 8, 5, 'magic', 'playerOne');
@@ -146,9 +146,15 @@ game.pickOption = function pickOption() {
 };
 
 game.switchPlayers = function switchPlayers() {
-  //checks if players are still on board for endgame
-  if ($(this.playerTwoCharacter).attr('class').includes('dead')) {
-    game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
+  //checks if players are still on board for endgame -
+  if (this.playerOneTurn) {
+    if ($(this.playerTwoCharacter).attr('class').includes('dead')) {
+      game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
+    }
+  } else {
+    if ($(this.playerOneCharacter).attr('class').includes('dead')) {
+      game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
+    }
   }
   this.canSwitchCharacters = true; //resets canSwitchCharacters flag so that players can tab through character select
   this.playerOneTurn = !game.playerOneTurn; //flag that switches player control
@@ -215,8 +221,14 @@ game.checkPlayerTwoCharacterToSwapTo = function checkPlayerTwoCharacterToSwapTo(
 };
 
 game.switchCharacter = function switchCharacter() {
-  if ($(this.playerTwoCharacter).attr('class').includes('dead')) {
-    game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
+  if (this.playerOneTurn) {
+    if ($(this.playerTwoCharacter).attr('class').includes('dead')) {
+      game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
+    }
+  } else {
+    if ($(this.playerOneCharacter).attr('class').includes('dead')) {
+      game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
+    }
   }
   $(document).on('keydown', function(e) {
     if (e.which === 9) {
@@ -406,37 +418,37 @@ game.getDefencePositionsForAttack = function getDefencePositionsForAttack(player
   const $characterType = $(character).attr('type');
   const $characterMP = $(character).attr('mp');
   game.defenderPosition = []; //this is what's referred to for attack function
-  console.log(game.defenderPosition);
   let $defenderPositions;
   this.playerOneTurn ? $defenderPositions = $("div[player*='playerTwo']") : $defenderPositions = $("div[player*='playerOne']"); //searches by attribute so only opposition characters will be selected for attack
   //iterates through all these oppostion characters and sees if they match
   $defenderPositions.each(function() {
     const id = this.id;
     const itemClass = this.className;
-    game.defenderIndex = 0;
+    if (!itemClass.includes('dead')) { //this is so dead characters don't display
 
-    //these are all the up, down, left and right squares of the player
-    if (`${parseInt(id[0]) - 1}-${parseInt(id[2])}` === playerPositionOrMovement
-      || `${parseInt(id[0]) + 1}-${parseInt(id[2])}` === playerPositionOrMovement
-      || `${parseInt(id[0])}-${parseInt(id[2]) - 1}` === playerPositionOrMovement
-      || `${parseInt(id[0])}-${parseInt(id[2]) + 1}` === playerPositionOrMovement) {
-      game.defenderPosition.push('.' + itemClass);
-      console.log(game.defenderPosition);
-      game.turnAttackOn();
-      if ($characterType === 'magic') game.turnMagicOn($characterMP);
-      $('.defender-stats-window').show();
-      if (game.defenderPosition.length > 1) {
-        $(document).on('keydown', function(e) {
-          if (e.which === 83) {
-            game.defenderIndex++;
-            if (game.defenderIndex >= game.defenderPosition.length) game.defenderIndex = 0;
-            console.log('multipleattak', game.defenderIndex);
-            game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
-          }
-        });
-      } else {
-        console.log('single attack', game.defenderIndex);
-        game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
+
+      game.defenderIndex = 0;
+
+      //these are all the up, down, left and right squares of the player
+      if (`${parseInt(id[0]) - 1}-${parseInt(id[2])}` === playerPositionOrMovement
+        || `${parseInt(id[0]) + 1}-${parseInt(id[2])}` === playerPositionOrMovement
+        || `${parseInt(id[0])}-${parseInt(id[2]) - 1}` === playerPositionOrMovement
+        || `${parseInt(id[0])}-${parseInt(id[2]) + 1}` === playerPositionOrMovement) {
+        game.defenderPosition.push('.' + itemClass);
+        game.turnAttackOn();
+        if ($characterType === 'magic') game.turnMagicOn($characterMP);
+        $('.defender-stats-window').show();
+        if (game.defenderPosition.length > 1) {
+          $(document).on('keydown', function(e) {
+            if (e.which === 83) {
+              game.defenderIndex++;
+              if (game.defenderIndex >= game.defenderPosition.length) game.defenderIndex = 0;
+              game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
+            }
+          });
+        } else {
+          game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
+        }
       }
     }
   });
@@ -563,27 +575,22 @@ game.checkForDeath = function checkForDeath(defender) {
 
 //THIS IS CURRENTLY BREAKING THE GAME BECAUSE IT CAN'T FIND THE CHARACTER
 game.actionOnDeath = function actionOnDeath(defender) {
-  // console.log(defender);
   const $deadCharacter = $(defender);
-  console.log($deadCharacter);
   const $deadCharacterName = $deadCharacter.attr('name');
   const $deadCharacterPlayer = $deadCharacter.attr('player');
   let $deadCharacterIsDead = $deadCharacter.attr('isDead');
   $deadCharacterIsDead = $deadCharacter.attr('isDead', true);
-  console.log($deadCharacterIsDead);
 
 
   $('#damage-message').html(`${$deadCharacterName} was killed!`);
   $deadCharacter.addClass('dead');
 
 
-  console.log($deadCharacter);
-
   //BASIC ENDGAME BIT
   $deadCharacterPlayer === 'playerOne' ? this.playerOneCharactersAlive -= 1 : this.playerTwoCharactersAlive -=1;
-  console.log(this.playerOneCharactersAlive, this.playerTwoCharactersAlive);
 
   if (this.playerOneCharactersAlive === 0 || this.playerTwoCharactersAlive === 0) {
+    ('.attacker-stats-window').hide();
     $('#damage-message').html('GAME OVER!!');
   }
 };
@@ -600,7 +607,6 @@ game.setStatsWindow = function setStatsWindow() {
 
 game.displayStats = function displayStats(character, attackOrDefend) {
 
-
   const $character = $(character);
   // const characterClass = $character.attr('class');
   const $nameStat = $character.attr('name');
@@ -612,6 +618,8 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   const $dmgStat = $character.attr('dmg');
   const $defStat = $character.attr('def');
   const $typeStat = $character.attr('type');
+  const $isDead = $character.attr('isdead');
+  if ($isDead === true) console.log('isdead');
 
   // game.cellTypes.characterOne.mp
   // const initialHP = game.cellTypes[characterClass].hp;
