@@ -30,7 +30,7 @@ class MeleeCharacter extends BaseCharacter {
   }
 }
 
-const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 6, 3, 'Ice', 6, 5, 50, 'magic', 'playerOne');
+const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 6, 3, 'Ice', 6, 5, 20, 'magic', 'playerOne');
 const theMountain = new MeleeCharacter('The Mountain', 15, 1, 6, 18, 'melee', 'playerOne');
 const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 12, 15, 4, 'Fire', 6, 5, 2, 'magic', 'playerOne');
 const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 9, 4, 'Ice', 4, 8, 5, 'magic', 'playerOne');
@@ -407,7 +407,6 @@ game.getDefencePositionsForAttack = function getDefencePositionsForAttack(player
   const $characterMP = $(character).attr('mp');
   game.defenderPosition = []; //this is what's referred to for attack function
   console.log(game.defenderPosition);
-  game.magicDefenderPosition = [];
   let $defenderPositions;
   this.playerOneTurn ? $defenderPositions = $("div[player*='playerTwo']") : $defenderPositions = $("div[player*='playerOne']"); //searches by attribute so only opposition characters will be selected for attack
   //iterates through all these oppostion characters and sees if they match
@@ -415,7 +414,6 @@ game.getDefencePositionsForAttack = function getDefencePositionsForAttack(player
     const id = this.id;
     const itemClass = this.className;
     game.defenderIndex = 0;
-    game.magicDefenderIndex = 0;
 
     //these are all the up, down, left and right squares of the player
     if (`${parseInt(id[0]) - 1}-${parseInt(id[2])}` === playerPositionOrMovement
