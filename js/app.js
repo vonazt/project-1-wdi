@@ -29,17 +29,17 @@ class MeleeCharacter extends BaseCharacter {
   }
 }
 
-const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 3, 3, 'Ice', 3, 5, 7, 'magic', 'playerOne');
-const theMountain = new MeleeCharacter('The Mountain', 15, 1, 4, 7, 'melee', 'playerOne');
+const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 6, 3, 'Ice', 3, 5, 14, 'magic', 'playerOne');
+const theMountain = new MeleeCharacter('The Mountain', 15, 1, 6, 18, 'melee', 'playerOne');
 const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 12, 15, 4, 'Fire', 6, 5, 2, 'magic', 'playerOne');
-const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 4, 4, 'Ice', 4, 3, 3, 'magic', 'playerOne');
-const nedStark = new MeleeCharacter('Ned Stark', 15, 3, 8, 6, 'melee', 'playerOne');
+const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 9, 4, 'Ice', 4, 8, 5, 'magic', 'playerOne');
+const nedStark = new MeleeCharacter('Ned Stark', 15, 3, 8, 15, 'melee', 'playerOne');
 
-const jorahMormont = new MeleeCharacter('Jorah Mormont', 10, 2, 13, 6, 'melee', 'playerTwo');
-const cerseiLannister = new MagicCharacter('Cersei Lannister', 15, 10, 4, 3, 'Ice', 6, 3, 1, 'magic', 'playerTwo');
-const theHound = new MeleeCharacter('The Hound', 12, 2, 8, 6, 'melee', 'playerTwo');
-const aryaStark = new MagicCharacter('Arya Stark', 10, 9, 3, 3, 'Fire', 6, 6, 5, 'magic', 'playerTwo');
-const jaimeLannister = new MeleeCharacter('Jaime Lannister', 14, 4, 7, 6, 'melee', 'playerTwo');
+const jorahMormont = new MeleeCharacter('Jorah Mormont', 10, 2, 5, 12, 'melee', 'playerTwo');
+const cerseiLannister = new MagicCharacter('Cersei Lannister', 15, 10, 10, 3, 'Ice', 6, 4, 1, 'magic', 'playerTwo');
+const theHound = new MeleeCharacter('The Hound', 12, 2, 8, 14, 'melee', 'playerTwo');
+const aryaStark = new MagicCharacter('Arya Stark', 10, 9, 6, 3, 'Fire', 6, 7, 11, 'magic', 'playerTwo');
+const jaimeLannister = new MeleeCharacter('Jaime Lannister', 14, 4, 7, 13, 'melee', 'playerTwo');
 
 //THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER
 game.playerOneCharactersAlive = 5;
@@ -414,7 +414,7 @@ game.getDefencePositionsForAttack = function getDefencePositionsForAttack(player
       || `${parseInt(id[0])}-${parseInt(id[2]) - 1}` === playerPositionOrMovement
       || `${parseInt(id[0])}-${parseInt(id[2]) + 1}` === playerPositionOrMovement)
       ||
-      ($characterType === 'magic'
+      ($characterType === 'magic' //all needs to be bunched together to work properly, but this is hella ugly
         && (`${parseInt(id[0]) - 2}-${parseInt(id[2])}` === playerPositionOrMovement
         || `${parseInt(id[0]) + 2}-${parseInt(id[2])}` === playerPositionOrMovement
         || `${parseInt(id[0])}-${parseInt(id[2]) - 2}` === playerPositionOrMovement
@@ -490,20 +490,21 @@ game.castMagic = function castMagic(attacker, defender, magic) {
   let defenderDmgStat = $(defender).attr('dmg');
 
   //sets the amount of hp that is taken off by spell, weighted by defender's def stat
-  const magicDamage = Math.ceil((parseInt(spellPower) / (magicResistance*0.6)));
+  const magicDamage = Math.ceil(parseInt(spellPower) * (1 / (magicResistance - 1)));
 
   //sets the amount the defender's def or dmg is decreased relative to def stat and spell power - NEEDS TWEAKING
-  let statDamage = Math.ceil(parseInt(magicResistance) / (parseInt(spellPower*0.9)));
-  statDamage = parseInt(magicResistance) - statDamage;
+  const statDamage = Math.ceil(parseInt(spellPower) * (0.8 / (magicResistance - 0.8)));
+  let defDamage = parseInt(magicResistance) - statDamage;
+  if (defDamage < 1) defDamage = 1;
   defenderDmgStat = parseInt(defenderDmgStat) - statDamage;
-
+  if (defenderDmgStat < 1) defenderDmgStat = 1;
   let $defenderHP = $(defender).attr('hp');
   $defenderHP = parseInt($defenderHP) - magicDamage;
   $(defender).attr('hp', $defenderHP);
 
   //sets whether def or dmg stat is affected depending on magic type
   if (magic === 'Fire') {
-    $(defender).attr('def', magicResistance);
+    $(defender).attr('def', defDamage);
   } else if (magic === 'Ice') {
     $(defender).attr('dmg', defenderDmgStat);
   }
@@ -522,7 +523,7 @@ game.attackDefender = function attackDefender(attacker, defender) {
   const attackPower = $(attacker).attr('dmg');
   const defPower = $(defender).attr('def');
 
-  const actualDamage = Math.ceil((parseInt(attackPower) / (defPower*0.4)));
+  const actualDamage = Math.ceil(parseInt(attackPower) * (1 / (defPower - 1)));
   let $defenderHP = $(defender).attr('hp');
   $defenderHP = parseInt($defenderHP) - actualDamage;
   $(defender).attr('hp', $defenderHP);
@@ -620,9 +621,9 @@ game.displayStats = function displayStats(character, attackOrDefend) {
     $mpDisplay.show();
     $mpDisplay.html(`MP: ${$mpStat}`);
     $mgDmgDisplay.show();
-    $mgDmgDisplay.html(`MAGIC DMG: ${$mgDmgStat}`);
+    $mgDmgDisplay.html(`M. DMG: ${$mgDmgStat}`);
     $mgTypeDisplay.show();
-    $mgDmgDisplay.html(`Type: ${$mgTypeStat} | Cost: ${$mgCostStat}MP`);
+    $mgTypeDisplay.html(`Type: ${$mgTypeStat} | Cost: ${$mgCostStat}MP`);
   }
 
   const $dmgDisplay = $(`#${battleType}-dmg-stats`);
