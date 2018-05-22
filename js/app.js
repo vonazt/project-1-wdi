@@ -30,21 +30,23 @@ class MeleeCharacter extends BaseCharacter {
   }
 }
 
-const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 6, 3, 'Ice', 6, 5, 150, 'magic', 'playerOne');
-const theMountain = new MeleeCharacter('The Mountain', 15, 1, 6, 18, 'melee', 'playerOne');
-const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 12, 15, 4, 'Fire', 6, 5, 2, 'magic', 'playerOne');
-const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 9, 4, 'Ice', 4, 8, 5, 'magic', 'playerOne');
-const nedStark = new MeleeCharacter('Ned Stark', 15, 3, 8, 15, 'melee', 'playerOne');
+const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 12, 3, 'Ice', 3, 5, 15, 'magic', 'playerOne');
+const theMountain = new MeleeCharacter('The Mountain', 15, 1, 6, 20, 'melee', 'playerOne');
+const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 16, 20, 4, 'Fire', 5, 5, 2, 'magic', 'playerOne');
+const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 12, 4, 'Ice', 4, 6, 5, 'magic', 'playerOne');
+const nedStark = new MeleeCharacter('Ned Stark', 15, 3, 5, 15, 'melee', 'playerOne');
+const melissandre = new MagicCharacter('Melissandre', 8, 12, 18, 4, 'Fire', 3, 5, 5, 'magic', 'playerOne');
 
-const jorahMormont = new MeleeCharacter('Jorah Mormont', 10, 2, 5, 12, 'melee', 'playerTwo');
-const cerseiLannister = new MagicCharacter('Cersei Lannister', 15, 10, 10, 3, 'Ice', 6, 4, 150, 'magic', 'playerTwo');
-const theHound = new MeleeCharacter('The Hound', 12, 2, 8, 14, 'melee', 'playerTwo');
-const aryaStark = new MagicCharacter('Arya Stark', 10, 9, 6, 3, 'Fire', 6, 7, 11, 'magic', 'playerTwo');
-const jaimeLannister = new MeleeCharacter('Jaime Lannister', 14, 4, 7, 13, 'melee', 'playerTwo');
+const jorahMormont = new MeleeCharacter('Jorah Mormont', 10, 2, 4, 16, 'melee', 'playerTwo');
+const cerseiLannister = new MagicCharacter('Cersei Lannister', 9, 12, 15, 3, 'Ice', 4, 4, 1, 'magic', 'playerTwo');
+const theHound = new MeleeCharacter('The Hound', 12, 2, 5, 14, 'melee', 'playerTwo');
+const aryaStark = new MagicCharacter('Arya Stark', 10, 6, 12, 3, 'Fire', 6, 5, 11, 'magic', 'playerTwo');
+const jaimeLannister = new MeleeCharacter('Jaime Lannister', 14, 4, 6, 16, 'melee', 'playerTwo');
+const whiteWalker = new MagicCharacter('White Walker', 15, 10, 18, 5, 'Ice', 2, 4, 15, 'magic', 'playerTwo');
 
 //THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER
-game.playerOneCharactersAlive = 5;
-game.playerTwoCharactersAlive = 5;
+game.playerOneCharactersAlive = 6;
+game.playerTwoCharactersAlive = 6;
 
 
 //GAME SETUP
@@ -62,16 +64,18 @@ game.createGameGrid = function createGameGrid() {
   }
 
   //starting positions for playerOne and playerTwo characters
-  gameGrid[3][1] = 'characterOne';
-  gameGrid[4][1] = 'characterTwo';
-  gameGrid[5][1] = 'characterThree';
-  gameGrid[6][1] = 'characterFour';
-  gameGrid[7][1] = 'characterFive';
-  gameGrid[3][8] = 'characterSix';
+  gameGrid[4][1] = 'characterOne';
+  gameGrid[4][0] = 'characterTwo';
+  gameGrid[5][0] = 'characterThree';
+  gameGrid[5][1] = 'characterFour';
+  gameGrid[6][1] = 'characterFive';
+  gameGrid[6][0] = 'characterSix';
   gameGrid[4][8] = 'characterSeven';
-  gameGrid[5][8] = 'characterEight';
-  gameGrid[6][8] = 'characterNine';
-  gameGrid[7][8] = 'characterTen';
+  gameGrid[4][9] = 'characterEight';
+  gameGrid[5][8] = 'characterNine';
+  gameGrid[5][9] = 'characterTen';
+  gameGrid[6][8] = 'characterEleven';
+  gameGrid[6][9] = 'characterTwelve';
 
   return gameGrid;
 };
@@ -83,11 +87,13 @@ game.cellTypes = {
   characterThree: tyrionLannister,
   characterFour: theMountain,
   characterFive: nedStark,
-  characterSix: jorahMormont,
-  characterSeven: cerseiLannister,
-  characterEight: theHound,
-  characterNine: aryaStark,
-  characterTen: jaimeLannister
+  characterSix: melissandre,
+  characterSeven: jorahMormont,
+  characterEight: cerseiLannister,
+  characterNine: theHound,
+  characterTen: aryaStark,
+  characterEleven: jaimeLannister,
+  characterTwelve: whiteWalker
 };
 
 game.drawBattlefield = function drawBattlefield() {
@@ -106,9 +112,9 @@ game.drawBattlefield = function drawBattlefield() {
       //assigns every cell an id for selection in other functions, such as movement
       $battleSquare.attr('id', `${i}-${j}`);
       //temp click function for checking grid coords in debugging
-      // $battleSquare.on('click', function() {
-      //   console.log($battleSquare);
-      // });
+      $battleSquare.on('click', function() {
+        console.log($battleSquare);
+      });
       $battleSquare.appendTo('#battle-map');
     });
   });
@@ -146,6 +152,12 @@ game.pickOption = function pickOption() {
 };
 
 game.switchPlayers = function switchPlayers() {
+  // if ($(this.playerOneCharacter).attr('class').includes('dead')) {
+  //   game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
+  // }
+  // if ($(this.playerTwoCharacter).attr('class').includes('dead')) {
+  //   game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
+  // }
   this.canSwitchCharacters = true; //resets canSwitchCharacters flag so that players can tab through character select
   this.playerOneTurn = !game.playerOneTurn; //flag that switches player control
   this.turnAttackOff(); //resets Attack in options window to gray
@@ -165,8 +177,8 @@ game.canSwitchCharacters = true; //turned to false after player has moved charac
 game.playerOneCharacter = '.characterOne';
 game.playerOneCharacterObjectReference = 'characterOne'; //this is called in checkCharacterToSwapTo to get right value in playerCharacterSwitches object
 //THESE SHOULD ONLY BE REFERENCED IN TERMS OF MOVEMENT - NOT FOR DESIGNATING DEFENDER
-game.playerTwoCharacter = '.characterSix';
-game.playerTwoCharacterObjectReference = 'characterSix';
+game.playerTwoCharacter = '.characterSeven';
+game.playerTwoCharacterObjectReference = 'characterSeven';
 
 //all the characters and which class they should switch to when tabbing through
 game.playerCharacterSwitches = {
@@ -174,13 +186,15 @@ game.playerCharacterSwitches = {
   characterTwo: '.characterThree',
   characterThree: '.characterFour',
   characterFour: '.characterFive',
-  characterFive: '.characterOne',
+  characterFive: '.characterSix',
+  characterSix: '.characterOne',
 
-  characterSix: '.characterSeven',
   characterSeven: '.characterEight',
   characterEight: '.characterNine',
   characterNine: '.characterTen',
-  characterTen: '.characterSix'
+  characterTen: '.characterEleven',
+  characterEleven: '.characterTwelve',
+  characterTwelve: '.characterSeven'
 };
 
 game.playerCharacterObjectReference = {
@@ -188,13 +202,15 @@ game.playerCharacterObjectReference = {
   characterTwo: 'characterThree',
   characterThree: 'characterFour',
   characterFour: 'characterFive',
-  characterFive: 'characterOne',
+  characterFive: 'characterSix',
+  characterSix: 'characterOne',
 
-  characterSix: 'characterSeven',
   characterSeven: 'characterEight',
   characterEight: 'characterNine',
   characterNine: 'characterTen',
-  characterTen: 'characterSix'
+  characterTen: 'characterEleven',
+  characterEleven: 'characterTwelve',
+  characterTwelve: 'characterSeven'
 };
 
 //references the objects above and changes the current selected character accordingly
@@ -210,28 +226,32 @@ game.checkPlayerTwoCharacterToSwapTo = function checkPlayerTwoCharacterToSwapTo(
   this.playerTwoCharacterObjectReference = this.playerCharacterObjectReference[currentCharacter];
 };
 
+
+
 game.switchCharacter = function switchCharacter() {
   $(document).on('keydown', function(e) {
     if (e.which === 9) {
       e.preventDefault(); //stops tab from moving around the window
       if (game.canSwitchCharacters) {
         if (game.playerOneTurn) {
+          for (let i=1; i < 7; i++) {
+            if ($(game.playerTwoCharacter).attr('class').includes('dead')) {
+              game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
+            }
+          }
+          for (let j=1; j < 7; j++) {
+            if ($(game.playerOneCharacter).attr('class').includes('dead')) {
+              game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
+            }
+          }
           //switches character according to what the characterObjectReference is
           game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
         } else if (!game.playerOneTurn) {
           game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
         }
+        //these loops are necessary to make sure that a dead character isn't selected while switching characters - don't ask me why
+
         //resets all the movement, display stats and available spaces while tabbing through characters
-        for (let i=1; i < 5; i++) {
-          if ($(game.playerTwoCharacter).attr('class').includes('dead')) {
-            game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
-          }
-        }
-        for (let j=1; j < 5; j++) {
-          if ($(game.playerOneCharacter).attr('class').includes('dead')) {
-            game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
-          }
-        }
         game.turnAttackOff();
         game.turnMagicOff();
         game.clearSquares();
@@ -497,7 +517,7 @@ game.castMagic = function castMagic(attacker, defender, magic) {
   const magicDamage = Math.floor(parseInt(spellPower) * (1 / (magicResistance - 1)));
 
   //sets the amount the defender's def or dmg is decreased relative to def stat and spell power - NEEDS TWEAKING
-  const statDamage = Math.floor(parseInt(spellPower) * (0.5 / (magicResistance - 0.5)));
+  const statDamage = Math.floor(parseInt(spellPower) * (0.8 / (magicResistance - 0.8)));
   let defDamage = parseInt(magicResistance) - statDamage;
   if (defDamage < 1) defDamage = 1;
   defenderDmgStat = parseInt(defenderDmgStat) - statDamage;

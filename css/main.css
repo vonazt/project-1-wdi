@@ -29,23 +29,23 @@ nav {
   width: 1000px; }
 
 #battle-map {
-  height: 500px;
-  width: 500px;
+  height: 650px;
+  width: 650px;
   margin-top: 100px;
   top: 20px;
   left: 100px;
   border: 5px solid silver; }
   #battle-map .battle-cell {
-    height: 50px;
-    width: 50px;
+    height: 65px;
+    width: 65px;
     box-sizing: border-box;
     border: 1px solid black;
     float: left;
     margin: 0;
     background-color: #C5E3BF; }
   #battle-map .characterOne {
-    height: 50px;
-    width: 50px;
+    height: 65px;
+    width: 65px;
     box-sizing: border-box;
     border: 1px solid black;
     float: left;
@@ -55,8 +55,8 @@ nav {
     background-color: white;
     background-repeat: no-repeat; }
   #battle-map .characterTwo {
-    height: 50px;
-    width: 50px;
+    height: 65px;
+    width: 65px;
     box-sizing: border-box;
     border: 1px solid black;
     float: left;
@@ -66,8 +66,8 @@ nav {
     background-color: white;
     background-repeat: no-repeat; }
   #battle-map .characterThree {
-    height: 50px;
-    width: 50px;
+    height: 65px;
+    width: 65px;
     box-sizing: border-box;
     border: 1px solid black;
     float: left;
@@ -77,8 +77,8 @@ nav {
     background-color: white;
     background-repeat: no-repeat; }
   #battle-map .characterFour {
-    height: 50px;
-    width: 50px;
+    height: 65px;
+    width: 65px;
     box-sizing: border-box;
     border: 1px solid black;
     float: left;
@@ -88,8 +88,8 @@ nav {
     background-color: white;
     background-repeat: no-repeat; }
   #battle-map .characterFive {
-    height: 50px;
-    width: 50px;
+    height: 65px;
+    width: 65px;
     box-sizing: border-box;
     border: 1px solid black;
     float: left;
@@ -99,8 +99,19 @@ nav {
     background-color: white;
     background-repeat: no-repeat; }
   #battle-map .characterSix {
-    height: 50px;
-    width: 50px;
+    height: 65px;
+    width: 65px;
+    box-sizing: border-box;
+    border: 1px solid black;
+    float: left;
+    margin: 0;
+    background-image: url(../images/melissandre.png);
+    background-size: contain;
+    background-color: white;
+    background-repeat: no-repeat; }
+  #battle-map .characterSeven {
+    height: 65px;
+    width: 65px;
     box-sizing: border-box;
     border: 1px solid black;
     float: left;
@@ -109,9 +120,9 @@ nav {
     background-size: contain;
     background-color: white;
     background-repeat: no-repeat; }
-  #battle-map .characterSeven {
-    height: 50px;
-    width: 50px;
+  #battle-map .characterEight {
+    height: 65px;
+    width: 65px;
     box-sizing: border-box;
     border: 1px solid black;
     float: left;
@@ -120,9 +131,9 @@ nav {
     background-size: contain;
     background-color: white;
     background-repeat: no-repeat; }
-  #battle-map .characterEight {
-    height: 50px;
-    width: 50px;
+  #battle-map .characterNine {
+    height: 65px;
+    width: 65px;
     box-sizing: border-box;
     border: 1px solid black;
     float: left;
@@ -131,9 +142,9 @@ nav {
     background-size: contain;
     background-color: white;
     background-repeat: no-repeat; }
-  #battle-map .characterNine {
-    height: 50px;
-    width: 50px;
+  #battle-map .characterTen {
+    height: 65px;
+    width: 65px;
     box-sizing: border-box;
     border: 1px solid black;
     float: left;
@@ -142,14 +153,25 @@ nav {
     background-size: contain;
     background-color: white;
     background-repeat: no-repeat; }
-  #battle-map .characterTen {
-    height: 50px;
-    width: 50px;
+  #battle-map .characterEleven {
+    height: 65px;
+    width: 65px;
     box-sizing: border-box;
     border: 1px solid black;
     float: left;
     margin: 0;
     background-image: url(../images/jaime_lannister.png);
+    background-size: contain;
+    background-color: white;
+    background-repeat: no-repeat; }
+  #battle-map .characterTwelve {
+    height: 65px;
+    width: 65px;
+    box-sizing: border-box;
+    border: 1px solid black;
+    float: left;
+    margin: 0;
+    background-image: url(../images/white_walker.png);
     background-size: contain;
     background-color: white;
     background-repeat: no-repeat; }
@@ -161,8 +183,8 @@ nav {
   #battle-map .clickable-character {
     cursor: pointer; }
   #battle-map .available {
-    height: 50px;
-    width: 50px;
+    height: 65px;
+    width: 65px;
     box-sizing: border-box;
     border: 1px solid black;
     float: left;
@@ -174,7 +196,7 @@ nav {
   height: 100px;
   width: 200px;
   top: 100px;
-  right: 220px;
+  right: 120px;
   background-color: #0032AF;
   border: 3px solid silver;
   border-radius: 5px; }
@@ -195,8 +217,8 @@ nav {
 .attacker-stats-window {
   position: absolute;
   height: 120px;
-  width: 200px;
-  right: 220px;
+  width: 250px;
+  right: 120px;
   top: 250px;
   background-color: #0032AF;
   border: 3px solid silver;
@@ -209,8 +231,8 @@ nav {
 .defender-stats-window {
   position: absolute;
   height: 120px;
-  width: 200px;
-  right: 220px;
+  width: 250px;
+  right: 120px;
   top: 400px;
   background-color: #0032AF;
   border: 3px solid silver;
