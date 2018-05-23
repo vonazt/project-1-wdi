@@ -12,10 +12,12 @@ header {
 
 h1 {
   font-family: 'Cinzel Decorative', cursive;
-  color: white;
   font-size: 8em;
   text-align: center;
-  margin-bottom: 100px; }
+  margin-bottom: 100px;
+  margin-top: 50px;
+  color: #f5f5f5;
+  text-shadow: 0px -2px 4px #fff, 0px -2px 10px #FF3,  0px -10px 20px #F90, 0px -20px 40px #C33; }
 
 nav {
   display: flex;
@@ -25,10 +27,11 @@ nav {
 #battle-map {
   height: 650px;
   width: 650px;
-  margin-top: 50px;
+  margin-top: 30px;
   top: 20px;
   left: 100px;
-  border: 5px solid silver; }
+  border: 5px solid silver;
+  background-image: url(../images/grass.png); }
   #battle-map .battle-cell {
     height: 65px;
     width: 65px;
@@ -52,7 +55,7 @@ nav {
     border: 1px solid black;
     float: left;
     margin: 0;
-    background-color: chartreuse; }
+    background-color: rgba(255, 255, 255, 0.3); }
 
 .characterOne {
   height: 65px;
@@ -202,7 +205,7 @@ nav {
   position: absolute;
   height: 100px;
   width: 200px;
-  top: 110px;
+  top: 100px;
   right: 120px;
   background-color: #0032AF;
   border: 3px solid silver;
@@ -224,9 +227,9 @@ nav {
 .attacker-stats-window {
   position: absolute;
   padding: 5px;
-  height: 170px;
-  width: 300px;
-  left: 50px;
+  height: 160px;
+  width: 335px;
+  left: 20px;
   top: 350px;
   background-color: #0032AF;
   border: 3px solid silver;
@@ -235,10 +238,10 @@ nav {
 .defender-stats-window {
   position: absolute;
   padding: 5px;
-  height: 170px;
-  width: 300px;
-  right: 50px;
-  top: 340px;
+  height: 160px;
+  width: 320px;
+  right: 40px;
+  top: 350px;
   background-color: #0032AF;
   border: 3px solid silver;
   border-radius: 5px; }

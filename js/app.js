@@ -487,7 +487,7 @@ game.getDefencePositionsForAttack = function(playerPositionOrMovement, character
         game.defenderPosition.push('.' + itemClass);
         game.turnAttackOn();
         if ($characterType === 'magic') game.turnMagicOn($characterMP);
-        $('.defender-stats-window').show();
+        $('.defender-stats-window').show(200);
         if (game.defenderPosition.length > 1) {
           $(document).on('keydown', function(e) {
             if (e.which === 83) {
@@ -557,7 +557,9 @@ game.castMagic = function castMagic(attacker, defender, magic) {
   const magicDamage = Math.floor(parseInt(spellPower) * (1 / (magicResistance - 1)));
 
   //sets the amount the defender's def or dmg is decreased relative to def stat and spell power - NEEDS TWEAKING
-  const statDamage = Math.floor(parseInt(spellPower) * (0.7 / (magicResistance - 0.7)));
+  let statDamage;
+  if (magic === 'Ice') statDamage = Math.floor(parseInt(spellPower) * (1 / (magicResistance - 1)));
+  else if (magic=== 'Fire') statDamage = Math.floor(parseInt(spellPower) * (0.7 / (magicResistance - 0.7)));
   let defDamage = parseInt(magicResistance) - statDamage;
   if (defDamage < 1) defDamage = 1;
   defenderDmgStat = parseInt(defenderDmgStat) - statDamage;
@@ -733,12 +735,13 @@ game.hideOpeningCredits = function hideOpeningCredits() {
     $('nav').hide();
     $gameTitle.css({
       'font-size': '3em',
-      'margin-bottom': '10px'
+      'margin-bottom': '10px',
+      'margin-top': '5px'
     });
   });
 };
 
-$(() => {
+game.init = function() {
   game.drawBattlefield();
   game.moveCharacter();
   game.checkMoveDistance();
@@ -754,5 +757,9 @@ $(() => {
   $('.attacker-stats-window').hide();
   $('.defender-stats-window').hide();
   game.hideOpeningCredits();
+}
+
+$(() => {
+  game.init();
 
 });
