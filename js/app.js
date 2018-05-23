@@ -30,7 +30,7 @@ class MeleeCharacter extends BaseCharacter {
   }
 }
 
-const jonSnow = new MeleeCharacter('Jon Snow', 14, 2, 5, 120, 'melee', 'playerOne');
+const jonSnow = new MeleeCharacter('Jon Snow', 14, 2, 5, 12, 'melee', 'playerOne');
 const robertBaratheon = new MeleeCharacter('Robert Baratheon', 15, 1, 4, 20, 'melee', 'playerOne');
 const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 16, 18, 4, 'Fire', 5, 5, 1, 'magic', 'playerOne');
 const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 12, 4, 'Fire', 3, 4, 1, 'magic', 'playerOne');
@@ -113,7 +113,7 @@ game.drawBattlefield = function drawBattlefield() {
       $battleSquare.attr('id', `${i}-${j}`);
       //temp click function for checking grid coords in debugging
       // $battleSquare.on('click', function() {
-      //   console.log($battleSquare);
+      //   ($battleSquare);
       // });
       $battleSquare.appendTo('#battle-map');
     });
@@ -199,6 +199,7 @@ game.switchCharacter = function switchCharacter() {
         //these loops are necessary to make sure that a dead character isn't selected while switching characters - don't ask me why
         for (let j=1; j < 6; j++) {
           if ($(game.playerOneCharacter).attr('class').includes('dead')) {
+            console.log(game.playerOneCharacterObjectReference);
             game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
           }
         }
@@ -224,12 +225,6 @@ game.switchCharacter = function switchCharacter() {
 };
 
 game.switchPlayers = function switchPlayers() {
-  // if ($(this.playerOneCharacter).attr('class').includes('dead')) {
-  //   game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
-  // }
-  // if ($(this.playerTwoCharacter).attr('class').includes('dead')) {
-  //   game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
-  // }
   if (this.playerOneTurn){
     $('#selected-attacker').removeClass();
     $('#selected-attacker').addClass(game.playerTwoCharacterObjectReference);
@@ -510,7 +505,6 @@ game.getDefencePositionsForAttack = function(playerPositionOrMovement, character
           || `${DefX}-${DefY - 2}` === playerPositionOrMovement
           || `${DefX}-${DefY + 2}` === playerPositionOrMovement) {
           game.defenderPosition.push('.' + itemClass);
-          console.log(game.defenderPosition);
           game.turnMagicOn($characterMP);
           $('.defender-stats-window').show(200);
           if (game.defenderPosition.length > 1) {
@@ -586,8 +580,8 @@ game.castMagic = function castMagic(attacker, defender, magic) {
   //sets the amount the defender's def or dmg is decreased relative to def stat and spell power - NEEDS TWEAKING
   let statDamage;
   if (magic === 'Ice') statDamage = Math.floor(parseInt(spellPower) * (1 / (magicResistance - 1)));
-  else if (magic === 'Fire') statDamage = Math.floor(parseInt(spellPower) * (0.6 / (magicResistance - 0.6)));
-  if (statDamage === 0) statDamage = 1;
+  else if (magic === 'Fire') statDamage = Math.floor(parseInt(spellPower) * (0.6 / (magicResistance - 0.6))); //this is so that fire doesn't OP damage
+  if (statDamage === 0) statDamage = 1; //defaults damage to 1 if it equals 0
   let defDamage = parseInt(magicResistance) - statDamage;
   if (defDamage < 1) defDamage = 1;
   defenderDmgStat = parseInt(defenderDmgStat) - statDamage;
@@ -616,13 +610,11 @@ game.castMagic = function castMagic(attacker, defender, magic) {
 game.attackDefender = function attackDefender(attacker, defender) {
   const attackType = 'attack';
   const attackPower = $(attacker).attr('dmg');
-  console.log(attackPower);
   const defPower = $(defender).attr('def');
-  console.log(defPower);
 
   let actualDamage = Math.floor(parseInt(attackPower) * (1 / (defPower - 1)));
   if (actualDamage === 0) actualDamage = 1;
-  console.log(actualDamage);
+
   let $defenderHP = $(defender).attr('hp');
   $defenderHP = parseInt($defenderHP) - actualDamage;
   if ($defenderHP === -Infinity) $defenderHP = 0;
@@ -661,8 +653,6 @@ game.checkForDeath = function checkForDeath(defender) {
 
 //THIS IS CURRENTLY BREAKING THE GAME BECAUSE IT CAN'T FIND THE CHARACTER
 game.actionOnDeath = function actionOnDeath(defender) {
-  $('#selected-defender').removeClass();
-  $('#selected-defender').addClass(game.playerTwoCharacterObjectReference);
   const $deadCharacter = $(defender);
   const $deadCharacterName = $deadCharacter.attr('name');
   const $deadCharacterPlayer = $deadCharacter.attr('player');
