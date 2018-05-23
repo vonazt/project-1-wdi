@@ -642,14 +642,13 @@ game.setStatsWindow = function setStatsWindow() {
 
 game.displayStats = function displayStats(character, attackOrDefend) {
   //sets which character image will be displayed in defender window
+  const characterObjectReference = character.substr(1);
   if (attackOrDefend === 'defence') {
-    const defenderObjectRef = character.substr(1);
     $('#selected-defender').removeClass();
-    $('#selected-defender').addClass(defenderObjectRef);
+    $('#selected-defender').addClass(characterObjectReference);
   }
 
   const $character = $(character);
-  // const characterClass = $character.attr('class');
   const $nameStat = $character.attr('name');
   const $hpStat = $character.attr('hp');
   let $mpStat = $character.attr('mp');
@@ -659,11 +658,11 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   const $dmgStat = $character.attr('dmg');
   const $defStat = $character.attr('def');
   const $typeStat = $character.attr('type');
-  const $isDead = $character.attr('isdead');
 
-  // game.cellTypes.characterOne.mp
-  // const initialHP = game.cellTypes[characterClass].hp;
-  // const initialMP = game.cellTypes[characterClass].mp;
+  const initialHP = game.cellTypes[characterObjectReference].hp;
+  const initialMP = game.cellTypes[characterObjectReference].mp;
+  const initialDef = game.cellTypes[characterObjectReference].def;
+  const initialDmg = game.cellTypes[characterObjectReference].dmg;
 
   let battleType;
   //
@@ -674,7 +673,7 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   $nameDisplay.html(`Name: ${$nameStat}`);
 
   const $hpDisplay = $(`#${battleType}-hp-stats`);
-  $hpDisplay.html(`HP: ${$hpStat}`);
+  $hpDisplay.html(`HP: ${$hpStat}/${initialHP}`);
 
   const $mpDisplay = $(`#${battleType}-mp-stats`);
   const $mgDmgDisplay = $(`#${battleType}-mg-dmg-stats`);
@@ -687,7 +686,7 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   } else {
     $mpDisplay.show();
     if (parseInt($mpStat) < 0) $mpStat = 0;
-    $mpDisplay.html(`MP: ${$mpStat}`);
+    $mpDisplay.html(`MP: ${$mpStat}/${initialMP}`);
     $mgDmgDisplay.show();
     $mgDmgDisplay.html(`M. DMG: ${$mgDmgStat}`);
     $mgTypeDisplay.show();
@@ -695,10 +694,10 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   }
 
   const $dmgDisplay = $(`#${battleType}-dmg-stats`);
-  $dmgDisplay.html(`DMG: ${$dmgStat}`);
+  $dmgDisplay.html(`DMG: ${$dmgStat}/${initialDmg}`);
 
   const $defDisplay = $(`#${battleType}-def-stats`);
-  $defDisplay.html(`DEF: ${$defStat}`);
+  $defDisplay.html(`DEF: ${$defStat}/${initialDef}`);
 };
 
 //GAME INIT
