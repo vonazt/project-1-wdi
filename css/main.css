@@ -100,7 +100,7 @@ nav {
   border: 1px solid black;
   float: left;
   margin: 0;
-  background-image: url(../images/the_mountain.png);
+  background-image: url(../images/robert_baratheon.png);
   background-size: contain;
   background-color: rgba(255, 255, 255, 0.75);
   background-repeat: no-repeat; }
@@ -205,7 +205,7 @@ nav {
   position: absolute;
   height: 100px;
   width: 200px;
-  top: 100px;
+  top: 95px;
   right: 120px;
   background-color: #0032AF;
   border: 3px solid silver;
@@ -239,8 +239,8 @@ nav {
   position: absolute;
   padding: 5px;
   height: 160px;
-  width: 320px;
-  right: 40px;
+  width: 335px;
+  right: 20px;
   top: 350px;
   background-color: #0032AF;
   border: 3px solid silver;

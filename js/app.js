@@ -31,17 +31,17 @@ class MeleeCharacter extends BaseCharacter {
 }
 
 const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 12, 3, 'Ice', 3, 5, 15, 'magic', 'playerOne');
-const theMountain = new MeleeCharacter('The Mountain', 15, 1, 6, 20, 'melee', 'playerOne');
-const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 16, 20, 4, 'Fire', 5, 5, 2, 'magic', 'playerOne');
-const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 12, 4, 'Ice', 4, 6, 50, 'magic', 'playerOne');
+const robertBaratheon = new MeleeCharacter('Robert Baratheon', 15, 1, 6, 20, 'melee', 'playerOne');
+const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 16, 18, 4, 'Fire', 5, 5, 2, 'magic', 'playerOne');
+const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 12, 4, 'Ice', 3, 6, 5, 'magic', 'playerOne');
 const nedStark = new MeleeCharacter('Ned Stark', 15, 3, 5, 15, 'melee', 'playerOne');
-const melissandre = new MagicCharacter('Melissandre', 8, 12, 18, 4, 'Fire', 3, 5, 5, 'magic', 'playerOne');
+const melissandre = new MagicCharacter('Melissandre', 8, 12, 18, 4, 'Fire', 4, 5, 5, 'magic', 'playerOne');
 
 const jorahMormont = new MeleeCharacter('Jorah Mormont', 12, 2, 5, 16, 'melee', 'playerTwo');
 const cerseiLannister = new MagicCharacter('Cersei Lannister', 9, 12, 15, 3, 'Ice', 4, 4, 1, 'magic', 'playerTwo');
 const theHound = new MeleeCharacter('The Hound', 12, 2, 5, 14, 'melee', 'playerTwo');
-const aryaStark = new MagicCharacter('Arya Stark', 10, 6, 12, 3, 'Fire', 6, 5, 11, 'magic', 'playerTwo');
-const jaimeLannister = new MeleeCharacter('Jaime Lannister', 14, 4, 6, 16, 'melee', 'playerTwo');
+const aryaStark = new MagicCharacter('Arya Stark', 10, 6, 12, 3, 'Fire', 3, 5, 11, 'magic', 'playerTwo');
+const jaimeLannister = new MeleeCharacter('Jaime Lannister', 14, 3, 6, 16, 'melee', 'playerTwo');
 const whiteWalker = new MagicCharacter('White Walker', 10, 10, 18, 5, 'Ice', 2, 4, 15, 'magic', 'playerTwo');
 
 //THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER
@@ -85,7 +85,7 @@ game.cellTypes = {
   characterOne: jonSnow,
   characterTwo: daenerysTargaryen,
   characterThree: tyrionLannister,
-  characterFour: theMountain,
+  characterFour: robertBaratheon,
   characterFive: nedStark,
   characterSix: melissandre,
   characterSeven: jorahMormont,
@@ -276,6 +276,7 @@ game.pickOption = function pickOption() {
           //these are necessary to make sure right picture is displaying after turn
           $('#selected-attacker').removeClass(game.playerOneCharacterObjectReference);
           $('#selected-attacker').addClass(game.playerTwoCharacterObjectReference);
+          game.playQuote(game.playerOneCharacterObjectReference);
           game.attackDefender(game.playerOneCharacter, game.defenderPosition[game.defenderIndex]); //this is set below in makeMove()
         } else {
           $('#selected-attacker').removeClass(game.playerTwoCharacterObjectReference);
@@ -288,6 +289,7 @@ game.pickOption = function pickOption() {
         if (game.playerOneTurn) {
           $('#selected-attacker').removeClass(game.playerOneCharacterObjectReference);
           $('#selected-attacker').addClass(game.playerTwoCharacterObjectReference);
+          game.playQuote(game.playerOneCharacterObjectReference);
           game.castMagic(game.playerOneCharacter, game.defenderPosition[game.defenderIndex]);
         } else {
           $('#selected-attacker').removeClass(game.playerTwoCharacterObjectReference);
@@ -559,13 +561,14 @@ game.castMagic = function castMagic(attacker, defender, magic) {
   //sets the amount the defender's def or dmg is decreased relative to def stat and spell power - NEEDS TWEAKING
   let statDamage;
   if (magic === 'Ice') statDamage = Math.floor(parseInt(spellPower) * (1 / (magicResistance - 1)));
-  else if (magic=== 'Fire') statDamage = Math.floor(parseInt(spellPower) * (0.7 / (magicResistance - 0.7)));
+  else if (magic === 'Fire') statDamage = Math.floor(parseInt(spellPower) * (1 / (magicResistance - 1)));
   let defDamage = parseInt(magicResistance) - statDamage;
   if (defDamage < 1) defDamage = 1;
   defenderDmgStat = parseInt(defenderDmgStat) - statDamage;
   if (defenderDmgStat < 1) defenderDmgStat = 1;
   let $defenderHP = $(defender).attr('hp');
   $defenderHP = parseInt($defenderHP) - magicDamage;
+  if ($defenderHP === -Infinity) $defenderHP = 0;
   $(defender).attr('hp', $defenderHP);
 
   //sets whether def or dmg stat is affected depending on magic type
@@ -647,6 +650,7 @@ game.actionOnDeath = function actionOnDeath(defender) {
   //BASIC ENDGAME BIT
   $deadCharacterPlayer === 'playerOne' ? this.playerOneCharactersAlive -= 1 : this.playerTwoCharactersAlive -=1;
   if (this.playerOneCharactersAlive === 0 || this.playerTwoCharactersAlive === 0) {
+    $('.attacker-stats-window').hide();
     $('#damage-message').html('GAME OVER!!');
   }
 };
@@ -724,6 +728,13 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   $defDisplay.html(`DEF: ${$defStat}/${initialDef}`);
 };
 
+//SOUNDS
+game.playQuote = function(characterRef) {
+  const quoteAudio = document.querySelector('.character-quote');
+  quoteAudio.src = `./sound/${characterRef}.wav`;
+  quoteAudio.play();
+};
+
 //GAME INIT
 game.hideOpeningCredits = function hideOpeningCredits() {
   const $gameTitle = $('.game-title');
@@ -743,7 +754,6 @@ game.hideOpeningCredits = function hideOpeningCredits() {
     });
   });
 };
-
 
 game.init = function() {
   game.drawBattlefield();
