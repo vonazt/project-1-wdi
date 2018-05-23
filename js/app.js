@@ -733,6 +733,9 @@ game.hideOpeningCredits = function hideOpeningCredits() {
     $('.options-display').show();
     $('.attacker-stats-window').show();
     $('nav').hide();
+    const mainTheme = document.querySelector('.main-theme-music');
+    mainTheme.src = './sound/main_theme.wav';
+    mainTheme.play();
     $gameTitle.css({
       'font-size': '3em',
       'margin-bottom': '10px',
@@ -740,6 +743,7 @@ game.hideOpeningCredits = function hideOpeningCredits() {
     });
   });
 };
+
 
 game.init = function() {
   game.drawBattlefield();
@@ -757,7 +761,7 @@ game.init = function() {
   $('.attacker-stats-window').hide();
   $('.defender-stats-window').hide();
   game.hideOpeningCredits();
-}
+};
 
 $(() => {
   game.init();
