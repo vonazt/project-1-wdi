@@ -66,7 +66,7 @@ nav {
   margin: 0;
   background-image: url(../images/jon_snow.png);
   background-size: contain;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.75);
   background-repeat: no-repeat; }
 
 .characterTwo {
@@ -78,7 +78,7 @@ nav {
   margin: 0;
   background-image: url(../images/daenerys.png);
   background-size: contain;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.75);
   background-repeat: no-repeat; }
 
 .characterThree {
@@ -90,7 +90,7 @@ nav {
   margin: 0;
   background-image: url(../images/tyrion.png);
   background-size: contain;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.75);
   background-repeat: no-repeat; }
 
 .characterFour {
@@ -102,7 +102,7 @@ nav {
   margin: 0;
   background-image: url(../images/the_mountain.png);
   background-size: contain;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.75);
   background-repeat: no-repeat; }
 
 .characterFive {
@@ -114,7 +114,7 @@ nav {
   margin: 0;
   background-image: url(../images/ned_stark.png);
   background-size: contain;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.75);
   background-repeat: no-repeat; }
 
 .characterSix {
@@ -126,7 +126,7 @@ nav {
   margin: 0;
   background-image: url(../images/melissandre.png);
   background-size: contain;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.75);
   background-repeat: no-repeat; }
 
 .characterSeven {
@@ -138,7 +138,7 @@ nav {
   margin: 0;
   background-image: url(../images/jorah_mormont.png);
   background-size: contain;
-  background-color: gray;
+  background-color: rgba(110, 110, 110, 0.75);
   background-repeat: no-repeat; }
 
 .characterEight {
@@ -150,7 +150,7 @@ nav {
   margin: 0;
   background-image: url(../images/cersei_lannister.png);
   background-size: contain;
-  background-color: gray;
+  background-color: rgba(110, 110, 110, 0.75);
   background-repeat: no-repeat; }
 
 .characterNine {
@@ -162,7 +162,7 @@ nav {
   margin: 0;
   background-image: url(../images/the_hound.png);
   background-size: contain;
-  background-color: gray;
+  background-color: rgba(110, 110, 110, 0.75);
   background-repeat: no-repeat; }
 
 .characterTen {
@@ -174,7 +174,7 @@ nav {
   margin: 0;
   background-image: url(../images/arya_stark.png);
   background-size: contain;
-  background-color: gray;
+  background-color: rgba(110, 110, 110, 0.75);
   background-repeat: no-repeat; }
 
 .characterEleven {
@@ -186,7 +186,7 @@ nav {
   margin: 0;
   background-image: url(../images/jaime_lannister.png);
   background-size: contain;
-  background-color: gray;
+  background-color: rgba(110, 110, 110, 0.75);
   background-repeat: no-repeat; }
 
 .characterTwelve {
@@ -198,7 +198,7 @@ nav {
   margin: 0;
   background-image: url(../images/white_walker.png);
   background-size: contain;
-  background-color: gray;
+  background-color: rgba(110, 110, 110, 0.75);
   background-repeat: no-repeat; }
 
 #move-options {

@@ -37,12 +37,12 @@ const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 12, 4, 'I
 const nedStark = new MeleeCharacter('Ned Stark', 15, 3, 5, 15, 'melee', 'playerOne');
 const melissandre = new MagicCharacter('Melissandre', 8, 12, 18, 4, 'Fire', 3, 5, 5, 'magic', 'playerOne');
 
-const jorahMormont = new MeleeCharacter('Jorah Mormont', 10, 2, 5, 16, 'melee', 'playerTwo');
+const jorahMormont = new MeleeCharacter('Jorah Mormont', 12, 2, 5, 16, 'melee', 'playerTwo');
 const cerseiLannister = new MagicCharacter('Cersei Lannister', 9, 12, 15, 3, 'Ice', 4, 4, 1, 'magic', 'playerTwo');
 const theHound = new MeleeCharacter('The Hound', 12, 2, 5, 14, 'melee', 'playerTwo');
 const aryaStark = new MagicCharacter('Arya Stark', 10, 6, 12, 3, 'Fire', 6, 5, 11, 'magic', 'playerTwo');
 const jaimeLannister = new MeleeCharacter('Jaime Lannister', 14, 4, 6, 16, 'melee', 'playerTwo');
-const whiteWalker = new MagicCharacter('White Walker', 15, 10, 18, 5, 'Ice', 2, 4, 15, 'magic', 'playerTwo');
+const whiteWalker = new MagicCharacter('White Walker', 10, 10, 18, 5, 'Ice', 2, 4, 15, 'magic', 'playerTwo');
 
 //THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER
 game.playerOneCharactersAlive = 6;
