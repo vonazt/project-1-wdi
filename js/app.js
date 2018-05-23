@@ -539,7 +539,7 @@ game.castMagic = function castMagic(attacker, defender, magic) {
   const magicDamage = Math.floor(parseInt(spellPower) * (1 / (magicResistance - 1)));
 
   //sets the amount the defender's def or dmg is decreased relative to def stat and spell power - NEEDS TWEAKING
-  const statDamage = Math.floor(parseInt(spellPower) * (0.8 / (magicResistance - 0.8)));
+  const statDamage = Math.floor(parseInt(spellPower) * (0.7 / (magicResistance - 0.7)));
   let defDamage = parseInt(magicResistance) - statDamage;
   if (defDamage < 1) defDamage = 1;
   defenderDmgStat = parseInt(defenderDmgStat) - statDamage;
@@ -569,7 +569,9 @@ game.attackDefender = function attackDefender(attacker, defender) {
   const attackPower = $(attacker).attr('dmg');
   const defPower = $(defender).attr('def');
 
-  const actualDamage = Math.floor(parseInt(attackPower) * (1 / (defPower - 1)));
+  let actualDamage = Math.floor(parseInt(attackPower) * (1 / (defPower - 1)));
+  if (actualDamage === 0) actualDamage = 1;
+  console.log(actualDamage);
   let $defenderHP = $(defender).attr('hp');
   $defenderHP = parseInt($defenderHP) - actualDamage;
   $(defender).attr('hp', $defenderHP);
