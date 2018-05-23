@@ -254,20 +254,21 @@ game.pickOption = function pickOption() {
       if (this.playerOneTurn) {
         $('#selected-attacker').removeClass(game.playerOneCharacterObjectReference);
         $('#selected-attacker').addClass(game.playerTwoCharacterObjectReference);
-        console.log(game.playerTwoCharacterObjectReference);
-      } else if (!this.playerOneTurn) {
+      } else {
         $('#selected-attacker').removeClass(game.playerTwoCharacterObjectReference);
         $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
-        console.log(game.playerOneCharacterObjectReference);
       }
       game.switchPlayers();
     }
     if (this.id === 'attack-option') {
       if (game.attackOn) { //flag for checking that attacker is in range of defender
         if (game.playerOneTurn) {
-          //NEED REFERENCE FUNCTION TO MAKE SURE THAT game.playerOneCharacter AND game.playerTwoCharacter are correct
+          $('#selected-attacker').removeClass(game.playerOneCharacterObjectReference);
+          $('#selected-attacker').addClass(game.playerTwoCharacterObjectReference);
           game.attackDefender(game.playerOneCharacter, game.defenderPosition[game.defenderIndex]); //this is set below in makeMove()
         } else {
+          $('#selected-attacker').removeClass(game.playerTwoCharacterObjectReference);
+          $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
           game.attackDefender(game.playerTwoCharacter, game.defenderPosition[game.defenderIndex]);
         }
       }
