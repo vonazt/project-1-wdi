@@ -140,6 +140,7 @@ nav {
   background-size: contain;
   background-color: rgba(255,255,255,.75);
   background-repeat: no-repeat;
+
 }
 .characterSeven {
   height: 65px;
@@ -152,6 +153,8 @@ nav {
   background-size: contain;
   background-color: rgba(110,110,110,.75);
   background-repeat: no-repeat;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 .characterEight {
   height: 65px;
@@ -164,6 +167,8 @@ nav {
   background-size: contain;
   background-color: rgba(110,110,110,.75);
   background-repeat: no-repeat;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 .characterNine {
   height: 65px;
@@ -176,6 +181,8 @@ nav {
   background-size: contain;
   background-color: rgba(110,110,110,.75);
   background-repeat: no-repeat;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 .characterTen {
   height: 65px;
@@ -188,6 +195,8 @@ nav {
   background-size: contain;
   background-color: rgba(110,110,110,.75);
   background-repeat: no-repeat;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 .characterEleven {
   height: 65px;
@@ -200,6 +209,8 @@ nav {
   background-size: contain;
   background-color: rgba(110,110,110,.75);
   background-repeat: no-repeat;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 .characterTwelve {
   height: 65px;
@@ -212,6 +223,8 @@ nav {
   background-size: contain;
   background-color: rgba(110,110,110,.75);
   background-repeat: no-repeat;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 
 #move-options {
@@ -313,8 +326,81 @@ h2 {
   border-radius: 5px;
 }
 
-@keyframes blinker {
-  50% {
-    opacity: 0;
+
+@media (max-width: 1400px) {
+  .attacker-stats-window {
+    width: 190px;
+    height: 160px;
+  }
+
+  .defender-stats-window {
+    width: 190px;
+    height: 160px;
+  }
+
+  #selected-attacker {
+    height: 90px;
+    width: 90px;
+  }
+
+  #selected-defender {
+    height: 90px;
+    width: 90px;
+  }
+
+  #move-options {
+    height: 100px;
+    width: 200px;
+    top: 95px;
+    right: 30px;
+  }
+
+  .feedback {
+    margin-right: 250px;
+  }
+}
+
+@media (max-width: 1140px) {
+  .attacker-stats-window {
+    width: 160px;
+    height: 140px;
+  }
+
+  .defender-stats-window {
+    width: 160px;
+    height: 140px;
+    .stats {
+      font-size: .85em;
+    }
+  }
+  .stats {
+    font-size: .85em;
+  }
+
+  #selected-attacker {
+    height: 70px;
+    width: 70px;
+  }
+
+  #selected-defender {
+    height: 70px;
+    width: 70px;
+  }
+
+  #move-options {
+    height: 100px;
+    width: 150px;
+    top: 95px;
+    right: 30px;
+    font-size: 1em;
+  }
+
+  .feedback {
+    padding: 10px;
+    line-height: 1.5em;
+    height: 70px;
+    width: 200px;
+    left: 470px;
+    top: 300px;
   }
 }

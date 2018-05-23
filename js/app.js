@@ -30,17 +30,17 @@ class MeleeCharacter extends BaseCharacter {
   }
 }
 
-const jonSnow = new MeleeCharacter('Jon Snow', 16, 3, 5, 12, 'melee', 'playerOne');
-const robertBaratheon = new MeleeCharacter('Robert Baratheon', 15, 1, 6, 20, 'melee', 'playerOne');
+const jonSnow = new MeleeCharacter('Jon Snow', 14, 2, 5, 120, 'melee', 'playerOne');
+const robertBaratheon = new MeleeCharacter('Robert Baratheon', 15, 1, 4, 20, 'melee', 'playerOne');
 const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 16, 18, 4, 'Fire', 5, 5, 1, 'magic', 'playerOne');
-const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 12, 4, 'Ice', 3, 6, 1, 'magic', 'playerOne');
+const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 12, 4, 'Fire', 3, 4, 1, 'magic', 'playerOne');
 const nedStark = new MeleeCharacter('Ned Stark', 15, 3, 5, 15, 'melee', 'playerOne');
 const melissandre = new MagicCharacter('Melissandre', 8, 12, 18, 4, 'Fire', 4, 5, 5, 'magic', 'playerOne');
 
 const jorahMormont = new MeleeCharacter('Jorah Mormont', 12, 2, 5, 16, 'melee', 'playerTwo');
-const cerseiLannister = new MagicCharacter('Cersei Lannister', 9, 12, 15, 3, 'Ice', 4, 4, 1, 'magic', 'playerTwo');
+const cerseiLannister = new MagicCharacter('Cersei Lannister', 12, 12, 15, 3, 'Fire', 4, 4, 1, 'magic', 'playerTwo');
 const theHound = new MeleeCharacter('The Hound', 12, 2, 5, 14, 'melee', 'playerTwo');
-const aryaStark = new MeleeCharacter('Arya Stark', 10, 6, 12, 3, 'melee', 'playerTwo');
+const aryaStark = new MeleeCharacter('Arya Stark', 13, 3, 4, 12, 'melee', 'playerTwo');
 const jaimeLannister = new MeleeCharacter('Jaime Lannister', 14, 3, 6, 16, 'melee', 'playerTwo');
 const whiteWalker = new MagicCharacter('White Walker', 10, 10, 18, 5, 'Ice', 2, 4, 15, 'magic', 'playerTwo');
 
@@ -112,9 +112,9 @@ game.drawBattlefield = function drawBattlefield() {
       //assigns every cell an id for selection in other functions, such as movement
       $battleSquare.attr('id', `${i}-${j}`);
       //temp click function for checking grid coords in debugging
-      $battleSquare.on('click', function() {
-        console.log($battleSquare);
-      });
+      // $battleSquare.on('click', function() {
+      //   console.log($battleSquare);
+      // });
       $battleSquare.appendTo('#battle-map');
     });
   });
@@ -581,12 +581,13 @@ game.castMagic = function castMagic(attacker, defender, magic) {
   let defenderDmgStat = $(defender).attr('dmg');
 
   //sets the amount of hp that is taken off by spell, weighted by defender's def stat
-  const magicDamage = Math.floor(parseInt(spellPower) * (1 / (magicResistance - 1)));
+  const magicDamage = Math.floor(parseInt(spellPower) * (0.8 / (magicResistance - 0.8)));
 
   //sets the amount the defender's def or dmg is decreased relative to def stat and spell power - NEEDS TWEAKING
   let statDamage;
   if (magic === 'Ice') statDamage = Math.floor(parseInt(spellPower) * (1 / (magicResistance - 1)));
-  else if (magic === 'Fire') statDamage = Math.floor(parseInt(spellPower) * (1 / (magicResistance - 1)));
+  else if (magic === 'Fire') statDamage = Math.floor(parseInt(spellPower) * (0.6 / (magicResistance - 0.6)));
+  if (statDamage === 0) statDamage = 1;
   let defDamage = parseInt(magicResistance) - statDamage;
   if (defDamage < 1) defDamage = 1;
   defenderDmgStat = parseInt(defenderDmgStat) - statDamage;
@@ -679,7 +680,10 @@ game.actionOnDeath = function actionOnDeath(defender) {
   $deadCharacterPlayer === 'playerOne' ? this.playerOneCharactersAlive -= 1 : this.playerTwoCharactersAlive -=1;
   if (this.playerOneCharactersAlive === 0 || this.playerTwoCharactersAlive === 0) {
     $('.attacker-stats-window').hide();
-    $('#damage-message').html('GAME OVER!!');
+    setTimeout(function() {
+      $('#damage-message').html('GAME OVER!!');
+    }, 5000);
+    // game.restart();
   }
 };
 
@@ -788,6 +792,21 @@ game.hideOpeningCredits = function hideOpeningCredits() {
     });
   });
 };
+
+// game.restart = function() {
+//   $('#battle-map').empty();
+//   $('.gameboard').prepend('<div />').attr('id', '#battle-map');
+//   game.drawBattlefield();
+//   game.moveCharacter();
+//   game.checkMoveDistance();
+//   game.switchCharacter();
+//   game.$attackOption = $('#attack-option');
+//   game.$magicOption = $('#magic-option');
+//   game.pickOption();
+//   game.setStatsWindow(game.playerOneCharacter);
+//
+//   $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
+// };
 
 game.init = function() {
   game.drawBattlefield();
