@@ -37,7 +37,7 @@ const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 12, 4, 'I
 const nedStark = new MeleeCharacter('Ned Stark', 15, 3, 5, 15, 'melee', 'playerOne');
 const melissandre = new MagicCharacter('Melissandre', 8, 12, 18, 4, 'Fire', 3, 5, 5, 'magic', 'playerOne');
 
-const jorahMormont = new MeleeCharacter('Jorah Mormont', 10, 2, 4, 16, 'melee', 'playerTwo');
+const jorahMormont = new MeleeCharacter('Jorah Mormont', 10, 2, 5, 16, 'melee', 'playerTwo');
 const cerseiLannister = new MagicCharacter('Cersei Lannister', 9, 12, 15, 3, 'Ice', 4, 4, 1, 'magic', 'playerTwo');
 const theHound = new MeleeCharacter('The Hound', 12, 2, 5, 14, 'melee', 'playerTwo');
 const aryaStark = new MagicCharacter('Arya Stark', 10, 6, 12, 3, 'Fire', 6, 5, 11, 'magic', 'playerTwo');
@@ -64,18 +64,18 @@ game.createGameGrid = function createGameGrid() {
   }
 
   //starting positions for playerOne and playerTwo characters
-  gameGrid[4][1] = 'characterOne';
-  gameGrid[4][0] = 'characterTwo';
-  gameGrid[5][0] = 'characterThree';
-  gameGrid[5][1] = 'characterFour';
-  gameGrid[6][1] = 'characterFive';
-  gameGrid[6][0] = 'characterSix';
-  gameGrid[4][8] = 'characterSeven';
-  gameGrid[4][9] = 'characterEight';
-  gameGrid[5][8] = 'characterNine';
-  gameGrid[5][9] = 'characterTen';
-  gameGrid[6][8] = 'characterEleven';
-  gameGrid[6][9] = 'characterTwelve';
+  gameGrid[3][1] = 'characterOne';
+  gameGrid[3][0] = 'characterTwo';
+  gameGrid[4][1] = 'characterThree';
+  gameGrid[4][0] = 'characterFour';
+  gameGrid[5][1] = 'characterFive';
+  gameGrid[5][0] = 'characterSix';
+  gameGrid[3][8] = 'characterSeven';
+  gameGrid[3][9] = 'characterEight';
+  gameGrid[4][8] = 'characterNine';
+  gameGrid[4][9] = 'characterTen';
+  gameGrid[5][8] = 'characterEleven';
+  gameGrid[5][9] = 'characterTwelve';
 
   return gameGrid;
 };
@@ -123,52 +123,6 @@ game.drawBattlefield = function drawBattlefield() {
 
 //PLAYER OPTIONS AND TURN SWITCHING
 game.playerOneTurn = true; //flag for switching between player turns
-
-
-game.pickOption = function pickOption() {
-  const $option = $('.option'); //selects option window
-  $option.on('click', function() {
-    if (this.id === 'wait-option') game.switchPlayers();
-    if (this.id === 'attack-option') {
-      if (game.attackOn) { //flag for checking that attacker is in range of defender
-        if (game.playerOneTurn) {
-          //NEED REFERENCE FUNCTION TO MAKE SURE THAT game.playerOneCharacter AND game.playerTwoCharacter are correct
-          game.attackDefender(game.playerOneCharacter, game.defenderPosition[game.defenderIndex]); //this is set below in makeMove()
-        } else {
-          game.attackDefender(game.playerTwoCharacter, game.defenderPosition[game.defenderIndex]);
-        }
-      }
-    } if (this.id === 'magic-option') {
-      if (game.magicOn) { //flag for checking that attacker is in magic range
-        if (game.playerOneTurn) {
-          //NEED REFERENCE FUNCTION TO MAKE SURE THAT game.playerOneCharacter AND game.playerTwoCharacter are correct
-          game.castMagic(game.playerOneCharacter, game.defenderPosition[game.defenderIndex]);
-        } else {
-          game.castMagic(game.playerTwoCharacter, game.defenderPosition[game.defenderIndex]);
-        }
-      }
-    }
-  });
-};
-
-game.switchPlayers = function switchPlayers() {
-  // if ($(this.playerOneCharacter).attr('class').includes('dead')) {
-  //   game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
-  // }
-  // if ($(this.playerTwoCharacter).attr('class').includes('dead')) {
-  //   game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
-  // }
-  this.canSwitchCharacters = true; //resets canSwitchCharacters flag so that players can tab through character select
-  this.playerOneTurn = !game.playerOneTurn; //flag that switches player control
-  this.turnAttackOff(); //resets Attack in options window to gray
-  this.turnMagicOff();
-  this.clearSquares();
-  this.setStatsWindow();
-  const $playerOneId = $(this.playerOneCharacter).attr('id');
-  const $playerTwoId = $(this.playerTwoCharacter).attr('id');
-  this.playerOneTurn ? this.getDefencePositionsForAttack($playerOneId, this.playerOneCharacter) : this.getDefencePositionsForAttack($playerTwoId, this.playerTwoCharacter);
-  this.checkMoveDistance();
-};
 
 game.canSwitchCharacters = true; //turned to false after player has moved character to prevent leapfrogging across gameboard
 //player cannot switch characters after moving
@@ -227,30 +181,33 @@ game.checkPlayerTwoCharacterToSwapTo = function checkPlayerTwoCharacterToSwapTo(
 };
 
 
-
 game.switchCharacter = function switchCharacter() {
   $(document).on('keydown', function(e) {
     if (e.which === 9) {
       e.preventDefault(); //stops tab from moving around the window
       if (game.canSwitchCharacters) {
         if (game.playerOneTurn) {
-          for (let i=1; i < 7; i++) {
-            if ($(game.playerTwoCharacter).attr('class').includes('dead')) {
-              game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
-            }
-          }
-          for (let j=1; j < 7; j++) {
-            if ($(game.playerOneCharacter).attr('class').includes('dead')) {
-              game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
-            }
-          }
           //switches character according to what the characterObjectReference is
+          $('#selected-attacker').removeClass(game.playerOneCharacterObjectReference);
           game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
+          $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
         } else if (!game.playerOneTurn) {
+          $('#selected-attacker').removeClass(game.playerTwoCharacterObjectReference);
           game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
+          $('#selected-attacker').addClass(game.playerTwoCharacterObjectReference);
         }
         //these loops are necessary to make sure that a dead character isn't selected while switching characters - don't ask me why
+        for (let i=1; i < 6; i++) {
+          if ($(game.playerTwoCharacter).attr('class').includes('dead')) {
+            game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
+          }
+        }
 
+        for (let j=1; j < 6; j++) {
+          if ($(game.playerOneCharacter).attr('class').includes('dead')) {
+            game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
+          }
+        }
         //resets all the movement, display stats and available spaces while tabbing through characters
         game.turnAttackOff();
         game.turnMagicOff();
@@ -261,6 +218,67 @@ game.switchCharacter = function switchCharacter() {
         const $playerTwoId = $(game.playerTwoCharacter).attr('id');
         game.playerOneTurn ? game.getDefencePositionsForAttack($playerOneId) : game.getDefencePositionsForAttack($playerTwoId);
         game.checkMoveDistance();
+      }
+    }
+  });
+};
+
+game.switchPlayers = function switchPlayers() {
+  // if ($(this.playerOneCharacter).attr('class').includes('dead')) {
+  //   game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
+  // }
+  // if ($(this.playerTwoCharacter).attr('class').includes('dead')) {
+  //   game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
+  // }
+  if (this.playerOneTurn){
+    $('#selected-attacker').removeClass(game.playerOneCharacterObjectReference);
+    $('#selected-attacker').addClass(game.playerTwoCharacterObjectReference);
+  }
+  this.canSwitchCharacters = true; //resets canSwitchCharacters flag so that players can tab through character select
+  this.playerOneTurn = !game.playerOneTurn; //flag that switches player control
+  this.turnAttackOff(); //resets Attack in options window to gray
+  this.turnMagicOff();
+  this.clearSquares();
+  this.setStatsWindow();
+
+  const $playerOneId = $(this.playerOneCharacter).attr('id');
+  const $playerTwoId = $(this.playerTwoCharacter).attr('id');
+  this.playerOneTurn ? this.getDefencePositionsForAttack($playerOneId, this.playerOneCharacter) : this.getDefencePositionsForAttack($playerTwoId, this.playerTwoCharacter);
+  this.checkMoveDistance();
+};
+
+game.pickOption = function pickOption() {
+  const $option = $('.option'); //selects option window
+  $option.on('click', function() {
+    if (this.id === 'wait-option') {
+      if (this.playerOneTurn) {
+        $('#selected-attacker').removeClass(game.playerOneCharacterObjectReference);
+        $('#selected-attacker').addClass(game.playerTwoCharacterObjectReference);
+        console.log(game.playerTwoCharacterObjectReference);
+      } else if (!this.playerOneTurn) {
+        $('#selected-attacker').removeClass(game.playerTwoCharacterObjectReference);
+        $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
+        console.log(game.playerOneCharacterObjectReference);
+      }
+      game.switchPlayers();
+    }
+    if (this.id === 'attack-option') {
+      if (game.attackOn) { //flag for checking that attacker is in range of defender
+        if (game.playerOneTurn) {
+          //NEED REFERENCE FUNCTION TO MAKE SURE THAT game.playerOneCharacter AND game.playerTwoCharacter are correct
+          game.attackDefender(game.playerOneCharacter, game.defenderPosition[game.defenderIndex]); //this is set below in makeMove()
+        } else {
+          game.attackDefender(game.playerTwoCharacter, game.defenderPosition[game.defenderIndex]);
+        }
+      }
+    } if (this.id === 'magic-option') {
+      if (game.magicOn) { //flag for checking that attacker is in magic range
+        if (game.playerOneTurn) {
+          //NEED REFERENCE FUNCTION TO MAKE SURE THAT game.playerOneCharacter AND game.playerTwoCharacter are correct
+          game.castMagic(game.playerOneCharacter, game.defenderPosition[game.defenderIndex]);
+        } else {
+          game.castMagic(game.playerTwoCharacter, game.defenderPosition[game.defenderIndex]);
+        }
       }
     }
   });
@@ -326,8 +344,10 @@ game.moveCharacter = function moveCharacter() {
   $(document).on('keydown', function(e) {
     if (game.playerOneTurn) {
       game.characterMovement(game.playerOneCharacter, e);
+      $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
     } else {
       game.characterMovement(game.playerTwoCharacter, e);
+      $('#selected-attacker').addClass(game.playerTwoCharacterObjectReference);
     }
   });
 };
@@ -416,13 +436,15 @@ game.moveCells = function moveCells(characterClass, direction, characterObj) {
     });
     $characterDetails.attr('class', 'battle-cell available');
     this.playerOneTurn ? this.getDefencePositionsForAttack($directionId, game.playerOneCharacter) : this.getDefencePositionsForAttack($directionId, game.playerTwoCharacter);
-  } else if (direction.attr('player') === 'playerTwo') {
-    const $playerOneId = $(game.playerOneCharacter).attr('id');
-    game.getDefencePositionsForAttack($playerOneId, game.playerOneCharacter);
-  } else if (direction.attr('player') === 'playerOne') {
-    const $playerTwoId = $(game.playerTwoCharacter).attr('id');
-    game.getDefencePositionsForAttack($playerTwoId, game.playerTwoCharacter);
   }
+  //THIS CREATES A GAME-KILLING BUG
+  // else if (direction.attr('player') === 'playerTwo') {
+  //   const $playerOneId = $(game.playerOneCharacter).attr('id');
+  //   game.getDefencePositionsForAttack($playerOneId, game.playerOneCharacter);
+  // } else if (direction.attr('player') === 'playerOne') {
+  //   const $playerTwoId = $(game.playerTwoCharacter).attr('id');
+  //   game.getDefencePositionsForAttack($playerTwoId, game.playerTwoCharacter);
+  // }
 };
 
 game.getDefencePositionsForAttack = function getDefencePositionsForAttack(playerPositionOrMovement, character) {
@@ -619,6 +641,12 @@ game.setStatsWindow = function setStatsWindow() {
 };
 
 game.displayStats = function displayStats(character, attackOrDefend) {
+  //sets which character image will be displayed in defender window
+  if (attackOrDefend === 'defence') {
+    const defenderObjectRef = character.substr(1);
+    $('#selected-defender').removeClass();
+    $('#selected-defender').addClass(defenderObjectRef);
+  }
 
   const $character = $(character);
   // const characterClass = $character.attr('class');
@@ -701,7 +729,7 @@ $(() => {
   game.pickOption();
   game.setStatsWindow(game.playerOneCharacter);
 
-
+  $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
   // $('.gameboard').hide();
   // $('.options-display').hide();
   // $('.attacker-stats-window').hide();

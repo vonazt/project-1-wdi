@@ -49,150 +49,7 @@ nav {
     margin: 0;
     background-color: #C5E3BF
   }
-  .characterOne {
-    height: 65px;
-    width: 65px;
-    box-sizing: border-box;
-    border: 1px solid black;
-    float: left;
-    margin: 0;
-    background-image: url(../images/jon_snow.png);
-    background-size: contain;
-    background-color: white;
-    background-repeat: no-repeat;
-  }
-  .characterTwo {
-    height: 65px;
-    width: 65px;
-    box-sizing: border-box;
-    border: 1px solid black;
-    float: left;
-    margin: 0;
-    background-image: url(../images/daenerys.png);
-    background-size: contain;
-    background-color: white;
-    background-repeat: no-repeat;
-  }
-  .characterThree {
-    height: 65px;
-    width: 65px;
-    box-sizing: border-box;
-    border: 1px solid black;
-    float: left;
-    margin: 0;
-    background-image: url(../images/tyrion.png);
-    background-size: contain;
-    background-color: white;
-    background-repeat: no-repeat;
-  }
-  .characterFour {
-    height: 65px;
-    width: 65px;
-    box-sizing: border-box;
-    border: 1px solid black;
-    float: left;
-    margin: 0;
-    background-image: url(../images/the_mountain.png);
-    background-size: contain;
-    background-color: white;
-    background-repeat: no-repeat;
-  }
-  .characterFive {
-    height: 65px;
-    width: 65px;
-    box-sizing: border-box;
-    border: 1px solid black;
-    float: left;
-    margin: 0;
-    background-image: url(../images/ned_stark.png);
-    background-size: contain;
-    background-color: white;
-    background-repeat: no-repeat;
-  }
-  .characterSix {
-    height: 65px;
-    width: 65px;
-    box-sizing: border-box;
-    border: 1px solid black;
-    float: left;
-    margin: 0;
-    background-image: url(../images/melissandre.png);
-    background-size: contain;
-    background-color: white;
-    background-repeat: no-repeat;
-  }
-  .characterSeven {
-    height: 65px;
-    width: 65px;
-    box-sizing: border-box;
-    border: 1px solid black;
-    float: left;
-    margin: 0;
-    background-image: url(../images/jorah_mormont.png);
-    background-size: contain;
-    background-color: white;
-    background-repeat: no-repeat;
-  }
-  .characterEight {
-    height: 65px;
-    width: 65px;
-    box-sizing: border-box;
-    border: 1px solid black;
-    float: left;
-    margin: 0;
-    background-image: url(../images/cersei_lannister.png);
-    background-size: contain;
-    background-color: white;
-    background-repeat: no-repeat;
-  }
-  .characterNine {
-    height: 65px;
-    width: 65px;
-    box-sizing: border-box;
-    border: 1px solid black;
-    float: left;
-    margin: 0;
-    background-image: url(../images/the_hound.png);
-    background-size: contain;
-    background-color: white;
-    background-repeat: no-repeat;
-  }
-  .characterTen {
-    height: 65px;
-    width: 65px;
-    box-sizing: border-box;
-    border: 1px solid black;
-    float: left;
-    margin: 0;
-    background-image: url(../images/arya_stark.png);
-    background-size: contain;
-    background-color: white;
-    background-repeat: no-repeat;
-  }
-  .characterEleven {
-    height: 65px;
-    width: 65px;
-    box-sizing: border-box;
-    border: 1px solid black;
-    float: left;
-    margin: 0;
-    background-image: url(../images/jaime_lannister.png);
-    background-size: contain;
-    background-color: white;
-    background-repeat: no-repeat;
-  }
-  .characterTwelve {
-    height: 65px;
-    width: 65px;
-    box-sizing: border-box;
-    border: 1px solid black;
-    float: left;
-    margin: 0;
-    background-image: url(../images/white_walker.png);
-    background-size: contain;
-    background-color: white;
-    background-repeat: no-repeat;
-  }
+
 
 
 
@@ -216,6 +73,151 @@ nav {
     background-color: chartreuse;
     // animation: blinker .5s linear infinite;
   }
+}
+
+.characterOne {
+  height: 65px;
+  width: 65px;
+  box-sizing: border-box;
+  border: 1px solid black;
+  float: left;
+  margin: 0;
+  background-image: url(../images/jon_snow.png);
+  background-size: contain;
+  background-color: white;
+  background-repeat: no-repeat;
+}
+.characterTwo {
+  height: 65px;
+  width: 65px;
+  box-sizing: border-box;
+  border: 1px solid black;
+  float: left;
+  margin: 0;
+  background-image: url(../images/daenerys.png);
+  background-size: contain;
+  background-color: white;
+  background-repeat: no-repeat;
+}
+.characterThree {
+  height: 65px;
+  width: 65px;
+  box-sizing: border-box;
+  border: 1px solid black;
+  float: left;
+  margin: 0;
+  background-image: url(../images/tyrion.png);
+  background-size: contain;
+  background-color: white;
+  background-repeat: no-repeat;
+}
+.characterFour {
+  height: 65px;
+  width: 65px;
+  box-sizing: border-box;
+  border: 1px solid black;
+  float: left;
+  margin: 0;
+  background-image: url(../images/the_mountain.png);
+  background-size: contain;
+  background-color: white;
+  background-repeat: no-repeat;
+}
+.characterFive {
+  height: 65px;
+  width: 65px;
+  box-sizing: border-box;
+  border: 1px solid black;
+  float: left;
+  margin: 0;
+  background-image: url(../images/ned_stark.png);
+  background-size: contain;
+  background-color: white;
+  background-repeat: no-repeat;
+}
+.characterSix {
+  height: 65px;
+  width: 65px;
+  box-sizing: border-box;
+  border: 1px solid black;
+  float: left;
+  margin: 0;
+  background-image: url(../images/melissandre.png);
+  background-size: contain;
+  background-color: white;
+  background-repeat: no-repeat;
+}
+.characterSeven {
+  height: 65px;
+  width: 65px;
+  box-sizing: border-box;
+  border: 1px solid black;
+  float: left;
+  margin: 0;
+  background-image: url(../images/jorah_mormont.png);
+  background-size: contain;
+  background-color: black;
+  background-repeat: no-repeat;
+}
+.characterEight {
+  height: 65px;
+  width: 65px;
+  box-sizing: border-box;
+  border: 1px solid black;
+  float: left;
+  margin: 0;
+  background-image: url(../images/cersei_lannister.png);
+  background-size: contain;
+  background-color: black;
+  background-repeat: no-repeat;
+}
+.characterNine {
+  height: 65px;
+  width: 65px;
+  box-sizing: border-box;
+  border: 1px solid black;
+  float: left;
+  margin: 0;
+  background-image: url(../images/the_hound.png);
+  background-size: contain;
+  background-color: black;
+  background-repeat: no-repeat;
+}
+.characterTen {
+  height: 65px;
+  width: 65px;
+  box-sizing: border-box;
+  border: 1px solid black;
+  float: left;
+  margin: 0;
+  background-image: url(../images/arya_stark.png);
+  background-size: contain;
+  background-color: black;
+  background-repeat: no-repeat;
+}
+.characterEleven {
+  height: 65px;
+  width: 65px;
+  box-sizing: border-box;
+  border: 1px solid black;
+  float: left;
+  margin: 0;
+  background-image: url(../images/jaime_lannister.png);
+  background-size: contain;
+  background-color: black;
+  background-repeat: no-repeat;
+}
+.characterTwelve {
+  height: 65px;
+  width: 65px;
+  box-sizing: border-box;
+  border: 1px solid black;
+  float: left;
+  margin: 0;
+  background-image: url(../images/white_walker.png);
+  background-size: contain;
+  background-color: black;
+  background-repeat: no-repeat;
 }
 
 #move-options {
@@ -248,10 +250,10 @@ nav {
 }
 .attacker-stats-window {
   position: absolute;
-  height: 120px;
-  width: 250px;
-  right: 120px;
-  top: 250px;
+  height: 150px;
+  width: 300px;
+  left: 50px;
+  top: 350px;
   background-color: #0032AF;
   border: 3px solid silver;
   border-radius: 5px;
@@ -262,12 +264,28 @@ nav {
   }
 }
 
+#selected-attacker {
+  height: 120px;
+  width: 120px;
+}
+#selected-defender {
+  height: 120px;
+  width: 120px;
+}
+
+h2 {
+  font-family: "Lucida Grande";
+  color: white;
+  font-size: 1em;
+}
+
+
 .defender-stats-window {
   position: absolute;
-  height: 120px;
-  width: 250px;
-  right: 120px;
-  top: 400px;
+  height: 150px;
+  width: 300px;
+  right: 50px;
+  top: 340px;
   background-color: #0032AF;
   border: 3px solid silver;
   border-radius: 5px;
@@ -291,10 +309,6 @@ nav {
   border-radius: 5px;
 }
 
-#graveyard {
-  height: 200px;
-  width: 200px;
-}
 
 
 @keyframes blinker {
