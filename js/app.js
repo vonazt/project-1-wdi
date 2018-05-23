@@ -30,7 +30,7 @@ class MeleeCharacter extends BaseCharacter {
   }
 }
 
-const jonSnow = new MeleeCharacter('Jon Snow', 10, 3, 12, 3, 'melee', 'playerOne');
+const jonSnow = new MeleeCharacter('Jon Snow', 10, 3, 5, 12, 'melee', 'playerOne');
 const robertBaratheon = new MeleeCharacter('Robert Baratheon', 15, 1, 6, 20, 'melee', 'playerOne');
 const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 16, 18, 4, 'Fire', 5, 5, 1, 'magic', 'playerOne');
 const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 12, 4, 'Ice', 3, 6, 1, 'magic', 'playerOne');
@@ -281,6 +281,7 @@ game.pickOption = function pickOption() {
         } else {
           $('#selected-attacker').removeClass(game.playerTwoCharacterObjectReference);
           $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
+          game.playQuote(game.playerTwoCharacterObjectReference);
           game.attackDefender(game.playerTwoCharacter, game.defenderPosition[game.defenderIndex]);
         }
       }
@@ -294,6 +295,7 @@ game.pickOption = function pickOption() {
         } else {
           $('#selected-attacker').removeClass(game.playerTwoCharacterObjectReference);
           $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
+          game.playQuote(game.playerTwoCharacterObjectReference);
           game.castMagic(game.playerTwoCharacter, game.defenderPosition[game.defenderIndex]);
         }
       }
@@ -613,7 +615,9 @@ game.castMagic = function castMagic(attacker, defender, magic) {
 game.attackDefender = function attackDefender(attacker, defender) {
   const attackType = 'attack';
   const attackPower = $(attacker).attr('dmg');
+  console.log(attackPower);
   const defPower = $(defender).attr('def');
+  console.log(defPower);
 
   let actualDamage = Math.floor(parseInt(attackPower) * (1 / (defPower - 1)));
   if (actualDamage === 0) actualDamage = 1;
