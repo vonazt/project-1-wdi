@@ -10,7 +10,7 @@
   <script src="./js/app.js" charset="utf-8"></script>
 </head>
 <body>
-  <!-- <header>
+  <header>
     <div class="opening-credits">
       <h1 class="game-title">GAME OF SHINING THRONES</h1>
       <nav>
@@ -18,7 +18,7 @@
         <button class="menu-button" id="rules-button">Rules and Controls</button>
       </nav>
     </div>
-  </header> -->
+  </header>
 
   <section class="gameboard">
     <div id="battle-map"></div></div>
@@ -27,12 +27,11 @@
     <div id="move-options">
       <button class="option" id="attack-option">Attack</button>
       <button class="option" id="magic-option">Magic</button>
-      <button class="option" id="wait-option">Wait</button>
-      <!-- <button class="option" id="cancel">Cancel</button> -->
+      <button class="option" id="wait-option">Defend</button>
     </div>
   </section>
   <section class="attacker-stats-window">
-      <h2 class="selected-character">Current attacker</h2>
+      <h2 class="selected-character">Attacker</h2>
       <div id="selected-attacker"></div>
       <div class="stats" id="attack-character-name"></div>
       <div class="stats" id="attack-hp-stats"></div>
@@ -43,7 +42,7 @@
       <div class="stats" id="attack-def-stats"></div>
   </section>
   <section class="defender-stats-window">
-    <h2 class="selected-character">Current defender</h2>
+    <h2 class="selected-character">Defender</h2>
     <div id="selected-defender"></div>
     <div class="stats defend" id="defend-character-name"></div>
     <div class="stats defend" id="defend-hp-stats"></div>

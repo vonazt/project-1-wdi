@@ -9,14 +9,7 @@ header {
   width: 1000px;
   display: flex;
   justify-content: center;
-}
-
-#game-title {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  width: 100%;
-  margin-top: 100px;
+  margin-bottom: 0;
 }
 
 h1 {
@@ -35,7 +28,7 @@ nav {
 #battle-map {
   height: 650px;
   width: 650px;
-  margin-top: 100px;
+  margin-top: 50px;
   top: 20px;
   left: 100px;
   border: 5px solid silver;
@@ -47,11 +40,9 @@ nav {
     border: 1px solid black;
     float: left;
     margin: 0;
-    background-color: #C5E3BF
+    background-color: #C5E3BF;
+    background-image: url(../images/grass.png);
   }
-
-
-
 
   .dead {
     background-color: red;
@@ -224,7 +215,7 @@ nav {
   position: absolute;
   height: 100px;
   width: 200px;
-  top: 100px;
+  top: 110px;
   right: 120px;
   background-color: #0032AF;
   border: 3px solid silver;
@@ -235,7 +226,7 @@ nav {
     border: none;
     background-color: #0032AF;
     cursor: pointer;
-    font-size: 1em;
+    font-size: 1.1em;
   }
   #attack-option {
     color: gray;
@@ -250,10 +241,23 @@ nav {
 }
 .attacker-stats-window {
   position: absolute;
-  height: 150px;
+  padding: 5px;
+  height: 170px;
   width: 300px;
   left: 50px;
   top: 350px;
+  background-color: #0032AF;
+  border: 3px solid silver;
+  border-radius: 5px;
+}
+
+.defender-stats-window {
+  position: absolute;
+  padding: 5px;
+  height: 170px;
+  width: 300px;
+  right: 50px;
+  top: 340px;
   background-color: #0032AF;
   border: 3px solid silver;
   border-radius: 5px;
@@ -261,14 +265,19 @@ nav {
     color: white;
     font-size: 1em;
     font-family: "Lucida Grande";
+    margin-top: 3px;
   }
 }
 
 #selected-attacker {
+  margin-top: 5px;
+  margin-right: 5px;
   height: 120px;
   width: 120px;
 }
 #selected-defender {
+  margin-top: 5px;
+  margin-right: 5px;
   height: 120px;
   width: 120px;
 }
@@ -280,26 +289,18 @@ h2 {
 }
 
 
-.defender-stats-window {
-  position: absolute;
-  height: 150px;
-  width: 300px;
-  right: 50px;
-  top: 340px;
-  background-color: #0032AF;
-  border: 3px solid silver;
-  border-radius: 5px;
-}
-
 .stats {
   color: white;
   font-size: 1em;
   font-family: "Lucida Grande";
+  margin-top: 3px;
 }
 
 .feedback {
   display: none;
   position: absolute;
+  padding: 10px;
+  line-height: 1.5em;
   height: 100px;
   width: 300px;
   left: 570px;

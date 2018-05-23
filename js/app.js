@@ -33,7 +33,7 @@ class MeleeCharacter extends BaseCharacter {
 const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 12, 3, 'Ice', 3, 5, 15, 'magic', 'playerOne');
 const theMountain = new MeleeCharacter('The Mountain', 15, 1, 6, 20, 'melee', 'playerOne');
 const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 16, 20, 4, 'Fire', 5, 5, 2, 'magic', 'playerOne');
-const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 12, 4, 'Ice', 4, 6, 5, 'magic', 'playerOne');
+const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 12, 4, 'Ice', 4, 6, 50, 'magic', 'playerOne');
 const nedStark = new MeleeCharacter('Ned Stark', 15, 3, 5, 15, 'melee', 'playerOne');
 const melissandre = new MagicCharacter('Melissandre', 8, 12, 18, 4, 'Fire', 3, 5, 5, 'magic', 'playerOne');
 
@@ -197,17 +197,17 @@ game.switchCharacter = function switchCharacter() {
           $('#selected-attacker').addClass(game.playerTwoCharacterObjectReference);
         }
         //these loops are necessary to make sure that a dead character isn't selected while switching characters - don't ask me why
+        for (let j=1; j < 6; j++) {
+          if ($(game.playerOneCharacter).attr('class').includes('dead')) {
+            game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
+          }
+        }
         for (let i=1; i < 6; i++) {
           if ($(game.playerTwoCharacter).attr('class').includes('dead')) {
             game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
           }
         }
 
-        for (let j=1; j < 6; j++) {
-          if ($(game.playerOneCharacter).attr('class').includes('dead')) {
-            game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
-          }
-        }
         //resets all the movement, display stats and available spaces while tabbing through characters
         game.turnAttackOff();
         game.turnMagicOff();
@@ -231,8 +231,11 @@ game.switchPlayers = function switchPlayers() {
   //   game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
   // }
   if (this.playerOneTurn){
-    $('#selected-attacker').removeClass(game.playerOneCharacterObjectReference);
+    $('#selected-attacker').removeClass();
     $('#selected-attacker').addClass(game.playerTwoCharacterObjectReference);
+  } else {
+    $('#selected-attacker').removeClass();
+    $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
   }
   this.canSwitchCharacters = true; //resets canSwitchCharacters flag so that players can tab through character select
   this.playerOneTurn = !game.playerOneTurn; //flag that switches player control
@@ -247,11 +250,18 @@ game.switchPlayers = function switchPlayers() {
   this.checkMoveDistance();
 };
 
+//this function doesn't work in every case for some weird reason
+game.changeCharacterPicture = function changeCharacterPicture(removeCharacter, addCharacter) {
+  $('#selected-attacker').removeClass(removeCharacter);
+  $('#selected-attacker').removeClass(addCharacter);
+};
+
 game.pickOption = function pickOption() {
   const $option = $('.option'); //selects option window
   $option.on('click', function() {
     if (this.id === 'wait-option') {
       if (this.playerOneTurn) {
+        //i condensed these into a function (see above) but for some reason it doesn't work in every case
         $('#selected-attacker').removeClass(game.playerOneCharacterObjectReference);
         $('#selected-attacker').addClass(game.playerTwoCharacterObjectReference);
       } else {
@@ -263,6 +273,7 @@ game.pickOption = function pickOption() {
     if (this.id === 'attack-option') {
       if (game.attackOn) { //flag for checking that attacker is in range of defender
         if (game.playerOneTurn) {
+          //these are necessary to make sure right picture is displaying after turn
           $('#selected-attacker').removeClass(game.playerOneCharacterObjectReference);
           $('#selected-attacker').addClass(game.playerTwoCharacterObjectReference);
           game.attackDefender(game.playerOneCharacter, game.defenderPosition[game.defenderIndex]); //this is set below in makeMove()
@@ -275,9 +286,12 @@ game.pickOption = function pickOption() {
     } if (this.id === 'magic-option') {
       if (game.magicOn) { //flag for checking that attacker is in magic range
         if (game.playerOneTurn) {
-          //NEED REFERENCE FUNCTION TO MAKE SURE THAT game.playerOneCharacter AND game.playerTwoCharacter are correct
+          $('#selected-attacker').removeClass(game.playerOneCharacterObjectReference);
+          $('#selected-attacker').addClass(game.playerTwoCharacterObjectReference);
           game.castMagic(game.playerOneCharacter, game.defenderPosition[game.defenderIndex]);
         } else {
+          $('#selected-attacker').removeClass(game.playerTwoCharacterObjectReference);
+          $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
           game.castMagic(game.playerTwoCharacter, game.defenderPosition[game.defenderIndex]);
         }
       }
@@ -288,7 +302,7 @@ game.pickOption = function pickOption() {
 //resets available squares each time characters or players switch
 game.clearSquares = function clearSquares() {
   const $availableSquares = $('.available');
-  $availableSquares.toggleClass('available');
+  $availableSquares.attr('class', 'battle-cell');
 };
 
 //CHARACTER MOVEMENT
@@ -336,7 +350,7 @@ game.showAvailableSquares = function showAvailableSquares(character) {
   $gridIds.each(function() {
     const id = this.id;
     if (moveArray.includes(id)) {
-      $(this).addClass('available');
+      $(this).attr('class', 'available');
     }
   });
 };
@@ -410,7 +424,7 @@ game.moveCells = function moveCells(characterClass, direction, characterObj) {
   this.turnMagicOff();
 
   //passes all the character's attributes from one div into the one being moved into
-  if (direction.attr('class') === 'battle-cell available') {
+  if (direction.attr('class') === 'available') {
     direction.attr('class', characterClass);
     direction.attr('name', $characterName);
     direction.attr('hp', $characterHp);
@@ -435,7 +449,7 @@ game.moveCells = function moveCells(characterClass, direction, characterObj) {
         if (item !== 'id') details.removeAttr(item);
       });
     });
-    $characterDetails.attr('class', 'battle-cell available');
+    $characterDetails.attr('class', 'available');
     this.playerOneTurn ? this.getDefencePositionsForAttack($directionId, game.playerOneCharacter) : this.getDefencePositionsForAttack($directionId, game.playerTwoCharacter);
   }
   //THIS CREATES A GAME-KILLING BUG
@@ -448,12 +462,14 @@ game.moveCells = function moveCells(characterClass, direction, characterObj) {
   // }
 };
 
-game.getDefencePositionsForAttack = function getDefencePositionsForAttack(playerPositionOrMovement, character) {
+
+
+game.getDefencePositionsForAttack = function(playerPositionOrMovement, character) {
   const $characterType = $(character).attr('type');
   const $characterMP = $(character).attr('mp');
   game.defenderPosition = []; //this is what's referred to for attack function
   let $defenderPositions;
-  this.playerOneTurn ? $defenderPositions = $("div[player*='playerTwo']") : $defenderPositions = $("div[player*='playerOne']"); //searches by attribute so only opposition characters will be selected for attack
+  $defenderPositions = this.playerOneTurn ?  $("div[player*='playerTwo']") :  $("div[player*='playerOne']"); //searches by attribute so only opposition characters will be selected for attack
   //iterates through all these oppostion characters and sees if they match
   $defenderPositions.each(function() {
     const id = this.id;
@@ -461,12 +477,13 @@ game.getDefencePositionsForAttack = function getDefencePositionsForAttack(player
     if (!itemClass.includes('dead')) { //this is so dead characters don't display
 
       game.defenderIndex = 0;
-
+      const DefX = parseInt(id[0]);
+      const DefY = parseInt(id[2]);
       //these are all the up, down, left and right squares of the player
-      if (`${parseInt(id[0]) - 1}-${parseInt(id[2])}` === playerPositionOrMovement
-        || `${parseInt(id[0]) + 1}-${parseInt(id[2])}` === playerPositionOrMovement
-        || `${parseInt(id[0])}-${parseInt(id[2]) - 1}` === playerPositionOrMovement
-        || `${parseInt(id[0])}-${parseInt(id[2]) + 1}` === playerPositionOrMovement) {
+      if (`${DefX - 1}-${DefY}` === playerPositionOrMovement
+        || `${DefX + 1}-${DefY}` === playerPositionOrMovement
+        || `${DefX}-${DefY - 1}` === playerPositionOrMovement
+        || `${DefX}-${DefY + 1}` === playerPositionOrMovement) {
         game.defenderPosition.push('.' + itemClass);
         game.turnAttackOn();
         if ($characterType === 'magic') game.turnMagicOn($characterMP);
@@ -610,13 +627,15 @@ game.checkForDeath = function checkForDeath(defender) {
 
 //THIS IS CURRENTLY BREAKING THE GAME BECAUSE IT CAN'T FIND THE CHARACTER
 game.actionOnDeath = function actionOnDeath(defender) {
+  $('#selected-defender').removeClass();
+  $('#selected-defender').addClass(game.playerTwoCharacterObjectReference);
   const $deadCharacter = $(defender);
   const $deadCharacterName = $deadCharacter.attr('name');
   const $deadCharacterPlayer = $deadCharacter.attr('player');
   let $deadCharacterIsDead = $deadCharacter.attr('isDead');
   $deadCharacterIsDead = $deadCharacter.attr('isDead', true);
   const defenderObject = defender.substr(1);
-  game.cellTypes[defenderObject].isDead = true;
+  this.cellTypes[defenderObject].isDead = true;
 
 
   $('#damage-message').html(`${$deadCharacterName} was killed!`);
@@ -722,8 +741,6 @@ game.hideOpeningCredits = function hideOpeningCredits() {
 $(() => {
   game.drawBattlefield();
   game.moveCharacter();
-  // game.$moveOptions = $('#move-options'); //this needs to be internalised somewhere later
-  // game.$moveOptions.hide();
   game.checkMoveDistance();
   game.switchCharacter();
   game.$attackOption = $('#attack-option');
@@ -732,10 +749,10 @@ $(() => {
   game.setStatsWindow(game.playerOneCharacter);
 
   $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
-  // $('.gameboard').hide();
-  // $('.options-display').hide();
-  // $('.attacker-stats-window').hide();
-  // $('.defender-stats-window').hide();
-  // game.hideOpeningCredits();
+  $('.gameboard').hide();
+  $('.options-display').hide();
+  $('.attacker-stats-window').hide();
+  $('.defender-stats-window').hide();
+  game.hideOpeningCredits();
 
 });
