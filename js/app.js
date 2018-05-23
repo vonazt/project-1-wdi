@@ -30,7 +30,7 @@ class MeleeCharacter extends BaseCharacter {
   }
 }
 
-const jonSnow = new MeleeCharacter('Jon Snow', 10, 3, 5, 12, 'melee', 'playerOne');
+const jonSnow = new MeleeCharacter('Jon Snow', 16, 3, 5, 12, 'melee', 'playerOne');
 const robertBaratheon = new MeleeCharacter('Robert Baratheon', 15, 1, 6, 20, 'melee', 'playerOne');
 const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 16, 18, 4, 'Fire', 5, 5, 1, 'magic', 'playerOne');
 const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 12, 4, 'Ice', 3, 6, 1, 'magic', 'playerOne');
@@ -624,6 +624,7 @@ game.attackDefender = function attackDefender(attacker, defender) {
   console.log(actualDamage);
   let $defenderHP = $(defender).attr('hp');
   $defenderHP = parseInt($defenderHP) - actualDamage;
+  if ($defenderHP === -Infinity) $defenderHP = 0;
   $(defender).attr('hp', $defenderHP);
 
   this.displayDamageMessage(attackType, attacker, defender, actualDamage);
