@@ -30,17 +30,17 @@ class MeleeCharacter extends BaseCharacter {
   }
 }
 
-const jonSnow = new MagicCharacter('Jon Snow', 10, 3, 12, 3, 'Ice', 3, 5, 15, 'magic', 'playerOne');
+const jonSnow = new MeleeCharacter('Jon Snow', 10, 3, 12, 3, 'melee', 'playerOne');
 const robertBaratheon = new MeleeCharacter('Robert Baratheon', 15, 1, 6, 20, 'melee', 'playerOne');
-const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 16, 18, 4, 'Fire', 5, 5, 2, 'magic', 'playerOne');
-const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 12, 4, 'Ice', 3, 6, 5, 'magic', 'playerOne');
+const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 16, 18, 4, 'Fire', 5, 5, 1, 'magic', 'playerOne');
+const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 12, 4, 'Ice', 3, 6, 1, 'magic', 'playerOne');
 const nedStark = new MeleeCharacter('Ned Stark', 15, 3, 5, 15, 'melee', 'playerOne');
 const melissandre = new MagicCharacter('Melissandre', 8, 12, 18, 4, 'Fire', 4, 5, 5, 'magic', 'playerOne');
 
 const jorahMormont = new MeleeCharacter('Jorah Mormont', 12, 2, 5, 16, 'melee', 'playerTwo');
 const cerseiLannister = new MagicCharacter('Cersei Lannister', 9, 12, 15, 3, 'Ice', 4, 4, 1, 'magic', 'playerTwo');
 const theHound = new MeleeCharacter('The Hound', 12, 2, 5, 14, 'melee', 'playerTwo');
-const aryaStark = new MagicCharacter('Arya Stark', 10, 6, 12, 3, 'Fire', 3, 5, 11, 'magic', 'playerTwo');
+const aryaStark = new MeleeCharacter('Arya Stark', 10, 6, 12, 3, 'melee', 'playerTwo');
 const jaimeLannister = new MeleeCharacter('Jaime Lannister', 14, 3, 6, 16, 'melee', 'playerTwo');
 const whiteWalker = new MagicCharacter('White Walker', 10, 10, 18, 5, 'Ice', 2, 4, 15, 'magic', 'playerTwo');
 
@@ -482,29 +482,52 @@ game.getDefencePositionsForAttack = function(playerPositionOrMovement, character
       const DefX = parseInt(id[0]);
       const DefY = parseInt(id[2]);
       //these are all the up, down, left and right squares of the player
-      if (`${DefX - 1}-${DefY}` === playerPositionOrMovement
-        || `${DefX + 1}-${DefY}` === playerPositionOrMovement
-        || `${DefX}-${DefY - 1}` === playerPositionOrMovement
-        || `${DefX}-${DefY + 1}` === playerPositionOrMovement) {
-        game.defenderPosition.push('.' + itemClass);
-        game.turnAttackOn();
-        if ($characterType === 'magic') game.turnMagicOn($characterMP);
-        $('.defender-stats-window').show(200);
-        if (game.defenderPosition.length > 1) {
-          $(document).on('keydown', function(e) {
-            if (e.which === 83) {
-              game.defenderIndex++;
-              if (game.defenderIndex >= game.defenderPosition.length) game.defenderIndex = 0;
-              game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
-            }
-          });
-        } else {
-          game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
+      if ($characterType === 'melee') {
+        if (`${DefX - 1}-${DefY}` === playerPositionOrMovement
+          || `${DefX + 1}-${DefY}` === playerPositionOrMovement
+          || `${DefX}-${DefY - 1}` === playerPositionOrMovement
+          || `${DefX}-${DefY + 1}` === playerPositionOrMovement) {
+          game.defenderPosition.push('.' + itemClass);
+          game.turnAttackOn();
+          $('.defender-stats-window').show(200);
+          if (game.defenderPosition.length > 1) {
+            $(document).on('keydown', function(e) {
+              if (e.which === 83) {
+                game.defenderIndex++;
+                if (game.defenderIndex >= game.defenderPosition.length) game.defenderIndex = 0;
+                game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
+              }
+            });
+          } else {
+            game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
+          }
+        }
+      } else if ($characterType === 'magic') {
+        if (`${DefX - 2}-${DefY}` === playerPositionOrMovement
+          || `${DefX + 2}-${DefY}` === playerPositionOrMovement
+          || `${DefX}-${DefY - 2}` === playerPositionOrMovement
+          || `${DefX}-${DefY + 2}` === playerPositionOrMovement) {
+          game.defenderPosition.push('.' + itemClass);
+          console.log(game.defenderPosition);
+          game.turnMagicOn($characterMP);
+          $('.defender-stats-window').show(200);
+          if (game.defenderPosition.length > 1) {
+            $(document).on('keydown', function(e) {
+              if (e.which === 83) {
+                game.defenderIndex++;
+                if (game.defenderIndex >= game.defenderPosition.length) game.defenderIndex = 0;
+                game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
+              }
+            });
+          } else {
+            game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
+          }
         }
       }
     }
   });
 };
+
 
 
 
@@ -722,7 +745,13 @@ game.displayStats = function displayStats(character, attackOrDefend) {
   }
 
   const $dmgDisplay = $(`#${battleType}-dmg-stats`);
-  $dmgDisplay.html(`DMG: ${$dmgStat}/${initialDmg}`);
+
+  if ($typeStat === 'magic') {
+    $dmgDisplay.hide();
+  } else if ($typeStat === 'melee') {
+    $dmgDisplay.show();
+    $dmgDisplay.html(`DMG: ${$dmgStat}/${initialDmg}`);
+  }
 
   const $defDisplay = $(`#${battleType}-def-stats`);
   $defDisplay.html(`DEF: ${$defStat}/${initialDef}`);
