@@ -466,7 +466,7 @@ game.moveCells = function moveCells(characterClass, direction, characterObj) {
   // }
 };
 
-//selects defenders based on their position and cycles through defenderIndex to select the right one 
+//selects defenders based on their position and cycles through defenderIndex to select the right one
 game.selectDefender = function() {
   if (game.defenderPosition.length > 1) {
     $(document).on('keydown', function(e) {
@@ -480,7 +480,7 @@ game.selectDefender = function() {
   } else {
     game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
   }
-}
+};
 
 game.getDefencePositionsForAttack = function(playerPositionOrMovement, character) {
   const $characterType = $(character).attr('type');
@@ -709,10 +709,8 @@ game.actionOnDeath = function actionOnDeath(defender) {
   const defenderObject = defender.substr(1);
   this.cellTypes[defenderObject].isDead = true;
 
-
   $('#damage-message').html(`${$deadCharacterName} was killed!`);
   $deadCharacter.addClass('dead');
-
 
   //BASIC ENDGAME BIT
   $deadCharacterPlayer === 'playerOne' ? this.playerOneCharactersAlive -= 1 : this.playerTwoCharactersAlive -=1;
