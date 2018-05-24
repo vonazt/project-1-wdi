@@ -42,7 +42,8 @@ nav {
   border-radius: 5px;
   padding: 20px;
   line-height: 2em;
-  overflow: auto; }
+  overflow: auto;
+  z-index: 1; }
   .game-rules a {
     font-family: 'Lucida Grande';
     color: white;
@@ -64,6 +65,19 @@ nav {
     display: none; }
   .game-rules .character-types {
     display: none; }
+
+.mute {
+  background-color: black;
+  border: none;
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  cursor: pointer; }
+  .mute:focus {
+    outline: 0; }
+  .mute img {
+    height: 30px;
+    width: 30px; }
 
 #battle-map {
   height: 650px;

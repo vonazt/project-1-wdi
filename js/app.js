@@ -799,15 +799,40 @@ game.playQuote = function(characterRef) {
   quoteAudio.play();
 };
 
+game.muteMainTheme = function() {
+  const $muteSymbol = $('.mute-img');
+  const mainTheme = document.querySelector('.main-theme-music');
+  $muteSymbol.on('click', function() {
+    if ($muteSymbol.attr('src') === './images/mute_symbol.png') {
+      $muteSymbol.attr('src', './images/sound.png');
+      mainTheme.src = './sound/main_theme.wav';
+      mainTheme.play();
+    } else {
+      $muteSymbol.attr('src', './images/mute_symbol.png');
+      mainTheme.src = '';
+    }
+  });
+};
+// document.querySelector('.mute').addEventListener('click', () => {
+//   toggleMuteSymbol();
+// });
+//
+// function toggleMuteSymbol() {
+//   const muteButton = document.querySelector('.mute-img');
+//
+// }
+
 //GAME INIT
 game.hideOpeningCredits = function hideOpeningCredits() {
   const $gameTitle = $('.game-title');
+  const $navBar = $('nav');
   const $startButton = $('#start-button');
+  const $rulesButton = $('#rules-button');
   $startButton.on('click', function() {
     $('.gameboard').show();
     $('.options-display').show();
     $('.attacker-stats-window').show();
-    $('nav').hide();
+    $startButton.hide();
     const mainTheme = document.querySelector('.main-theme-music');
     mainTheme.src = './sound/main_theme.wav';
     mainTheme.play();
@@ -815,6 +840,30 @@ game.hideOpeningCredits = function hideOpeningCredits() {
       'font-size': '3em',
       'margin-bottom': '10px',
       'margin-top': '5px'
+    });
+    $navBar.css({
+      'position': 'absolute',
+      'top': '100px',
+      'left': '5px',
+      'width': '200px',
+      'height': '50px',
+      'padding': '0'
+    });
+    $rulesButton.show();
+
+    $rulesButton.css({
+      'font-family': 'Lucida Grande',
+      'width': '120px',
+      'font-size': '1em',
+      'left': '5px',
+      'color': 'white',
+      'background-color': '#0032AF',
+      'border': '3px solid silver',
+      'border-radius': '5px',
+      'box-shadow': 'none',
+      'cursor': 'pointer',
+      'padding': '5px',
+      'margin': '0'
     });
   });
 };
@@ -830,7 +879,7 @@ game.displayGameRules = function() {
   const $characterTypes = $('.character-types');
   const $closeMenu = $('.close-menu');
   $rulesButton.on('click', function() {
-    $gameRules.show();
+    $gameRules.show(200);
     $gameBasics.show();
     $gameBasicsLink.hide();
     $controlsLink.show();
@@ -898,6 +947,7 @@ game.init = function() {
   $('.defender-stats-window').hide();
   game.hideOpeningCredits();
   game.displayGameRules();
+  game.muteMainTheme();
 };
 
 $(() => {

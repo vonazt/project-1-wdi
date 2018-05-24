@@ -48,6 +48,7 @@ nav {
   padding: 20px;
   line-height: 2em;
   overflow: auto;
+  z-index: 1;
   a {
     font-family: 'Lucida Grande';
     color: white;
@@ -74,6 +75,20 @@ nav {
   }
   .character-types {
     display: none;
+  }
+}
+
+.mute {
+  background-color: black;
+  border: none;
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  cursor: pointer;
+  &:focus {outline: 0};
+  img {
+    height: 30px;
+    width: 30px;
   }
 }
 
