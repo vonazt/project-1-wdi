@@ -52,7 +52,7 @@ game.playerTwoCharactersAlive = 6;
 //GAME SETUP
 
 //BATTLEFIELD GRID BUILDING AND CHARCTER PLACING
-game.createGameGrid = function createGameGrid() {
+game.createGameGrid = function() {
   const gameGrid = [];
 
   //creates a 10 x 10 battlefield grid
@@ -96,7 +96,7 @@ game.cellTypes = {
   characterTwelve: whiteWalker
 };
 
-game.drawBattlefield = function drawBattlefield() {
+game.drawBattlefield = function() {
   const battlegrid = this.createGameGrid();
   $.each(battlegrid, (i, row) => {
     $.each(row, (j, cell) => {
@@ -168,20 +168,20 @@ game.playerCharacterObjectReference = {
 };
 
 //references the objects above and changes the current selected character accordingly
-game.checkPlayerOneCharacterToSwapTo = function checkPlayerOneCharacterToSwapTo(currentCharacter) {
+game.checkPlayerOneCharacterToSwapTo = function(currentCharacter) {
   this.playerOneCharacter = this.playerCharacterSwitches[currentCharacter];
   this.playerOneCharacterObjectReference = this.playerCharacterObjectReference[currentCharacter];
 };
 
 //these two need to be separate because of need for different starting points at beginning of player turn
 
-game.checkPlayerTwoCharacterToSwapTo = function checkPlayerTwoCharacterToSwapTo(currentCharacter) {
+game.checkPlayerTwoCharacterToSwapTo = function(currentCharacter) {
   this.playerTwoCharacter = this.playerCharacterSwitches[currentCharacter];
   this.playerTwoCharacterObjectReference = this.playerCharacterObjectReference[currentCharacter];
 };
 
 
-game.switchCharacter = function switchCharacter() {
+game.switchCharacter = function() {
   $(document).on('keydown', function(e) {
     if (e.which === 9) {
       e.preventDefault(); //stops tab from moving around the window
@@ -227,7 +227,7 @@ game.cycleThroughDeadPlayers = function() {
   }
 };
 
-game.switchPlayers = function switchPlayers() {
+game.switchPlayers = function() {
   this.canSwitchCharacters = true; //resets canSwitchCharacters flag so that players can tab through character select
   //I've put th
   this.cycleThroughDeadPlayers();
@@ -251,12 +251,12 @@ game.switchPlayers = function switchPlayers() {
 };
 
 //this function doesn't work in every case for some weird reason
-game.changeCharacterPicture = function changeCharacterPicture(removeCharacter, addCharacter) {
+game.changeCharacterPicture = function(removeCharacter, addCharacter) {
   $('#selected-attacker').removeClass(removeCharacter);
   $('#selected-attacker').removeClass(addCharacter);
 };
 
-game.pickOption = function pickOption() {
+game.pickOption = function() {
   const $option = $('.option'); //selects option window
   $option.on('click', function() {
     if (this.id === 'wait-option') {
@@ -304,14 +304,14 @@ game.pickOption = function pickOption() {
 };
 
 //resets available squares each time characters or players switch
-game.clearSquares = function clearSquares() {
+game.clearSquares = function() {
   const $availableSquares = $('.available');
   $availableSquares.attr('class', 'battle-cell');
 };
 
 //CHARACTER MOVEMENT
 
-game.checkMoveDistance = function checkMoveDistance() {
+game.checkMoveDistance = function() {
   if (this.playerOneTurn) {
     this.showAvailableSquares(this.playerOneCharacter);
   } else {
@@ -320,7 +320,7 @@ game.checkMoveDistance = function checkMoveDistance() {
 };
 
 //checks which squares are available for character to move to based on current position and move stats (see character object)
-game.showAvailableSquares = function showAvailableSquares(character) {
+game.showAvailableSquares = function(character) {
   const $characterStartPoint = $(character).attr('id');
   //gets current location from character's current div id
   const characterXStartpoint = parseInt($characterStartPoint[0]);
@@ -359,7 +359,7 @@ game.showAvailableSquares = function showAvailableSquares(character) {
   });
 };
 
-game.moveCharacter = function moveCharacter() {
+game.moveCharacter = function() {
   $(document).on('keydown', function(e) {
     if (game.playerOneTurn) {
       game.characterMovement(game.playerOneCharacter, e);
@@ -371,7 +371,7 @@ game.moveCharacter = function moveCharacter() {
   });
 };
 
-game.characterMovement = function characterMovement(character, e) {
+game.characterMovement = function(character, e) {
   const $character = $(character);
   //gets the character position based on id
   //gets id of surrounding squares using character's current cell id
@@ -392,7 +392,7 @@ game.characterMovement = function characterMovement(character, e) {
   }
 };
 
-game.makeMove = function makeMove(direction, character) {
+game.makeMove = function(direction, character) {
   game.canSwitchCharacters = false; //switches flag so player can no longer tab through characters to prevent leapfrogging
   $('.defender-stats-window').hide();
   if (this.playerOneTurn) {
@@ -405,7 +405,7 @@ game.makeMove = function makeMove(direction, character) {
 
 //swaps cell classes based on direction key pressed to give illusion of character movement
 //available class is related to move stats below
-game.moveCells = function moveCells(characterClass, direction, characterObj) {
+game.moveCells = function(characterClass, direction, characterObj) {
   //all these variables are necessary for passing character attributes between divs - not sure how to refactor these
   const $characterDetails = $(characterObj);
   const $characterName = $characterDetails.attr('name');
@@ -566,7 +566,7 @@ game.getDefencePositionsForAttack = function(playerPositionOrMovement, character
 game.attackOn = false;
 game.magicOn = false;
 
-game.turnAttackOn = function turnAttackOn() {
+game.turnAttackOn = function() {
   this.attackOn = true;
   this.$attackOption.css({
     'color': 'white',
@@ -574,7 +574,7 @@ game.turnAttackOn = function turnAttackOn() {
   });
 };
 
-game.turnAttackOff = function turnAttackOff() {
+game.turnAttackOff = function() {
   this.attackOn = false;
   this.$attackOption.css({
     'color': 'gray',
@@ -582,7 +582,7 @@ game.turnAttackOff = function turnAttackOff() {
   });
 };
 
-game.turnMagicOn = function turnMagicOn(attackerMP) {
+game.turnMagicOn = function(attackerMP) {
   if (parseInt(attackerMP) > 0) {
     this.magicOn = true;
     this.$magicOption.css({
@@ -592,7 +592,7 @@ game.turnMagicOn = function turnMagicOn(attackerMP) {
   }
 };
 
-game.turnMagicOff = function turnMagicOff() {
+game.turnMagicOff = function() {
   this.magicOn = false;
   this.$magicOption.css({
     'color': 'gray',
@@ -600,7 +600,7 @@ game.turnMagicOff = function turnMagicOff() {
   });
 };
 
-game.castMagic = function castMagic(attacker, defender, magic) {
+game.castMagic = function(attacker, defender, magic) {
   const attackType = 'magic'; //for displayDamageMessage() below
   const spellPower = $(attacker).attr('mgdmg');
   const spellCost = $(attacker).attr('spellCost');
@@ -642,7 +642,7 @@ game.castMagic = function castMagic(attacker, defender, magic) {
   this.switchPlayers();
 };
 
-game.attackDefender = function attackDefender(attacker, defender) {
+game.attackDefender = function(attacker, defender) {
   const attackType = 'attack';
   const attackPower = $(attacker).attr('dmg');
   const defPower = $(defender).attr('def');
@@ -661,7 +661,7 @@ game.attackDefender = function attackDefender(attacker, defender) {
 };
 
 //condense into one function
-game.displayDamageMessage = function displayDamageMessage(attackType, attacker, defender, damage,  magic, statDamage) {
+game.displayDamageMessage = function(attackType, attacker, defender, damage,  magic, statDamage) {
   $('.feedback').show();
   const $messageWindow = $('#damage-message');
   const attackerName = $(attacker).attr('name');
@@ -690,7 +690,7 @@ game.displayDamageMessage = function displayDamageMessage(attackType, attacker, 
   }
 };
 
-game.checkForDeath = function checkForDeath(defender) {
+game.checkForDeath = function(defender) {
   const $defenderHP = $(defender).attr('hp');
   if (parseInt($defenderHP) <= 0){
     //this code gets the right initial picture coming up after 1st character death but then breaks the selector later on in the game
@@ -700,7 +700,7 @@ game.checkForDeath = function checkForDeath(defender) {
 };
 
 game.gameOver = false;
-game.actionOnDeath = function actionOnDeath(defender) {
+game.actionOnDeath = function(defender) {
   const $deadCharacter = $(defender);
   const $deadCharacterName = $deadCharacter.attr('name');
   const $deadCharacterPlayer = $deadCharacter.attr('player');
@@ -748,7 +748,7 @@ game.restart = function() {
 
 
 //STATS DISPLAY WINDOW
-game.setStatsWindow = function setStatsWindow() {
+game.setStatsWindow = function() {
   if ($(this.playerOneCharacter).attr('class').includes('dead')) {
     game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
   }
@@ -759,7 +759,7 @@ game.setStatsWindow = function setStatsWindow() {
   this.playerOneTurn ? this.displayStats(this.playerOneCharacter, 'attack') : this.displayStats(this.playerTwoCharacter, 'attack');
 };
 
-game.displayStats = function displayStats(character, attackOrDefend) {
+game.displayStats = function(character, attackOrDefend) {
   //sets which character image will be displayed in defender window
   const characterObjectReference = character.substr(1);
   if (attackOrDefend === 'defence') {
@@ -848,7 +848,7 @@ game.muteMainTheme = function() {
 };
 
 //GAME INIT
-game.hideOpeningCredits = function hideOpeningCredits() {
+game.hideOpeningCredits = function() {
   const $gameTitle = $('.game-title');
   const $navBar = $('nav');
   const $startButton = $('#start-button');
@@ -948,6 +948,11 @@ game.displayGameRules = function() {
 
 
 game.init = function() {
+  $('.gameboard').hide();
+  $('.mute').hide();
+  $('.options-display').hide();
+  $('.attacker-stats-window').hide();
+  $('.defender-stats-window').hide();
   game.drawBattlefield();
   game.moveCharacter();
   game.checkMoveDistance();
@@ -957,11 +962,6 @@ game.init = function() {
   game.pickOption();
   game.setStatsWindow(game.playerOneCharacter);
   $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
-  $('.gameboard').hide();
-  $('.mute').hide();
-  $('.options-display').hide();
-  $('.attacker-stats-window').hide();
-  $('.defender-stats-window').hide();
   game.hideOpeningCredits();
   game.displayGameRules();
   game.muteMainTheme();
