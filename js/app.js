@@ -949,6 +949,9 @@ game.displayGameRules = function() {
   $closeMenu.on('click', function() {
     $gameRules.hide();
   });
+  $(document).on('keydown', function(e) {
+    if (e.which === 27) $gameRules.hide();
+  });
 };
 
 
