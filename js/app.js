@@ -30,10 +30,10 @@ class MeleeCharacter extends BaseCharacter {
   }
 }
 
-const jonSnow = new MeleeCharacter('Jon Snow', 14, 2, 5, 12, 'melee', 'playerOne');
+const jonSnow = new MeleeCharacter('Jon Snow', 14, 3, 5, 12, 'melee', 'playerOne');
 const robertBaratheon = new MeleeCharacter('Robert Baratheon', 15, 1, 4, 20, 'melee', 'playerOne');
 const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 16, 18, 4, 'Fire', 5, 5, 1, 'magic', 'playerOne');
-const tyrionLannister = new MagicCharacter('Tyrion Lannister', 8, 10, 12, 4, 'Fire', 4, 4, 1, 'magic', 'playerOne');
+const tyrionLannister = new MagicCharacter('Tyrion Lannister', 8, 10, 14, 4, 'Fire', 4, 4, 1, 'magic', 'playerOne');
 const nedStark = new MeleeCharacter('Ned Stark', 15, 3, 5, 14, 'melee', 'playerOne');
 const melissandre = new MagicCharacter('Melissandre', 8, 12, 18, 4, 'Fire', 4, 5, 5, 'magic', 'playerOne');
 
@@ -658,7 +658,7 @@ game.attackDefender = function attackDefender(attacker, defender) {
 
   this.displayDamageMessage(attackType, attacker, defender, actualDamage);
   this.checkForDeath(defender);
-  this.switchPlayers();
+  if (!game.gameOver) this.switchPlayers();
 };
 
 //condense into one function
@@ -687,7 +687,7 @@ game.checkForDeath = function checkForDeath(defender) {
   if (parseInt($defenderHP) <= 0) this.actionOnDeath(defender);
 };
 
-//THIS IS CURRENTLY BREAKING THE GAME BECAUSE IT CAN'T FIND THE CHARACTER
+game.gameOver = false;
 game.actionOnDeath = function actionOnDeath(defender) {
   const $deadCharacter = $(defender);
   const $deadCharacterName = $deadCharacter.attr('name');
@@ -705,12 +705,34 @@ game.actionOnDeath = function actionOnDeath(defender) {
   //BASIC ENDGAME BIT
   $deadCharacterPlayer === 'playerOne' ? this.playerOneCharactersAlive -= 1 : this.playerTwoCharactersAlive -=1;
   if (this.playerOneCharactersAlive === 0 || this.playerTwoCharactersAlive === 0) {
+    game.gameOver = true;
     $('.attacker-stats-window').hide();
-    setTimeout(function() {
-      $('#damage-message').html('GAME OVER!!');
-    }, 5000);
-    // game.restart();
+    $('#damage-message').html('GAME OVER!!');
+    game.restart();
   }
+};
+
+
+game.restart = function() {
+  $('#battle-map').empty();
+  $('.gameboard').prepend('<div />').attr('id', '#battle-map');
+  game.drawBattlefield();
+  game.playerOneTurn = true;
+  game.moveCharacter();
+  game.checkMoveDistance();
+  game.switchCharacter();
+  game.$attackOption = $('#attack-option');
+  game.$magicOption = $('#magic-option');
+  game.pickOption();
+  game.playerOneCharacter = '.characterOne';
+  game.playerOneCharacterObjectReference = 'characterOne';
+  game.playerTwoCharacter = '.characterSeven';
+  game.playerTwoCharacterObjectReference = 'characterTwo';
+  $('attacker-stats-window').show();
+  $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
+  game.setStatsWindow(game.playerOneCharacter);
+  game.playerOneCharactersAlive = 6;
+  game.playerTwoCharactersAlive = 6;
 };
 
 
@@ -813,14 +835,6 @@ game.muteMainTheme = function() {
     }
   });
 };
-// document.querySelector('.mute').addEventListener('click', () => {
-//   toggleMuteSymbol();
-// });
-//
-// function toggleMuteSymbol() {
-//   const muteButton = document.querySelector('.mute-img');
-//
-// }
 
 //GAME INIT
 game.hideOpeningCredits = function hideOpeningCredits() {
@@ -833,6 +847,7 @@ game.hideOpeningCredits = function hideOpeningCredits() {
     $('.gameboard').show();
     $('.options-display').show();
     $('.attacker-stats-window').show();
+    $('#flamegroup').hide();
     $startButton.hide();
     const mainTheme = document.querySelector('.main-theme-music');
     mainTheme.src = './sound/main_theme.wav';
@@ -917,20 +932,6 @@ game.displayGameRules = function() {
   });
 };
 
-// game.restart = function() {
-//   $('#battle-map').empty();
-//   $('.gameboard').prepend('<div />').attr('id', '#battle-map');
-//   game.drawBattlefield();
-//   game.moveCharacter();
-//   game.checkMoveDistance();
-//   game.switchCharacter();
-//   game.$attackOption = $('#attack-option');
-//   game.$magicOption = $('#magic-option');
-//   game.pickOption();
-//   game.setStatsWindow(game.playerOneCharacter);
-//
-//   $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
-// };
 
 game.init = function() {
   game.drawBattlefield();
