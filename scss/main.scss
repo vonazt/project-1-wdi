@@ -28,6 +28,7 @@ nav {
   button {
     box-shadow:  0px -2px 4px #fff, 0px -2px 10px #FF3,  0px -5px 20px #F90, 0px -5px 40px #C33;
     margin-right: 50px;
+    cursor: pointer;
     &.menu-button {
       font-family: 'Cinzel Decorative', cursive;
       font-size: 1.5em;
@@ -476,28 +477,28 @@ h2 {
 }
 
 #flamegroup {
-    margin:0 auto;
-    position:relative;
-    width:120px;
-    height:156px;
+    margin: 0 auto;
+    position: relative;
+    width: 120px;
+    height: 156px;
 }
 .flame {
-    margin:0 auto;
-    position:absolute;
-    width:100px;
-    height:136px;
-    background:url(http://sitepointstatic.com/examples/css3/animation/flame-sprite.png?r=6) 0px 0px no-repeat;
+    margin: 0 auto;
+    position: absolute;
+    width: 100px;
+    height: 136px;
+    background: url(http://sitepointstatic.com/examples/css3/animation/flame-sprite.png?r=6) 0px 0px no-repeat;
 }
 
 #fl1 {
    animation: flicker 1.3s steps(1) infinite;
-    top:20px;
-    left:10px
+    top: 20px;
+    left: 10px
 }
 #fl2 {
    animation: flicker .7s steps(1) infinite;
-    top:10px;
-    left:20px;
+    top: 10px;
+    left: 20px;
 
 }
 #fl3 {
@@ -506,8 +507,8 @@ h2 {
 
 @keyframes flicker { /* flame pulses */
     0%,
-    100%{background-position:0px 0px; opacity:.8 }
-    25% {background-position:-100px 0px;}
-    50% {background-position:-200px 0px;; opacity:.4;}
-    75% {background-position:-100px 0px;}
+    100%{background-position: 0px 0px; opacity:.8 }
+    25% {background-position: -100px 0px;}
+    50% {background-position: -200px 0px;; opacity:.4;}
+    75% {background-position: -100px 0px;}
 }

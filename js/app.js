@@ -30,7 +30,7 @@ class MeleeCharacter extends BaseCharacter {
   }
 }
 
-const jonSnow = new MeleeCharacter('Jon Snow', 14, 3, 5, 12, 'melee', 'playerOne');
+const jonSnow = new MeleeCharacter('Jon Snow', 14, 8, 5, 120, 'melee', 'playerOne');
 const robertBaratheon = new MeleeCharacter('Robert Baratheon', 15, 1, 4, 20, 'melee', 'playerOne');
 const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 16, 18, 4, 'Fire', 5, 5, 1, 'magic', 'playerOne');
 const tyrionLannister = new MagicCharacter('Tyrion Lannister', 8, 10, 14, 4, 'Fire', 4, 4, 1, 'magic', 'playerOne');
@@ -42,7 +42,7 @@ const cerseiLannister = new MagicCharacter('Cersei Lannister', 10, 12, 15, 3, 'F
 const theHound = new MeleeCharacter('The Hound', 12, 2, 5, 18, 'melee', 'playerTwo');
 const aryaStark = new MeleeCharacter('Arya Stark', 13, 3, 4, 12, 'melee', 'playerTwo');
 const jaimeLannister = new MeleeCharacter('Jaime Lannister', 14, 3, 6, 13, 'melee', 'playerTwo');
-const whiteWalker = new MagicCharacter('White Walker', 8, 10, 18, 5, 'Ice', 2, 4, 15, 'magic', 'playerTwo');
+const whiteWalker = new MagicCharacter('White Walker', 8, 10, 18, 5, 'Ice', 4, 4, 15, 'magic', 'playerTwo');
 
 //THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER
 game.playerOneCharactersAlive = 6;
@@ -225,6 +225,7 @@ game.switchCharacter = function switchCharacter() {
 };
 
 game.switchPlayers = function switchPlayers() {
+  this.canSwitchCharacters = true; //resets canSwitchCharacters flag so that players can tab through character select
   if (this.playerOneTurn){
     $('#selected-attacker').removeClass();
     $('#selected-attacker').addClass(game.playerTwoCharacterObjectReference);
@@ -232,7 +233,6 @@ game.switchPlayers = function switchPlayers() {
     $('#selected-attacker').removeClass();
     $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
   }
-  this.canSwitchCharacters = true; //resets canSwitchCharacters flag so that players can tab through character select
   this.playerOneTurn = !game.playerOneTurn; //flag that switches player control
   this.turnAttackOff(); //resets Attack in options window to gray
   this.turnMagicOff();
@@ -666,7 +666,9 @@ game.displayDamageMessage = function displayDamageMessage(attackType, attacker, 
   $('.feedback').show();
   const $messageWindow = $('#damage-message');
   const attackerName = $(attacker).attr('name');
+  const attackerMagic = $(attacker).attr('magicType');
   const defenderName = $(defender).attr('name');
+  const defenderType = $(defender).attr('type');
   if (attackType === 'attack') {
     $messageWindow.html(`${attackerName} attacked ${defenderName} and did ${damage} damage!`);
     setTimeout(function() {
@@ -675,10 +677,17 @@ game.displayDamageMessage = function displayDamageMessage(attackType, attacker, 
   } else if (attackType === 'magic') {
     let statType;
     magic === 'Fire' ? statType = 'DEF' : statType = 'DMG';
-    $messageWindow.html(`${attackerName} cast ${magic} and did ${damage} damage to ${defenderName}. ${defenderName}'s ${statType} decreased by ${statDamage}!`);
-    setTimeout(function() {
-      $('.feedback').hide();
-    }, 3200);
+    if (defenderType === 'melee' || attackerMagic === 'Fire') {
+      $messageWindow.html(`${attackerName} cast ${magic} and did ${damage} damage to ${defenderName}. ${defenderName}'s ${statType} decreased by ${statDamage}!`);
+      setTimeout(function() {
+        $('.feedback').hide();
+      }, 3200);
+    } else {
+      $messageWindow.html(`${attackerName} cast ${magic} and did ${damage} damage to ${defenderName}.`);
+      setTimeout(function() {
+        $('.feedback').hide();
+      }, 3200);
+    }
   }
 };
 
@@ -715,24 +724,24 @@ game.actionOnDeath = function actionOnDeath(defender) {
 
 game.restart = function() {
   $('#battle-map').empty();
-  $('.gameboard').prepend('<div />').attr('id', '#battle-map');
-  game.drawBattlefield();
-  game.playerOneTurn = true;
-  game.moveCharacter();
-  game.checkMoveDistance();
-  game.switchCharacter();
-  game.$attackOption = $('#attack-option');
-  game.$magicOption = $('#magic-option');
-  game.pickOption();
-  game.playerOneCharacter = '.characterOne';
-  game.playerOneCharacterObjectReference = 'characterOne';
-  game.playerTwoCharacter = '.characterSeven';
-  game.playerTwoCharacterObjectReference = 'characterTwo';
-  $('attacker-stats-window').show();
-  $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
-  game.setStatsWindow(game.playerOneCharacter);
-  game.playerOneCharactersAlive = 6;
-  game.playerTwoCharactersAlive = 6;
+  // $('.gameboard').prepend('<div />').attr('id', '#battle-map');
+  // game.drawBattlefield();
+  // game.playerOneTurn = true;
+  // game.moveCharacter();
+  // game.checkMoveDistance();
+  // game.switchCharacter();
+  // game.$attackOption = $('#attack-option');
+  // game.$magicOption = $('#magic-option');
+  // game.pickOption();
+  // game.playerOneCharacter = '.characterOne';
+  // game.playerOneCharacterObjectReference = 'characterOne';
+  // game.playerTwoCharacter = '.characterSeven';
+  // game.playerTwoCharacterObjectReference = 'characterTwo';
+  // $('attacker-stats-window').show();
+  // $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
+  // game.setStatsWindow(game.playerOneCharacter);
+  // game.playerOneCharactersAlive = 6;
+  // game.playerTwoCharactersAlive = 6;
 };
 
 
