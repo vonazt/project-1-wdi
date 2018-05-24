@@ -196,18 +196,7 @@ game.switchCharacter = function switchCharacter() {
           game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
           $('#selected-attacker').addClass(game.playerTwoCharacterObjectReference);
         }
-        //these loops are necessary to make sure that a dead character isn't selected while switching characters - don't ask me why
-        for (let j=1; j < 6; j++) {
-          if ($(game.playerOneCharacter).attr('class').includes('dead')) {
-            console.log(game.playerOneCharacterObjectReference);
-            game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
-          }
-        }
-        for (let i=1; i < 6; i++) {
-          if ($(game.playerTwoCharacter).attr('class').includes('dead')) {
-            game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
-          }
-        }
+        game.cycleThroughDeadPlayers();
 
         //resets all the movement, display stats and available spaces while tabbing through characters
         game.turnAttackOff();
@@ -224,8 +213,24 @@ game.switchCharacter = function switchCharacter() {
   });
 };
 
+//these loops are necessary to make sure that a dead character isn't selected while switching characters - don't ask me why
+game.cycleThroughDeadPlayers = function() {
+  for (let i=1; i < 6; i++) {
+    if ($(game.playerOneCharacter).attr('class').includes('dead')) {
+      game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
+    }
+  }
+  for (let j=1; j < 6; j++) {
+    if ($(game.playerTwoCharacter).attr('class').includes('dead')) {
+      game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
+    }
+  }
+};
+
 game.switchPlayers = function switchPlayers() {
   this.canSwitchCharacters = true; //resets canSwitchCharacters flag so that players can tab through character select
+  //I've put th
+  this.cycleThroughDeadPlayers();
   if (this.playerOneTurn){
     $('#selected-attacker').removeClass();
     $('#selected-attacker').addClass(game.playerTwoCharacterObjectReference);
@@ -693,7 +698,11 @@ game.displayDamageMessage = function displayDamageMessage(attackType, attacker, 
 
 game.checkForDeath = function checkForDeath(defender) {
   const $defenderHP = $(defender).attr('hp');
-  if (parseInt($defenderHP) <= 0) this.actionOnDeath(defender);
+  if (parseInt($defenderHP) <= 0){
+    //this code gets the right initial picture coming up after 1st character death but then breaks the selector later on in the game
+    // this.playerOneTurn ? this.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference) : game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
+    this.actionOnDeath(defender);
+  }
 };
 
 game.gameOver = false;
@@ -724,6 +733,7 @@ game.actionOnDeath = function actionOnDeath(defender) {
 
 game.restart = function() {
   $('#battle-map').empty();
+  $('.defender-stats-window').hide();
   // $('.gameboard').prepend('<div />').attr('id', '#battle-map');
   // game.drawBattlefield();
   // game.playerOneTurn = true;
