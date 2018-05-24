@@ -30,7 +30,7 @@ class MeleeCharacter extends BaseCharacter {
   }
 }
 
-const jonSnow = new MeleeCharacter('Jon Snow', 14, 8, 5, 120, 'melee', 'playerOne');
+const jonSnow = new MeleeCharacter('Jon Snow', 14, 2, 5, 12, 'melee', 'playerOne');
 const robertBaratheon = new MeleeCharacter('Robert Baratheon', 15, 1, 4, 20, 'melee', 'playerOne');
 const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 16, 18, 4, 'Fire', 5, 5, 1, 'magic', 'playerOne');
 const tyrionLannister = new MagicCharacter('Tyrion Lannister', 8, 10, 14, 4, 'Fire', 4, 4, 1, 'magic', 'playerOne');
@@ -66,10 +66,10 @@ game.createGameGrid = function createGameGrid() {
   //starting positions for playerOne and playerTwo characters
   gameGrid[3][1] = 'characterOne';
   gameGrid[3][0] = 'characterTwo';
-  gameGrid[4][1] = 'characterThree';
-  gameGrid[4][0] = 'characterFour';
+  gameGrid[5][0] = 'characterThree';
+  gameGrid[4][1] = 'characterFour';
   gameGrid[5][1] = 'characterFive';
-  gameGrid[5][0] = 'characterSix';
+  gameGrid[4][0] = 'characterSix';
   gameGrid[3][8] = 'characterSeven';
   gameGrid[3][9] = 'characterEight';
   gameGrid[4][8] = 'characterNine';
@@ -397,7 +397,6 @@ game.makeMove = function makeMove(direction, character) {
   $('.defender-stats-window').hide();
   if (this.playerOneTurn) {
     //playerCharacterObjectReference has to be passed because of selector in moveCells() that requires 'character', not .'character'
-    //this.playerTwoCharacter is wrong - there needs to be a check as to which character is the adjacent one
     this.moveCells(this.playerOneCharacterObjectReference, direction, character);
   } else {
     this.moveCells(this.playerTwoCharacterObjectReference, direction, character);
@@ -456,7 +455,8 @@ game.moveCells = function moveCells(characterClass, direction, characterObj) {
     $characterDetails.attr('class', 'available');
     this.playerOneTurn ? this.getDefencePositionsForAttack($directionId, game.playerOneCharacter) : this.getDefencePositionsForAttack($directionId, game.playerTwoCharacter);
   }
-  //THIS CREATES A GAME-KILLING BUG
+  //THIS CREATES A GAME-KILLING BUG but the idea is that if a player tries to move into defender square it will display defender info
+  //unfortunately it means they can select defenders from across the map due to id location finding
   // else if (direction.attr('player') === 'playerTwo') {
   //   const $playerOneId = $(game.playerOneCharacter).attr('id');
   //   game.getDefencePositionsForAttack($playerOneId, game.playerOneCharacter);
@@ -466,7 +466,21 @@ game.moveCells = function moveCells(characterClass, direction, characterObj) {
   // }
 };
 
-
+//selects defenders based on their position and cycles through defenderIndex to select the right one 
+game.selectDefender = function() {
+  if (game.defenderPosition.length > 1) {
+    $(document).on('keydown', function(e) {
+      if (e.which === 83) {
+        //cycles through the available defenders that have been pushed to the defenderIndex
+        game.defenderIndex++;
+        if (game.defenderIndex >= game.defenderPosition.length) game.defenderIndex = 0;
+        game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
+      }
+    });
+  } else {
+    game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
+  }
+}
 
 game.getDefencePositionsForAttack = function(playerPositionOrMovement, character) {
   const $characterType = $(character).attr('type');
@@ -492,17 +506,7 @@ game.getDefencePositionsForAttack = function(playerPositionOrMovement, character
           game.defenderPosition.push('.' + itemClass);
           game.turnAttackOn();
           $('.defender-stats-window').show(200);
-          if (game.defenderPosition.length > 1) {
-            $(document).on('keydown', function(e) {
-              if (e.which === 83) {
-                game.defenderIndex++;
-                if (game.defenderIndex >= game.defenderPosition.length) game.defenderIndex = 0;
-                game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
-              }
-            });
-          } else {
-            game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
-          }
+          game.selectDefender();
         }
       } else if ($characterType === 'magic') {
         if (`${DefX - 2}-${DefY}` === playerPositionOrMovement
@@ -512,17 +516,7 @@ game.getDefencePositionsForAttack = function(playerPositionOrMovement, character
           game.defenderPosition.push('.' + itemClass);
           game.turnMagicOn($characterMP);
           $('.defender-stats-window').show(200);
-          if (game.defenderPosition.length > 1) {
-            $(document).on('keydown', function(e) {
-              if (e.which === 83) {
-                game.defenderIndex++;
-                if (game.defenderIndex >= game.defenderPosition.length) game.defenderIndex = 0;
-                game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
-              }
-            });
-          } else {
-            game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
-          }
+          game.selectDefender();
         }
       }
     }
@@ -914,7 +908,7 @@ game.displayGameRules = function() {
   const $characterTypes = $('.character-types');
   const $closeMenu = $('.close-menu');
   $rulesButton.on('click', function() {
-    $gameRules.show(200);
+    $gameRules.show(300);
     $gameBasics.show();
     $gameBasicsLink.hide();
     $controlsLink.show();
