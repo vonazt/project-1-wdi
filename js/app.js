@@ -524,7 +524,7 @@ game.getDefencePositionsForAttack = function(playerPositionOrMovement, character
   });
 };
 
-//POSSIBILITY OF USING THIS TO CREATE A MAESTER CHARACTER WHO CAN HEAL TEAMMATES 
+//POSSIBILITY OF USING THIS TO CREATE A MAESTER CHARACTER WHO CAN HEAL TEAMMATES
 // game.getPositionsForHeal = function(playerPositionOrMovement, character) {
 //   game.teamMatePosition = []; //this is what's referred to for attack function
 //   let $teamMatePositions;
@@ -819,6 +819,54 @@ game.hideOpeningCredits = function hideOpeningCredits() {
   });
 };
 
+game.displayGameRules = function() {
+  const $rulesButton = $('#rules-button');
+  const $gameRules = $('.game-rules');
+  const $gameBasicsLink = $('.game-basics-link');
+  const $gameBasics = $('.game-basics');
+  const $controlsLink = $('.controls-link');
+  const $controls = $('.controls');
+  const $characterTypesLink = $('.character-types-link');
+  const $characterTypes = $('.character-types');
+  const $closeMenu = $('.close-menu');
+  $rulesButton.on('click', function() {
+    $gameRules.show();
+    $gameBasics.show();
+    $gameBasicsLink.hide();
+    $controlsLink.show();
+    $controls.hide();
+    $characterTypesLink.show();
+    $characterTypes.hide();
+  });
+  $gameBasicsLink.on('click', function() {
+    $controls.hide();
+    $controlsLink.show();
+    $characterTypes.hide();
+    $characterTypesLink.show();
+    $gameBasics.show();
+    $gameBasicsLink.hide();
+  });
+  $controlsLink.on('click', function() {
+    $controlsLink.hide();
+    $gameBasicsLink.show();
+    $gameBasics.hide();
+    $characterTypes.hide();
+    $characterTypesLink.show();
+    $controls.show();
+  });
+  $characterTypesLink.on('click', function() {
+    $characterTypesLink.hide();
+    $gameBasicsLink.show();
+    $gameBasics.hide();
+    $controls.hide();
+    $controlsLink.show();
+    $characterTypes.show();
+  });
+  $closeMenu.on('click', function() {
+    $gameRules.hide();
+  });
+};
+
 // game.restart = function() {
 //   $('#battle-map').empty();
 //   $('.gameboard').prepend('<div />').attr('id', '#battle-map');
@@ -849,6 +897,7 @@ game.init = function() {
   $('.attacker-stats-window').hide();
   $('.defender-stats-window').hide();
   game.hideOpeningCredits();
+  game.displayGameRules();
 };
 
 $(() => {
