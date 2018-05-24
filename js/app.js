@@ -33,16 +33,16 @@ class MeleeCharacter extends BaseCharacter {
 const jonSnow = new MeleeCharacter('Jon Snow', 14, 2, 5, 12, 'melee', 'playerOne');
 const robertBaratheon = new MeleeCharacter('Robert Baratheon', 15, 1, 4, 20, 'melee', 'playerOne');
 const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 16, 18, 4, 'Fire', 5, 5, 1, 'magic', 'playerOne');
-const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 12, 4, 'Fire', 3, 4, 1, 'magic', 'playerOne');
+const tyrionLannister = new MagicCharacter('Tyrion Lannister', 8, 10, 12, 4, 'Fire', 4, 4, 1, 'magic', 'playerOne');
 const nedStark = new MeleeCharacter('Ned Stark', 15, 3, 5, 14, 'melee', 'playerOne');
 const melissandre = new MagicCharacter('Melissandre', 8, 12, 18, 4, 'Fire', 4, 5, 5, 'magic', 'playerOne');
 
 const jorahMormont = new MeleeCharacter('Jorah Mormont', 12, 2, 5, 16, 'melee', 'playerTwo');
-const cerseiLannister = new MagicCharacter('Cersei Lannister', 12, 12, 15, 3, 'Fire', 4, 4, 1, 'magic', 'playerTwo');
+const cerseiLannister = new MagicCharacter('Cersei Lannister', 10, 12, 15, 3, 'Fire', 4, 4, 1, 'magic', 'playerTwo');
 const theHound = new MeleeCharacter('The Hound', 12, 2, 5, 18, 'melee', 'playerTwo');
 const aryaStark = new MeleeCharacter('Arya Stark', 13, 3, 4, 12, 'melee', 'playerTwo');
 const jaimeLannister = new MeleeCharacter('Jaime Lannister', 14, 3, 6, 13, 'melee', 'playerTwo');
-const whiteWalker = new MagicCharacter('White Walker', 10, 10, 18, 5, 'Ice', 2, 4, 15, 'magic', 'playerTwo');
+const whiteWalker = new MagicCharacter('White Walker', 8, 10, 18, 5, 'Ice', 2, 4, 15, 'magic', 'playerTwo');
 
 //THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER
 game.playerOneCharactersAlive = 6;
@@ -829,6 +829,7 @@ game.hideOpeningCredits = function hideOpeningCredits() {
   const $startButton = $('#start-button');
   const $rulesButton = $('#rules-button');
   $startButton.on('click', function() {
+    $('.mute').show();
     $('.gameboard').show();
     $('.options-display').show();
     $('.attacker-stats-window').show();
@@ -942,6 +943,7 @@ game.init = function() {
   game.setStatsWindow(game.playerOneCharacter);
   $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
   $('.gameboard').hide();
+  $('.mute').hide();
   $('.options-display').hide();
   $('.attacker-stats-window').hide();
   $('.defender-stats-window').hide();
