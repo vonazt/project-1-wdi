@@ -34,14 +34,14 @@ const jonSnow = new MeleeCharacter('Jon Snow', 14, 2, 5, 12, 'melee', 'playerOne
 const robertBaratheon = new MeleeCharacter('Robert Baratheon', 15, 1, 4, 20, 'melee', 'playerOne');
 const daenerysTargaryen = new MagicCharacter('Daenarys Targaryen', 6, 16, 18, 4, 'Fire', 5, 5, 1, 'magic', 'playerOne');
 const tyrionLannister = new MagicCharacter('Tyrion Lannister', 10, 10, 12, 4, 'Fire', 3, 4, 1, 'magic', 'playerOne');
-const nedStark = new MeleeCharacter('Ned Stark', 15, 3, 5, 15, 'melee', 'playerOne');
+const nedStark = new MeleeCharacter('Ned Stark', 15, 3, 5, 14, 'melee', 'playerOne');
 const melissandre = new MagicCharacter('Melissandre', 8, 12, 18, 4, 'Fire', 4, 5, 5, 'magic', 'playerOne');
 
 const jorahMormont = new MeleeCharacter('Jorah Mormont', 12, 2, 5, 16, 'melee', 'playerTwo');
 const cerseiLannister = new MagicCharacter('Cersei Lannister', 12, 12, 15, 3, 'Fire', 4, 4, 1, 'magic', 'playerTwo');
-const theHound = new MeleeCharacter('The Hound', 12, 2, 5, 14, 'melee', 'playerTwo');
+const theHound = new MeleeCharacter('The Hound', 12, 2, 5, 18, 'melee', 'playerTwo');
 const aryaStark = new MeleeCharacter('Arya Stark', 13, 3, 4, 12, 'melee', 'playerTwo');
-const jaimeLannister = new MeleeCharacter('Jaime Lannister', 14, 3, 6, 16, 'melee', 'playerTwo');
+const jaimeLannister = new MeleeCharacter('Jaime Lannister', 14, 3, 6, 13, 'melee', 'playerTwo');
 const whiteWalker = new MagicCharacter('White Walker', 10, 10, 18, 5, 'Ice', 2, 4, 15, 'magic', 'playerTwo');
 
 //THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER
@@ -524,7 +524,43 @@ game.getDefencePositionsForAttack = function(playerPositionOrMovement, character
   });
 };
 
-
+//POSSIBILITY OF USING THIS TO CREATE A MAESTER CHARACTER WHO CAN HEAL TEAMMATES 
+// game.getPositionsForHeal = function(playerPositionOrMovement, character) {
+//   game.teamMatePosition = []; //this is what's referred to for attack function
+//   let $teamMatePositions;
+//   $teamMatePositions = this.playerOneTurn ?  $("div[player*='playerOne']") :  $("div[player*='playerTwo']"); //searches by attribute so only opposition characters will be selected for attack
+//   //iterates through all these oppostion characters and sees if they match
+//   $teamMatePositions.each(function() {
+//     const id = this.id;
+//     const itemClass = this.className;
+//     if (!itemClass.includes('dead')) { //this is so dead characters don't display
+//
+//       game.teamMateIndex = 0;
+//       const DefX = parseInt(id[0]);
+//       const DefY = parseInt(id[2]);
+//       //these are all the up, down, left and right squares of the player
+//       if (`${DefX - 1}-${DefY}` === playerPositionOrMovement
+//           || `${DefX + 1}-${DefY}` === playerPositionOrMovement
+//           || `${DefX}-${DefY - 1}` === playerPositionOrMovement
+//           || `${DefX}-${DefY + 1}` === playerPositionOrMovement) {
+//         game.teamMatePosition.push('.' + itemClass);
+//         game.turnHealOn();
+//         $('.defender-stats-window').show(200);
+//         if (game.teamMatePosition.length > 1) {
+//           $(document).on('keydown', function(e) {
+//             if (e.which === 83) {
+//               game.teamMateIndex++;
+//               if (game.teamMateIndex >= game.teamMatePosition.length) game.teamMateIndex = 0;
+//               game.displayStats(game.teamMatePosition[game.teamMateIndex], 'defence');
+//             }
+//           });
+//         } else {
+//           game.displayStats(game.teamMatePosition[game.teamMateIndex], 'defence');
+//         }
+//       }
+//     }
+//   });
+// };
 
 
 //BATTLE EVENTS
@@ -642,7 +678,7 @@ game.displayDamageMessage = function displayDamageMessage(attackType, attacker, 
     $messageWindow.html(`${attackerName} cast ${magic} and did ${damage} damage to ${defenderName}. ${defenderName}'s ${statType} decreased by ${statDamage}!`);
     setTimeout(function() {
       $('.feedback').hide();
-    }, 3000);
+    }, 3200);
   }
 };
 
@@ -807,7 +843,6 @@ game.init = function() {
   game.$magicOption = $('#magic-option');
   game.pickOption();
   game.setStatsWindow(game.playerOneCharacter);
-
   $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
   $('.gameboard').hide();
   $('.options-display').hide();
@@ -818,5 +853,4 @@ game.init = function() {
 
 $(() => {
   game.init();
-
 });

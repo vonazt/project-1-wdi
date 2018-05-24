@@ -127,15 +127,15 @@ OVERVIEW:
 16. DONE Create DEF stats for character constructor
   -DONE During Attack, DMG -= DEF
 
-17. Populate Battlefield with multiple characters
- - Assign starting positions
- - Allow option to select which Defender to Attack
- HOW? - check coordinates and return an array of available options
-  - display those options
-  - allow player to select which Defender to Attack
+17. DONE Populate Battlefield with multiple characters
+ DONE - Assign starting positions
+ DONE - Allow option to select which Defender to Attack
+ DONE HOW? - check coordinates and return an array of available options
+ DONE - display those options
+ DONE - allow player to select which Defender to Attack
 
-18. Run full Battle between two sides
-  - Check that each aspect functions as it should
+DONE 18. Run full Battle between two sides
+DONE   - Check that each aspect functions as it should
 
 (Depending on progress so far)
 19. Create Attack minigame
@@ -165,10 +165,10 @@ OVERVIEW:
     - store Character in player1 object
   -Switch between player 1 and player 2 select options, populating each respective object with characters
 
-24. Styling
-  - Create character models
-  - Give everything pixel aesthetic
-  - Do Sound Effects
+DONE 24. Styling
+DONE  - Create character models
+DONE  - Give everything pixel aesthetic
+DONE  - Do Sound Effects
 
 25. Optional extras:
   - Items
