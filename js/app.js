@@ -233,12 +233,12 @@ game.switchPlayers = function() {
   this.cycleThroughDeadPlayers();
   if (this.playerOneTurn){
     $('#selected-attacker').removeClass();
-    $('#selected-attacker').addClass(game.playerTwoCharacterObjectReference);
+    $('#selected-attacker').addClass(this.playerTwoCharacterObjectReference);
   } else {
     $('#selected-attacker').removeClass();
-    $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
+    $('#selected-attacker').addClass(this.playerOneCharacterObjectReference);
   }
-  this.playerOneTurn = !game.playerOneTurn; //flag that switches player control
+  this.playerOneTurn = !this.playerOneTurn; //flag that switches player control
   this.turnAttackOff(); //resets Attack in options window to gray
   this.turnMagicOff();
   this.clearSquares();
@@ -393,7 +393,7 @@ game.characterMovement = function(character, e) {
 };
 
 game.makeMove = function(direction, character) {
-  game.canSwitchCharacters = false; //switches flag so player can no longer tab through characters to prevent leapfrogging
+  this.canSwitchCharacters = false; //switches flag so player can no longer tab through characters to prevent leapfrogging
   $('.defender-stats-window').hide();
   if (this.playerOneTurn) {
     //playerCharacterObjectReference has to be passed because of selector in moveCells() that requires 'character', not .'character'
@@ -453,7 +453,7 @@ game.moveCells = function(characterClass, direction, characterObj) {
       });
     });
     $characterDetails.attr('class', 'available');
-    this.playerOneTurn ? this.getDefencePositionsForAttack($directionId, game.playerOneCharacter) : this.getDefencePositionsForAttack($directionId, game.playerTwoCharacter);
+    this.playerOneTurn ? this.getDefencePositionsForAttack($directionId, this.playerOneCharacter) : this.getDefencePositionsForAttack($directionId, this.playerTwoCharacter);
   }
   //THIS CREATES A GAME-KILLING BUG but the idea is that if a player tries to move into defender square it will display defender info
   //unfortunately it means they can select defenders from across the map due to id location finding
@@ -468,7 +468,7 @@ game.moveCells = function(characterClass, direction, characterObj) {
 
 //selects defenders based on their position and cycles through defenderIndex to select the right one
 game.selectDefender = function() {
-  if (game.defenderPosition.length > 1) {
+  if (this.defenderPosition.length > 1) {
     $(document).on('keydown', function(e) {
       if (e.which === 83) {
         //cycles through the available defenders that have been pushed to the defenderIndex
@@ -478,14 +478,14 @@ game.selectDefender = function() {
       }
     });
   } else {
-    game.displayStats(game.defenderPosition[game.defenderIndex], 'defence');
+    this.displayStats(this.defenderPosition[this.defenderIndex], 'defence');
   }
 };
 
 game.getDefencePositionsForAttack = function(playerPositionOrMovement, character) {
   const $characterType = $(character).attr('type');
   const $characterMP = $(character).attr('mp');
-  game.defenderPosition = []; //this is what's referred to for attack function
+  this.defenderPosition = []; //this is what's referred to for attack function
   let $defenderPositions;
   $defenderPositions = this.playerOneTurn ?  $("div[player*='playerTwo']") :  $("div[player*='playerOne']"); //searches by attribute so only opposition characters will be selected for attack
   //iterates through all these oppostion characters and sees if they match
@@ -657,7 +657,7 @@ game.attackDefender = function(attacker, defender) {
 
   this.displayDamageMessage(attackType, attacker, defender, actualDamage);
   this.checkForDeath(defender);
-  if (!game.gameOver) this.switchPlayers();
+  if (!this.gameOver) this.switchPlayers();
 };
 
 //condense into one function
@@ -713,12 +713,12 @@ game.actionOnDeath = function(defender) {
   $deadCharacter.addClass('dead');
 
   //BASIC ENDGAME BIT
-  $deadCharacterPlayer === 'playerOne' ? this.playerOneCharactersAlive -= 1 : this.playerTwoCharactersAlive -=1;
+  $deadCharacterPlayer === 'playerOne' ? this.playerOneCharactersAlive -= 1 : this.playerTwoCharactersAlive -= 1;
   if (this.playerOneCharactersAlive === 0 || this.playerTwoCharactersAlive === 0) {
-    game.gameOver = true;
+    this.gameOver = true;
     $('.attacker-stats-window').hide();
     $('#damage-message').html('GAME OVER!!');
-    game.restart();
+    this.restart();
   }
 };
 
@@ -750,10 +750,10 @@ game.restart = function() {
 //STATS DISPLAY WINDOW
 game.setStatsWindow = function() {
   if ($(this.playerOneCharacter).attr('class').includes('dead')) {
-    game.checkPlayerOneCharacterToSwapTo(game.playerOneCharacterObjectReference);
+    this.checkPlayerOneCharacterToSwapTo(this.playerOneCharacterObjectReference);
   }
   if ($(this.playerTwoCharacter).attr('class').includes('dead')) {
-    game.checkPlayerTwoCharacterToSwapTo(game.playerTwoCharacterObjectReference);
+    this.checkPlayerTwoCharacterToSwapTo(this.playerTwoCharacterObjectReference);
   }
   $('.defender-stats-window').hide();
   this.playerOneTurn ? this.displayStats(this.playerOneCharacter, 'attack') : this.displayStats(this.playerTwoCharacter, 'attack');
@@ -778,15 +778,14 @@ game.displayStats = function(character, attackOrDefend) {
   const $defStat = $character.attr('def');
   const $typeStat = $character.attr('type');
 
-  const initialHP = game.cellTypes[characterObjectReference].hp;
-  const initialMP = game.cellTypes[characterObjectReference].mp;
-  const initialDef = game.cellTypes[characterObjectReference].def;
-  const initialDmg = game.cellTypes[characterObjectReference].dmg;
+  const initialHP = this.cellTypes[characterObjectReference].hp;
+  const initialMP = this.cellTypes[characterObjectReference].mp;
+  const initialDef = this.cellTypes[characterObjectReference].def;
+  const initialDmg = this.cellTypes[characterObjectReference].dmg;
 
   let battleType;
-  //
-  attackOrDefend === 'attack' ? battleType = 'attack' : battleType = 'defend';
-  // battleType = attackOrDefend === 'attack' ? 'attack' : 'defend';
+
+  battleType = attackOrDefend === 'attack' ? 'attack' : 'defend';
 
   const $nameDisplay = $(`#${battleType}-character-name`);
   $nameDisplay.html(`Name: ${$nameStat}`);
@@ -953,18 +952,18 @@ game.init = function() {
   $('.options-display').hide();
   $('.attacker-stats-window').hide();
   $('.defender-stats-window').hide();
-  game.drawBattlefield();
-  game.moveCharacter();
-  game.checkMoveDistance();
-  game.switchCharacter();
-  game.$attackOption = $('#attack-option');
-  game.$magicOption = $('#magic-option');
-  game.pickOption();
-  game.setStatsWindow(game.playerOneCharacter);
+  this.drawBattlefield();
+  this.moveCharacter();
+  this.checkMoveDistance();
+  this.switchCharacter();
+  this.$attackOption = $('#attack-option');
+  this.$magicOption = $('#magic-option');
+  this.pickOption();
+  this.setStatsWindow(game.playerOneCharacter);
   $('#selected-attacker').addClass(game.playerOneCharacterObjectReference);
-  game.hideOpeningCredits();
-  game.displayGameRules();
-  game.muteMainTheme();
+  this.hideOpeningCredits();
+  this.displayGameRules();
+  this.muteMainTheme();
 };
 
 $(() => {
