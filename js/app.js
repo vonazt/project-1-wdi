@@ -42,7 +42,7 @@ const cerseiLannister = new MagicCharacter('Cersei Lannister', 10, 12, 15, 3, 'F
 const theHound = new MeleeCharacter('The Hound', 12, 2, 5, 18, 'melee', 'playerTwo');
 const aryaStark = new MeleeCharacter('Arya Stark', 13, 3, 4, 12, 'melee', 'playerTwo');
 const jaimeLannister = new MeleeCharacter('Jaime Lannister', 14, 3, 6, 13, 'melee', 'playerTwo');
-const whiteWalker = new MagicCharacter('White Walker', 8, 10, 18, 5, 'Ice', 4, 4, 15, 'magic', 'playerTwo');
+const whiteWalker = new MagicCharacter('White Walker', 8, 15, 18, 5, 'Ice', 4, 4, 15, 'magic', 'playerTwo');
 
 //THIS SHOULD BE INCREMENTED EVERY INSTANCE OF A CHARACTER
 game.playerOneCharactersAlive = 6;
