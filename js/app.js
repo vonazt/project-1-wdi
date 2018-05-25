@@ -682,6 +682,7 @@ game.displayDamageMessage = function(attackType, attacker, defender, damage,  ma
         $('.feedback').hide();
       }, 3200);
     } else {
+      //this is separated out so that display message doesn't show magic user depleting DMG of other magic user as this is irrelevant to the player
       $messageWindow.html(`${attackerName} cast ${magic} and did ${damage} damage to ${defenderName}.`);
       setTimeout(function() {
         $('.feedback').hide();
@@ -704,6 +705,8 @@ game.actionOnDeath = function(defender) {
   const $deadCharacter = $(defender);
   const $deadCharacterName = $deadCharacter.attr('name');
   const $deadCharacterPlayer = $deadCharacter.attr('player');
+  //all this is trying to set the class of dead character so it doesn't break the game by a player being able to select a dead character
+  //limited effectiveness
   let $deadCharacterIsDead = $deadCharacter.attr('isDead');
   $deadCharacterIsDead = $deadCharacter.attr('isDead', true);
   const defenderObject = defender.substr(1);
@@ -749,6 +752,7 @@ game.restart = function() {
 
 //STATS DISPLAY WINDOW
 game.setStatsWindow = function() {
+  //this is trying to make sure that a dead character's info isn't displayed - not working right for picture in all cases
   if ($(this.playerOneCharacter).attr('class').includes('dead')) {
     this.checkPlayerOneCharacterToSwapTo(this.playerOneCharacterObjectReference);
   }
@@ -766,7 +770,7 @@ game.displayStats = function(character, attackOrDefend) {
     $('#selected-defender').removeClass();
     $('#selected-defender').addClass(characterObjectReference);
   }
-
+  //these are all the relevant character attributes that need to be displayed that are taken from the character's div cell's attributes
   const $character = $(character);
   const $nameStat = $character.attr('name');
   const $hpStat = $character.attr('hp');
@@ -778,11 +782,13 @@ game.displayStats = function(character, attackOrDefend) {
   const $defStat = $character.attr('def');
   const $typeStat = $character.attr('type');
 
+  //these set the initial values for each of these by referncing the character object - so cellTypes[characterOne] = jonSnow, etc.
   const initialHP = this.cellTypes[characterObjectReference].hp;
   const initialMP = this.cellTypes[characterObjectReference].mp;
   const initialDef = this.cellTypes[characterObjectReference].def;
   const initialDmg = this.cellTypes[characterObjectReference].dmg;
 
+  //battleType is so that the stats window displays the appropriate stats for either attacker or defender
   let battleType;
 
   battleType = attackOrDefend === 'attack' ? 'attack' : 'defend';
@@ -797,6 +803,7 @@ game.displayStats = function(character, attackOrDefend) {
   const $mgDmgDisplay = $(`#${battleType}-mg-dmg-stats`);
   const $mgTypeDisplay = $(`#${battleType}-mg-type-stats`);
 
+  //these stats should only be displayed if the character is a magic character
   if ($typeStat === 'melee' || !$mpStat) {
     $mpDisplay.hide();
     $mgDmgDisplay.hide();
@@ -812,7 +819,7 @@ game.displayStats = function(character, attackOrDefend) {
   }
 
   const $dmgDisplay = $(`#${battleType}-dmg-stats`);
-
+  //these stats should only be displayed if a character is a melee character
   if ($typeStat === 'magic') {
     $dmgDisplay.hide();
   } else if ($typeStat === 'melee') {
@@ -944,7 +951,6 @@ game.displayGameRules = function() {
     if (e.which === 27) $gameRules.hide();
   });
 };
-
 
 game.init = function() {
   $('.gameboard').hide();
