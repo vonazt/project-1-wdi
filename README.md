@@ -4,7 +4,7 @@
 [insert intro image]
 
 The brief for this project was to build a browser-based game using HTML, CSS and JavaScript within a week.
-The game I created is Game of Shining Thrones. It is a turn-based strategy game for two players that was inspired by the Shining Force series of games I loved playing as a child (and also from the Game of Thrones series for its aesthetic design).
+The game I created is Game of Shining Thrones. It is a turn-based strategy game for two players that was inspired by the Shining Force series of games I loved playing as a child (and also from the Game of Thrones series for its aesthetic design). 
 
 #Game description
 
