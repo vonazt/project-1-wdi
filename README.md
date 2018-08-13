@@ -1,5 +1,5 @@
 ## WDI 34 Project 1 - Game of Shining Thrones
-### Client-based game
+### Browser-based game
 ##### by Richard Tzanov
 
 <p align="left"><img src="https://i.imgur.com/ou6DZvu.png" width="1000"></p>
@@ -67,6 +67,8 @@ This worked in that the rest of the game could function but it meant that other 
 <p align="left"><img src="https://i.imgur.com/7sUMFGc.png" width="1000"></p>
 
 While this solution largely works, it does still cause a bug whereby the incorrect image is displayed in the stats window until the player moves the character. I've tried coming up with multiple solutions to this unsuccessfully and ultimately I think that it's down to the fundamentals of the game requiring switching classes and attributes from one div to another.
+
+<p align="left"><img src="https://i.imgur.com/86KTIYj.gif" width="1000"></p>
 
 #### Planned features
 
