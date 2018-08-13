@@ -39,6 +39,7 @@ The implementation of this when there was just one character on the battlefield 
 With only one character on each side, all of this was relatively simple and functioned as I wanted it to. Things became a lot more complicated when I added multiple characters to each side.
 
 <p align="left"><img src="https://i.imgur.com/dJDrO0y.png" width="1000"></p>
+
 (N.B. - this is a good example of the kind of overengineered code that I discuss below that I would like to refactor once my JS knowledge has improved.)
 
 Giving players the ability to swap between characters was essential to the strategic core for the game, and implementing the initial switchCharacter function was relatively simple. Every character class (characterOne, characterTwo, etc) is a key in an object, with the corresponding value being the next character to switch to (e.g., `{characterOne: '.characterTwo'}`). When the player switches character, the function checks the playerCharacter object and then uses that to fill in the corresponding functions to do with movement and stats window display.
