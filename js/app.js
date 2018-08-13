@@ -486,8 +486,7 @@ game.getDefencePositionsForAttack = function(playerPositionOrMovement, character
   const $characterType = $(character).attr('type');
   const $characterMP = $(character).attr('mp');
   this.defenderPosition = []; //this is what's referred to for attack function
-  let $defenderPositions;
-  $defenderPositions = this.playerOneTurn ?  $("div[player*='playerTwo']") :  $("div[player*='playerOne']"); //searches by attribute so only opposition characters will be selected for attack
+  const $defenderPositions = this.playerOneTurn ?  $('div[player*=\'playerTwo\']') :  $('div[player*=\'playerOne\']'); //searches by attribute so only opposition characters will be selected for attack
   //iterates through all these oppostion characters and sees if they match
   $defenderPositions.each(function() {
     const id = this.id;
